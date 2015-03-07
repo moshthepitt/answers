@@ -23,3 +23,9 @@ This starter template gives me the opportunity to as quickly as possible get thr
 * django-compressor
 * django-cacheops
 
+# Installation
+1. Download or git clone the project
+2. Have a look at template.local_settings.py to make configuarion changes as you need
+3. Run server
+4. ??
+5. Profit
