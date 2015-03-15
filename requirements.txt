@@ -13,6 +13,7 @@ funcy==1.4
 oauthlib==0.7.2
 pyinotify==0.9.5
 python-openid==2.2.5
+pytz==2014.10
 redis==2.10.3
 requests==2.5.3
 requests-oauthlib==0.4.2
