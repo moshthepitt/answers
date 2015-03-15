@@ -1,7 +1,7 @@
 # Django starter template
 A little something-something that I use as my starter template for personal and commercial Django projects.  The basic idea is to save time when starting Django projects - at the beginning of all Django projects I found I always did certain things every single time.
 
-This starter template gives me the opportunity to as quickly as possible get through the boilerplate and start real & interesting work on new DJango projects.
+This starter template gives me the opportunity to as quickly as possible get through the boilerplate and start real & interesting work on new Django projects.
 
 # What is included
 * A base html template based on Bootstrap
