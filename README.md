@@ -10,7 +10,7 @@ This starter template gives me the opportunity to as quickly as possible get thr
 * A simple method to create fake/dummy users (core.utils.fake_users)
 * A UserProfile model that extends django.contrib.auth.models.User
 * A context processor to make the site name available to templates (core.context_processors.site_processor)
-* Django flatpages set up with a wysiwyg editor (Redactor)
+* Django flatpages set app with a wysiwyg editor (Redactor)
 * Django Allauth templates set up to work with Bootstrap and django-crispy-forms
 
 # Installed Third Party Apps
@@ -25,7 +25,7 @@ This starter template gives me the opportunity to as quickly as possible get thr
 
 # Installation
 1. Download or git clone the project
-2. Have a look at template.local_settings.py to make configuarion changes as you need
+2. Have a look at template.local_settings.py to make configuarion changes as you need.  It would be a good idea to add local_settings.py to gitignore so that this file is not tracked by Git.
 3. Run server
 4. ??
 5. Profit
