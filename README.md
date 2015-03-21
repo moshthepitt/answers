@@ -25,7 +25,7 @@ This starter template gives me the opportunity to as quickly as possible get thr
 
 # Installation
 1. Download or git clone the project
-2. Have a look at template.local_settings.py to make configuarion changes as you need.  It would be a good idea to add local_settings.py to gitignore so that this file is not tracked by Git.
+2. Have a look at template.local_settings.py to make changes as you need.  It would be a good idea to add local_settings.py to gitignore so that this file is not tracked by Git.
 3. Run server
 4. ??
 5. Profit
