@@ -1,10 +1,10 @@
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-#sites
+# sites
 SITE_ID = 1
 
-#change the secret key
+# change the secret key
 SECRET_KEY = 'hwokhV3;N5"E\=vV(t&_D@Yxn>CwPpuB=P\Qt8xF#j@E6)Q3:4.:@$+ox[Z!lQR'
 
 DATABASES = {
@@ -14,32 +14,32 @@ DATABASES = {
     }
 }
 
-#Emails
+# Emails
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST = 'localhost'
 EMAIL_PORT = 1025
-DEFAULT_FROM_EMAIL='Hello World <hello@example.com>'
+DEFAULT_FROM_EMAIL = 'Hello World <hello@example.com>'
 
 
-#static
+# static
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
 STATIC_ROOT = '/static/'
 STATIC_URL = '/static/'
 
-#media
+# media
 MEDIA_ROOT = '/media/'
 MEDIA_URL = '/media/'
 
-#CACHE
+# CACHE
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
     }
 }
 
-#DEBUG
+# DEBUG
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 TEMPLATE_DEBUG = True

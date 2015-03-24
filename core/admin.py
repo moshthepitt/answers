@@ -5,6 +5,7 @@ from django.db import models
 
 from suit_redactor.widgets import RedactorWidget
 
+
 class FlatPageCustom(FlatPageAdmin):
     formfield_overrides = {
         models.TextField: {'widget': RedactorWidget(editor_options={'lang': 'en'})}
