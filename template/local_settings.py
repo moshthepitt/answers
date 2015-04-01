@@ -39,6 +39,18 @@ CACHES = {
     }
 }
 
+# HAYSTACK
+# HAYSTACK_CONNECTIONS = {
+#     'default': {
+#         'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+#         'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
+#         'STORAGE': 'file',
+#         'POST_LIMIT': 128 * 1024 * 1024,
+#         'INCLUDE_SPELLING': True,
+#         'BATCH_SIZE': 1000,
+#     },
+# }
+
 # DEBUG
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

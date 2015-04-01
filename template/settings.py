@@ -95,6 +95,12 @@ TEMPLATE_DIRS = [
     os.path.join(BASE_DIR, 'templates'),
 ]
 
+TEMPLATE_LOADERS = (
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+    'django.template.loaders.eggs.Loader',
+)
+
 TEMPLATE_CONTEXT_PROCESSORS = TCP + (
     'django.core.context_processors.request',
 
@@ -102,6 +108,7 @@ TEMPLATE_CONTEXT_PROCESSORS = TCP + (
     "allauth.socialaccount.context_processors.socialaccount",
 
     "core.context_processors.site_processor",
+    "core.context_processors.debug_processor",
 )
 
 STATICFILES_FINDERS = (
