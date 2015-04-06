@@ -19,7 +19,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'DATABASE_NAME',
-        'USER': 'DATABASE_USEF',
+        'USER': 'DATABASE_USER',
         'PASSWORD': 'PASSWORD',
         'HOST': 'localhost',
         'PORT': '',                      # Set to empty string for default.
@@ -86,5 +86,4 @@ DEFAULT_FROM_EMAIL = 'John Doe <johndoe@example.com>'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 ALLOWED_HOSTS = ['example.com', 'www.example.com']
-TEMPLATE_DEBUG = False
 CRISPY_FAIL_SILENTLY = not DEBUG
