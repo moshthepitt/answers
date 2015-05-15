@@ -41,6 +41,7 @@ INSTALLED_APPS = (
     # custom
     'core',
     'users',
+    'questions',
     # third party
     'allauth',
     'allauth.account',
