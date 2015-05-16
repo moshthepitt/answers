@@ -54,6 +54,9 @@ INSTALLED_APPS = (
     'compressor',
     'cacheops',
     'suit_redactor',
+    'mptt',
+    'autoslug',
+    'polymorphic',
 )
 
 MIDDLEWARE_CLASSES = (
