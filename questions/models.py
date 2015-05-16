@@ -92,6 +92,19 @@ class Quiz(models.Model):
                     " taken by users who can edit"
                     " quizzes."))
 
+    def get_question_order(self):
+        if self.question_ordering == Quiz.DATE_ORDER:
+            return "-created_on"
+        elif self.question_ordering == Quiz.ALPHABETICAL_ORDER:
+            return "title"
+        elif self.question_ordering == Quiz.RANDOM_ORDER:
+            return "?"
+        else:
+            return "title"
+
+    def get_questions(self):
+        return self.question_set.all().order_by(self.get_question_order())
+
     class Meta:
         verbose_name = "Quiz"
         verbose_name_plural = "Quizzes"
