@@ -4,10 +4,15 @@ from polymorphic.admin import PolymorphicParentModelAdmin  # , PolymorphicChildM
 
 from questions.models import Quiz, Question, MultipleChoiceQuestion, MultipleChoiceAnswer
 from questions.models import RatingQuestion, TextQuestion, EssayQuestion, BooleanQuestion
+from questions.models import Category
 
 
 class QuizAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
+
+
+class CategoryAdmin(admin.ModelAdmin):
+    pass
 
 
 class MultipleChoiceQuestionAdmin(admin.ModelAdmin):
@@ -45,6 +50,7 @@ class QuestionAdmin(PolymorphicParentModelAdmin):
     )
 
 admin.site.register(Quiz, QuizAdmin)
+admin.site.register(Category, CategoryAdmin)
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(MultipleChoiceQuestion, MultipleChoiceQuestionAdmin)
 admin.site.register(MultipleChoiceAnswer, MultipleChoiceAnswerAdmin)

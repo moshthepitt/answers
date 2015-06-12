@@ -30,6 +30,8 @@ class Category(MPTTModel):
         order_insertion_by = ['order']
 
     class Meta:
+        verbose_name = _("Category")
+        verbose_name_plural = _("Categories")
         ordering = ['order']
 
 
@@ -106,10 +108,10 @@ class Quiz(models.Model):
         return self.question_set.all().order_by(self.get_question_order())
 
     class Meta:
-        verbose_name = "Quiz"
-        verbose_name_plural = "Quizzes"
+        verbose_name = _("Quiz")
+        verbose_name_plural = _("Quizzes")
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
 
@@ -137,8 +139,9 @@ class Question(PolymorphicModel):
     class Meta:
         verbose_name = _("Question")
         verbose_name_plural = _("Questions")
+        ordering = ['title']
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
 
@@ -150,7 +153,7 @@ class TextQuestion(Question):
         verbose_name = _("Text Question")
         verbose_name_plural = _("Text Questions")
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
 
@@ -162,7 +165,7 @@ class EssayQuestion(Question):
         verbose_name = _("Essay Question")
         verbose_name_plural = _("Essay Questions")
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
 
@@ -177,7 +180,7 @@ class MultipleChoiceQuestion(Question):
         verbose_name = _("Multiple Choice Question")
         verbose_name_plural = _("Multiple Choice Questions")
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
 
@@ -189,15 +192,15 @@ class MultipleChoiceAnswer(models.Model):
     updated_on = models.DateTimeField(_("Updated on"), auto_now=True)
     question = models.ForeignKey(MultipleChoiceQuestion, verbose_name=_("Question"))
     title = models.CharField(_("Answer"), max_length=300, blank=False, help_text=_(
-        "INput the answer as you want it displayed"))
+        "Input the answer as you want it displayed"))
     correct_answer = models.BooleanField(
         _("Correct Answer"), default=False, help_text=_("Is this a correct answer?"))
 
     class Meta:
-        verbose_name = "Multiple Choice Answer"
-        verbose_name_plural = "Multiple Choice Answers"
+        verbose_name = _("Multiple Choice Answer")
+        verbose_name_plural = _("Multiple Choice Answers")
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
 
@@ -227,7 +230,7 @@ class RatingQuestion(Question):
         verbose_name = _("Rating Question")
         verbose_name_plural = _("Rating Questions")
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
 
@@ -243,8 +246,8 @@ class BooleanQuestion(Question):
         "Which is the correct answer to this question?"))
 
     class Meta:
-        verbose_name = "Boolean Question"
-        verbose_name_plural = "Boolean Questions"
+        verbose_name = _("Boolean Question")
+        verbose_name_plural = _("Boolean Questions")
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
