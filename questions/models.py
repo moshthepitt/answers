@@ -1,6 +1,7 @@
 from django.core.validators import MaxValueValidator
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.core.urlresolvers import reverse
 
 from autoslug import AutoSlugField
 from mptt.fields import TreeForeignKey
@@ -107,6 +108,9 @@ class Quiz(models.Model):
     def get_questions(self):
         return self.question_set.all().order_by(self.get_question_order())
 
+    def get_absolute_url(self):
+        return reverse('questions:quiz', args=[self.slug])
+
     class Meta:
         verbose_name = _("Quiz")
         verbose_name_plural = _("Quizzes")
@@ -153,6 +157,10 @@ class TextQuestion(Question):
         verbose_name = _("Text Question")
         verbose_name_plural = _("Text Questions")
 
+    def get_answer_class(self):
+        from answers.models import TextAnswer
+        return TextAnswer
+
     def __str__(self):
         return self.title
 
@@ -164,6 +172,10 @@ class EssayQuestion(Question):
     class Meta:
         verbose_name = _("Essay Question")
         verbose_name_plural = _("Essay Questions")
+
+    def get_answer_class(self):
+        from answers.models import EssayAnswer
+        return EssayAnswer
 
     def __str__(self):
         return self.title
@@ -180,11 +192,15 @@ class MultipleChoiceQuestion(Question):
         verbose_name = _("Multiple Choice Question")
         verbose_name_plural = _("Multiple Choice Questions")
 
+    def get_answer_class(self):
+        from answers.models import MultipleChoiceAnswer
+        return MultipleChoiceAnswer
+
     def __str__(self):
         return self.title
 
 
-class MultipleChoiceAnswer(models.Model):
+class MultipleChoiceOption(models.Model):
 
     """The answer choices to a multipel choice question"""
 
@@ -208,27 +224,13 @@ class RatingQuestion(Question):
 
     """A question used to rate things from Very Poor/Very Bad to Very Good"""
 
-    # choices
-    # VERY_POOR = '1'
-    # POOR = '2'
-    # AVERAGE = '3'
-    # GOOD = '4'
-    # VERY_GOOD = '5'
-
-    # RATING_CHOICES = (
-    #     (VERY_POOR, _('Very Poor')),
-    #     (POOR, _('Poor')),
-    #     (AVERAGE, _('Average')),
-    #     (GOOD, _("Good")),
-    #     (VERY_GOOD, _("Very Good")),
-    # )
-
-    # choices = models.CharField(
-    #     _("Rating Choices"), max_length=1, choices=RATING_CHOICES, blank=False)
-
     class Meta:
         verbose_name = _("Rating Question")
         verbose_name_plural = _("Rating Questions")
+
+    def get_answer_class(self):
+        from answers.models import RatingAnswer
+        return RatingAnswer
 
     def __str__(self):
         return self.title
@@ -248,6 +250,10 @@ class BooleanQuestion(Question):
     class Meta:
         verbose_name = _("Boolean Question")
         verbose_name_plural = _("Boolean Questions")
+
+    def get_answer_class(self):
+        from answers.models import BooleanAnswer
+        return BooleanAnswer
 
     def __str__(self):
         return self.title

@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from polymorphic.admin import PolymorphicParentModelAdmin  # , PolymorphicChildModelAdmin
 
-from questions.models import Quiz, Question, MultipleChoiceQuestion, MultipleChoiceAnswer
+from questions.models import Quiz, Question, MultipleChoiceQuestion, MultipleChoiceOption
 from questions.models import RatingQuestion, TextQuestion, EssayQuestion, BooleanQuestion
 from questions.models import Category
 
@@ -15,11 +15,15 @@ class CategoryAdmin(admin.ModelAdmin):
     pass
 
 
+class MultipleChoiceOptionInline(admin.TabularInline):
+    model = MultipleChoiceOption
+
+
 class MultipleChoiceQuestionAdmin(admin.ModelAdmin):
-    pass
+    inlines = [MultipleChoiceOptionInline, ]
 
 
-class MultipleChoiceAnswerAdmin(admin.ModelAdmin):
+class MultipleChoiceOptionAdmin(admin.ModelAdmin):
     pass
 
 
@@ -41,6 +45,7 @@ class BooleanQuestionAdmin(admin.ModelAdmin):
 
 class QuestionAdmin(PolymorphicParentModelAdmin):
     base_model = Question
+
     child_models = (
         (MultipleChoiceQuestion, MultipleChoiceQuestionAdmin),
         (RatingQuestion, RatingQuestionAdmin),
@@ -53,7 +58,7 @@ admin.site.register(Quiz, QuizAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(MultipleChoiceQuestion, MultipleChoiceQuestionAdmin)
-admin.site.register(MultipleChoiceAnswer, MultipleChoiceAnswerAdmin)
+admin.site.register(MultipleChoiceOption, MultipleChoiceOptionAdmin)
 admin.site.register(RatingQuestion, RatingQuestionAdmin)
 admin.site.register(TextQuestion, TextQuestionAdmin)
 admin.site.register(EssayQuestion, EssayQuestionAdmin)
