@@ -27,12 +27,13 @@ class BooleanAnswerAdmin(admin.ModelAdmin):
 
 class AnswerAdmin(PolymorphicParentModelAdmin):
     base_model = Answer
+
     child_models = (
         (TextAnswer, TextAnswerAdmin),
         (MultipleChoiceAnswer, MultipleChoiceAnswerAdmin),
         (EssayAnswer, EssayAnswerAdmin),
         (RatingAnswer, RatingAnswerAdmin),
-        (BooleanAnswer, BooleanAnswerAdmin)
+        (BooleanAnswer, BooleanAnswerAdmin),
     )
 
 

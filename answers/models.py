@@ -16,7 +16,7 @@ class Answer(PolymorphicModel):
         verbose_name_plural = _("Answers")
 
     def __str__(self):
-        return self.question
+        return self.question.title
 
 
 class TextAnswer(Answer):
@@ -27,7 +27,7 @@ class TextAnswer(Answer):
         verbose_name_plural = ("Text Answers")
 
     def __str__(self):
-        return self.question
+        return self.question.title
 
 
 class EssayAnswer(Answer):
@@ -38,7 +38,7 @@ class EssayAnswer(Answer):
         verbose_name_plural = _("Essay Answers")
 
     def __str__(self):
-        return self.question
+        return self.question.title
 
 
 class MultipleChoiceAnswer(Answer):
@@ -49,7 +49,7 @@ class MultipleChoiceAnswer(Answer):
         verbose_name_plural = _("Multiple Choice Answers")
 
     def __str__(self):
-        return self.question
+        return self.question.title
 
 
 class RatingAnswer(Answer):
@@ -75,7 +75,7 @@ class RatingAnswer(Answer):
         verbose_name_plural = _("Rating Answers")
 
     def __str__(self):
-        return self.question
+        return self.question.title
 
 
 class BooleanAnswer(Answer):
@@ -86,4 +86,4 @@ class BooleanAnswer(Answer):
         verbose_name_plural = _("Boolean Answers")
 
     def __str__(self):
-        return self.question
+        return self.question.title

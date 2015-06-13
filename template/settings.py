@@ -52,7 +52,7 @@ INSTALLED_APPS = (
     'crispy_forms',
     'debug_toolbar',
     'compressor',
-    'cacheops',
+    # 'cacheops',
     'suit_redactor',
     'mptt',
     'autoslug',
