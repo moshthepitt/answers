@@ -28,7 +28,7 @@ class MultipleChoiceOptionAdmin(admin.ModelAdmin):
 
 
 class RatingQuestionAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['title', 'category']
 
 
 class TextQuestionAdmin(admin.ModelAdmin):

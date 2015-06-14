@@ -1,12 +1,15 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
+from django.contrib.auth.decorators import login_required
 
 from django.conf import settings
 
-from core.views import HomePageView
+from core.views import HomePageView, DashboardView
 
 urlpatterns = patterns('',
     url(r'^$', HomePageView.as_view(), name='home'),
+    url(r'^dashboard/$', login_required(DashboardView.as_view()), name='dashboard'),
+
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accounts/', include('allauth.urls')),
 

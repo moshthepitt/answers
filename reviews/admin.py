@@ -1,9 +1,9 @@
 from django.contrib import admin
 
-from reviews.models import PeerReview
+from reviews.models import Review
 
 
-class PeerReviewAdmin(admin.ModelAdmin):
+class ReviewAdmin(admin.ModelAdmin):
     pass
 
-admin.site.register(PeerReview, PeerReviewAdmin)
+admin.site.register(Review, ReviewAdmin)

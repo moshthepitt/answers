@@ -35,6 +35,9 @@ class Category(MPTTModel):
         verbose_name_plural = _("Categories")
         ordering = ['order']
 
+    def __str__(self):
+        return self.title
+
 
 class Quiz(models.Model):
 

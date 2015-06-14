@@ -2,14 +2,12 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
         ('contenttypes', '0002_remove_content_type_name'),
-        ('questions', '0004_auto_20150612_1703'),
     ]
 
     operations = [
@@ -53,7 +51,6 @@ class Migration(migrations.Migration):
             name='MultipleChoiceAnswer',
             fields=[
                 ('answer_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='answers.Answer')),
-                ('answer', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, verbose_name='Answer', to='questions.MultipleChoiceOption')),
             ],
             options={
                 'verbose_name': 'Multiple Choice Answer',
@@ -65,7 +62,7 @@ class Migration(migrations.Migration):
             name='RatingAnswer',
             fields=[
                 ('answer_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='answers.Answer')),
-                ('answer', models.PositiveIntegerField(verbose_name='Answer', choices=[(1, 'Very Poor'), (2, 'Poor'), (3, 'Average'), (4, 'Good'), (5, 'Very Good')])),
+                ('answer', models.PositiveIntegerField(verbose_name='Answer', choices=[(1, 'Strongly Disagree'), (2, 'Disagree'), (3, 'Neither Agree Nor Disagree'), (4, 'Agree'), (5, 'Strongly Agree')])),
             ],
             options={
                 'verbose_name': 'Rating Answer',
@@ -89,10 +86,5 @@ class Migration(migrations.Migration):
             model_name='answer',
             name='polymorphic_ctype',
             field=models.ForeignKey(related_name='polymorphic_answers.answer_set+', editable=False, to='contenttypes.ContentType', null=True),
-        ),
-        migrations.AddField(
-            model_name='answer',
-            name='question',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, verbose_name='Question', to='questions.Question'),
         ),
     ]

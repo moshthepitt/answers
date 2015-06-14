@@ -12,6 +12,7 @@ import autoslug.fields
 class Migration(migrations.Migration):
 
     dependencies = [
+        ('contenttypes', '0002_remove_content_type_name'),
     ]
 
     operations = [
@@ -33,15 +34,17 @@ class Migration(migrations.Migration):
             ],
             options={
                 'ordering': ['order'],
+                'verbose_name': 'Category',
+                'verbose_name_plural': 'Categories',
             },
         ),
         migrations.CreateModel(
-            name='MultipleChoiceAnswer',
+            name='MultipleChoiceOption',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('created_on', models.DateTimeField(auto_now_add=True, verbose_name='Created on')),
                 ('updated_on', models.DateTimeField(auto_now=True, verbose_name='Updated on')),
-                ('title', models.CharField(help_text='INput the answer as you want it displayed', max_length=300, verbose_name='Answer')),
+                ('title', models.CharField(help_text='Input the answer as you want it displayed', max_length=300, verbose_name='Answer')),
                 ('correct_answer', models.BooleanField(default=False, help_text='Is this a correct answer?', verbose_name='Correct Answer')),
             ],
             options={
@@ -58,10 +61,11 @@ class Migration(migrations.Migration):
                 ('title', models.CharField(help_text='The question as you want it displayed', max_length=300, verbose_name='Question')),
                 ('description', models.TextField(help_text='A more detailed description of the question', verbose_name='Description', blank=True)),
                 ('image', models.ImageField(default=None, upload_to=core.utils.PathAndRename(b'questions/'), null=True, verbose_name='Image', blank=True)),
-                ('required', models.BooleanField(default=True, help_text='Is this question required?', verbose_name='Rquired')),
+                ('required', models.BooleanField(default=True, help_text='Is this question required?', verbose_name='Required')),
                 ('explanation', models.TextField(help_text='Explanation to be shown after the question has been answered', verbose_name='Explanation', blank=True)),
             ],
             options={
+                'ordering': ['title'],
                 'verbose_name': 'Question',
                 'verbose_name_plural': 'Questions',
             },
@@ -73,7 +77,7 @@ class Migration(migrations.Migration):
                 ('created_on', models.DateTimeField(auto_now_add=True, verbose_name='Created on')),
                 ('updated_on', models.DateTimeField(auto_now=True, verbose_name='Updated on')),
                 ('title', models.CharField(max_length=300, verbose_name='Title')),
-                ('slug', autoslug.fields.AutoSlugField(unique=True, max_length=255)),
+                ('slug', autoslug.fields.AutoSlugField(editable=True, unique=True, populate_from=b'title')),
                 ('description', models.TextField(help_text='A more detailed description of the quiz', verbose_name='Description', blank=True)),
                 ('question_ordering', models.CharField(default=b'2', help_text='How should the questions in this quix be ordered?', max_length=1, verbose_name='Question Ordering', choices=[(b'1', 'Date'), (b'2', 'Alphabetical'), (b'3', 'Random')])),
                 ('max_questions', models.PositiveIntegerField(default=None, help_text='Number of questions to be answered on each attempt.', null=True, verbose_name='Max Questions', blank=True)),
@@ -87,8 +91,8 @@ class Migration(migrations.Migration):
                 ('category', models.ForeignKey(verbose_name='Category', blank=True, to='questions.Category', null=True)),
             ],
             options={
-                'verbose_name': 'Quiz',
-                'verbose_name_plural': 'Quizzes',
+                'verbose_name': 'Question Set',
+                'verbose_name_plural': 'Question Sets',
             },
         ),
         migrations.CreateModel(
@@ -111,8 +115,8 @@ class Migration(migrations.Migration):
                 ('question_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='questions.Question')),
             ],
             options={
-                'verbose_name': 'Text Question',
-                'verbose_name_plural': 'Text Questions',
+                'verbose_name': 'Essay Question',
+                'verbose_name_plural': 'Essay Questions',
             },
             bases=('questions.question',),
         ),
@@ -156,11 +160,16 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='question',
+            name='polymorphic_ctype',
+            field=models.ForeignKey(related_name='polymorphic_questions.question_set+', editable=False, to='contenttypes.ContentType', null=True),
+        ),
+        migrations.AddField(
+            model_name='question',
             name='quiz',
             field=models.ManyToManyField(to='questions.Quiz', verbose_name='Quiz', blank=True),
         ),
         migrations.AddField(
-            model_name='multiplechoiceanswer',
+            model_name='multiplechoiceoption',
             name='question',
             field=models.ForeignKey(verbose_name='Question', to='questions.MultipleChoiceQuestion'),
         ),

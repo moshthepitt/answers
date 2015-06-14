@@ -33,7 +33,7 @@ def quiz_form_helper(quiz):
     return helper
 
 
-def save_quiz_form(quiz, form, user=None, peer_review=None):
+def save_quiz_form(quiz, form, user=None, review=None):
     for question in quiz.get_questions():
         answer_field = 'answer_{}'.format(question.id)
         if answer_field in form.cleaned_data:
@@ -43,6 +43,6 @@ def save_quiz_form(quiz, form, user=None, peer_review=None):
                 question=question,
                 answer=questions_answer,
                 user=user,
-                peer_review=peer_review
+                review=review
             )
             answer.save()

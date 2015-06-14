@@ -10,23 +10,24 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('questions', '0005_auto_20150614_1124'),
+        ('questions', '0001_initial'),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='PeerReview',
+            name='Review',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('created_on', models.DateTimeField(auto_now_add=True, verbose_name='Created on')),
                 ('updated_on', models.DateTimeField(auto_now=True, verbose_name='Updated on')),
+                ('title', models.CharField(max_length=300, verbose_name='Title', blank=True)),
                 ('quiz', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, verbose_name='Question Set', to='questions.Quiz')),
-                ('reviewers', models.ManyToManyField(related_name='peer_reviewers', verbose_name='Reviewers', to=settings.AUTH_USER_MODEL)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, verbose_name='User', to=settings.AUTH_USER_MODEL)),
+                ('reviewers', models.ManyToManyField(related_name='peer_reviewers', verbose_name='Reviewers', to=settings.AUTH_USER_MODEL, blank=True)),
+                ('user', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, default=None, blank=True, to=settings.AUTH_USER_MODEL, null=True, verbose_name='User')),
             ],
             options={
-                'verbose_name': 'Peer Review',
-                'verbose_name_plural': 'Peer Reviews',
+                'verbose_name': 'Review',
+                'verbose_name_plural': 'Reviews',
             },
         ),
     ]

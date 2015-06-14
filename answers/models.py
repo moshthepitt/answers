@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from polymorphic import PolymorphicModel
 
 from questions.models import Question, MultipleChoiceOption
-from reviews.models import PeerReview
+from reviews.models import Review
 
 
 class Answer(PolymorphicModel):
@@ -14,8 +14,8 @@ class Answer(PolymorphicModel):
     question = models.ForeignKey(Question, verbose_name=_("Question"), on_delete=models.PROTECT)
     user = models.ForeignKey(
         User, verbose_name=_("User"), on_delete=models.PROTECT, blank=True, null=True, default=None)
-    peer_review = models.ForeignKey(PeerReview, verbose_name=_(
-        "Peer Review"), on_delete=models.PROTECT, blank=True, null=True, default=None)
+    review = models.ForeignKey(Review, verbose_name=_(
+        "Review"), on_delete=models.PROTECT, blank=True, null=True, default=None)
 
     class Meta:
         verbose_name = _("Answer")
@@ -68,11 +68,11 @@ class RatingAnswer(Answer):
     VERY_GOOD = 5
 
     RATING_CHOICES = (
-        (VERY_POOR, _('Very Poor')),
-        (POOR, _('Poor')),
-        (AVERAGE, _('Average')),
-        (GOOD, _("Good")),
-        (VERY_GOOD, _("Very Good")),
+        (VERY_POOR, _('Strongly Disagree')),
+        (POOR, _('Disagree')),
+        (AVERAGE, _('Neither Agree Nor Disagree')),
+        (GOOD, _("Agree")),
+        (VERY_GOOD, _("Strongly Agree")),
     )
 
     answer = models.PositiveIntegerField(_("Answer"), choices=RATING_CHOICES)
