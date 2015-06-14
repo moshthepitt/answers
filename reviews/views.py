@@ -4,7 +4,8 @@ from django.core.urlresolvers import reverse
 
 from reviews.models import PeerReview
 from reviews.mixins import PeerReviewMixin
-from questions.forms import make_quiz_form, quiz_form_helper, save_quiz_form
+from reviews.utils import save_peer_review
+from questions.forms import make_quiz_form, quiz_form_helper
 
 
 class PeerReviewView(PeerReviewMixin, FormMixin, DetailView):
@@ -24,7 +25,7 @@ class PeerReviewView(PeerReviewMixin, FormMixin, DetailView):
             return self.form_invalid(form)
 
     def form_valid(self, form):
-        save_quiz_form(self.object.quiz, form)
+        save_peer_review(self.object.quiz, form)
         return super(PeerReviewView, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
