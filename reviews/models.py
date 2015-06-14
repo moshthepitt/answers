@@ -20,6 +20,5 @@ class PeerReview(models.Model):
     def __str__(self):
         return "{user} {quiz}".format(user=self.user.userprofile.get_display_name(), quiz=self.quiz.title)
 
-    @models.permalink
     def get_absolute_url(self):
         return reverse('reviews:peer_review', args=[self.pk])

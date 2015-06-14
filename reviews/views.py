@@ -3,10 +3,11 @@ from django.views.generic.edit import FormMixin
 from django.core.urlresolvers import reverse
 
 from reviews.models import PeerReview
+from reviews.mixins import PeerReviewMixin
 from questions.forms import make_quiz_form, quiz_form_helper, save_quiz_form
 
 
-class PeerReviewView(FormMixin, DetailView):
+class PeerReviewView(PeerReviewMixin, FormMixin, DetailView):
     model = PeerReview
 
     def get_success_url(self):

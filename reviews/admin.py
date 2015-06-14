@@ -1,3 +1,9 @@
 from django.contrib import admin
 
-# Register your models here.
+from reviews.models import PeerReview
+
+
+class PeerReviewAdmin(admin.ModelAdmin):
+    pass
+
+admin.site.register(PeerReview, PeerReviewAdmin)
