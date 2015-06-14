@@ -2,6 +2,7 @@ from collections import OrderedDict
 
 from django.forms.models import fields_for_model
 from django.forms import BaseForm
+from django.utils.translation import ugettext as _
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit
@@ -28,7 +29,7 @@ def quiz_form_helper(quiz):
     helper.form_id = 'quiz-{}-form'.format(quiz.id)
     helper.form_method = 'post'
     helper.layout = Layout(*form.base_fields.keys())
-    helper.add_input(Submit('submit', 'Submit', css_class='btn-success'))
+    helper.add_input(Submit('submit', _('Submit'), css_class='btn-success'))
     return helper
 
 

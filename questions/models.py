@@ -108,12 +108,13 @@ class Quiz(models.Model):
     def get_questions(self):
         return self.question_set.all().order_by(self.get_question_order())
 
+    @models.permalink
     def get_absolute_url(self):
         return reverse('questions:quiz', args=[self.slug])
 
     class Meta:
-        verbose_name = _("Quiz")
-        verbose_name_plural = _("Quizzes")
+        verbose_name = _("Question Set")
+        verbose_name_plural = _("Question Sets")
 
     def __str__(self):
         return self.title

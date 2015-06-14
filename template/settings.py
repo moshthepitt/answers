@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     'users',
     'questions',
     'answers',
+    'reviews',
     # third party
     'allauth',
     'allauth.account',

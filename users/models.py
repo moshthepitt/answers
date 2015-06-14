@@ -14,7 +14,12 @@ class UserProfile(models.Model):
     updated_on = models.DateTimeField(_("Updated on"), auto_now=True)
     user = models.OneToOneField(User, verbose_name=_("User"))
 
-    def __unicode__(self):
+    def get_display_name(self):
+        if self.user.get_full_name():
+            return self.user.get_full_name()
+        return self.user.username
+
+    def __str__(self):
         return _("{user}'s profile").format(user=self.user)
 
 
