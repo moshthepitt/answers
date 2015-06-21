@@ -53,6 +53,7 @@ INSTALLED_APPS = (
     # 'allauth.socialaccount.providers.twitter',
     'crispy_forms',
     'debug_toolbar',
+    'datatableview',
     'compressor',
     # 'cacheops',
     'suit_redactor',

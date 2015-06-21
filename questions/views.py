@@ -1,6 +1,10 @@
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormMixin
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse_lazy, reverse
+from django.utils.translation import ugettext as _
+from django.utils.html import format_html
+
+from datatableview.views import DatatableView
 
 from questions.models import Quiz
 from questions.forms import make_quiz_form, quiz_form_helper, save_quiz_form
@@ -36,3 +40,22 @@ class QuizView(FormMixin, DetailView):
     def dispatch(self, *args, **kwargs):
         self.object = self.get_object()
         return super(QuizView, self).dispatch(*args, **kwargs)
+
+
+class QuizDatatableView(DatatableView):
+    model = Quiz
+    template_name = "questions/quiz_list.html"
+    datatable_options = {
+        'structure_template': "datatableview/bootstrap_structure.html",
+        'columns': [
+            'title',
+            (_("Actions"), 'id', 'get_actions'),
+        ],
+        'search_fields': ['title'],
+        'unsortable_columns': ['id'],
+    }
+
+    def get_actions(self, instance, *args, **kwargs):
+        return format_html(
+            '<a href="{}">Edit</a>', reverse('questions:quiz', args=[instance.pk])
+        )
