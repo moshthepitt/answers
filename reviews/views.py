@@ -1,9 +1,16 @@
 from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView
+from django.views.generic.edit import UpdateView
 from django.views.generic.edit import FormMixin
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
+from django.utils.translation import ugettext as _
+from django.utils.html import format_html
+
+from datatableview.views import DatatableView
 
 from reviews.models import Review
 from reviews.mixins import ReviewMixin
+from reviews.forms import ReviewForm, PeerReviewForm
 from questions.forms import make_quiz_form, quiz_form_helper, save_quiz_form
 
 
@@ -37,3 +44,69 @@ class ReviewView(ReviewMixin, FormMixin, DetailView):
     def dispatch(self, *args, **kwargs):
         self.object = self.get_object()
         return super(ReviewView, self).dispatch(*args, **kwargs)
+
+
+class ReviewUpdate(UpdateView):
+    model = Review
+    form_class = ReviewForm
+    template_name = "reviews/review_edit.html"
+    success_url = reverse_lazy('reviews:review_list')
+
+
+class ReviewAdd(CreateView):
+    model = Review
+    form_class = ReviewForm
+    template_name = "reviews/review_add.html"
+    success_url = reverse_lazy('reviews:review_list')
+
+
+PeerReviewUpdate = ReviewUpdate.as_view(form_class=PeerReviewForm)
+PeerReviewAdd = ReviewAdd.as_view(form_class=PeerReviewForm)
+
+
+class ReviewDatatableView(DatatableView):
+    model = Review
+    template_name = "reviews/review_list.html"
+    datatable_options = {
+        'structure_template': "datatableview/bootstrap_structure.html",
+        'columns': [
+            'title',
+            (_("Actions"), 'id', 'get_actions'),
+        ],
+        'search_fields': ['title'],
+        'unsortable_columns': ['id'],
+    }
+    review_type = None
+
+    def get_queryset(self):
+        queryset = super(ReviewDatatableView, self).get_queryset()
+        return queryset.filter(user=None)
+
+    def get_actions(self, instance, *args, **kwargs):
+        return format_html(
+            '<a href="{}">Edit</a>', reverse('reviews:review_edit', args=[instance.pk])
+        )
+
+
+class PeerReviewDatatableView(DatatableView):
+    model = Review
+    template_name = "reviews/peer_review_list.html"
+    datatable_options = {
+        'structure_template': "datatableview/bootstrap_structure.html",
+        'columns': [
+            'title',
+            (_("Actions"), 'id', 'get_actions'),
+        ],
+        'search_fields': ['title'],
+        'unsortable_columns': ['id'],
+    }
+    review_type = None
+
+    def get_queryset(self):
+        queryset = super(PeerReviewDatatableView, self).get_queryset()
+        return queryset.exclude(user=None)
+
+    def get_actions(self, instance, *args, **kwargs):
+        return format_html(
+            '<a href="{}">Edit</a>', reverse('reviews:peer_review_edit', args=[instance.pk])
+        )

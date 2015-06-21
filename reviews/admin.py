@@ -4,6 +4,6 @@ from reviews.models import Review
 
 
 class ReviewAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['title', 'user', 'quiz']
 
 admin.site.register(Review, ReviewAdmin)

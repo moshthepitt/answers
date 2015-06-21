@@ -10,9 +10,11 @@ class Review(models.Model):
     created_on = models.DateTimeField(_("Created on"), auto_now_add=True)
     updated_on = models.DateTimeField(_("Updated on"), auto_now=True)
     title = models.CharField(_("Title"), max_length=300, blank=True)
-    user = models.ForeignKey(User, verbose_name=_("User"), on_delete=models.PROTECT, blank=True, null=True, default=None)
+    user = models.ForeignKey(User, verbose_name=_("User"), help_text=_(
+        "The person being reviewed"), on_delete=models.PROTECT, blank=True, null=True, default=None)
     quiz = models.ForeignKey(Quiz, verbose_name=_("Question Set"), on_delete=models.PROTECT)
-    reviewers = models.ManyToManyField(User, verbose_name=_("Reviewers"), related_name='peer_reviewers', blank=True)
+    reviewers = models.ManyToManyField(User, verbose_name=_("Reviewers"), help_text=_(
+        "The people who are going to take this review"), related_name='peer_reviewers', blank=True)
 
     class Meta:
         verbose_name = _("Review")
