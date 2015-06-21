@@ -4,11 +4,12 @@ from collections import OrderedDict
 from django.forms.models import fields_for_model
 from django.forms import BaseForm, ModelForm
 from django.utils.translation import ugettext as _
+from django.forms.models import inlineformset_factory
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, HTML, Field, ButtonHolder
 
-from questions.models import MultipleChoiceOption, MultipleChoiceQuestion, Quiz
+from questions.models import MultipleChoiceOption, MultipleChoiceQuestion, Quiz, Question
 
 
 class QuizForm(ModelForm):
@@ -31,6 +32,21 @@ class QuizForm(ModelForm):
                 HTML("<a class='btn btn-default' href='{% url \"questions:quiz_list\" %}'>Cancel</a>")
             )
         )
+
+
+class QuestionForm(ModelForm):
+
+    class Meta:
+        model = Question
+        fields = ['title']
+
+    def __init__(self, *args, **kwargs):
+        super(QuestionForm, self).__init__(*args, **kwargs)
+        self.fields['title'].true = False
+
+
+# QuestionFormSet = inlineformset_factory(
+#     Quiz, Question, form=QuestionForm, can_delete=True, extra=5)
 
 
 def make_quiz_form(quiz):

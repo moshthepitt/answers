@@ -2,6 +2,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView
 from django.views.generic.edit import UpdateView
 from django.views.generic.edit import FormMixin
+from django.views.generic import FormView
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.utils.translation import ugettext as _
 from django.utils.html import format_html
@@ -9,7 +10,7 @@ from django.utils.html import format_html
 from datatableview.views import DatatableView
 
 from questions.models import Quiz
-from questions.forms import QuizForm
+from questions.forms import QuizForm#, QuestionFormSet
 from questions.forms import make_quiz_form, quiz_form_helper, save_quiz_form
 
 
@@ -60,7 +61,8 @@ class QuizDatatableView(DatatableView):
 
     def get_actions(self, instance, *args, **kwargs):
         return format_html(
-            '<a href="{}">Edit</a>', reverse('questions:quiz_edit', args=[instance.pk])
+            '<a href="{}">Edit</a> <a href="{}">Questions</a>', reverse(
+                'questions:quiz_edit', args=[instance.pk]), reverse('questions:quiz_questions', args=[instance.pk])
         )
 
 
@@ -76,3 +78,31 @@ class QuizAdd(CreateView):
     form_class = QuizForm
     template_name = "questions/quiz_add.html"
     success_url = reverse_lazy('questions:quiz_list')
+
+
+# class QuizQuestions(UpdateView):
+#     form_class = QuizForm
+#     template_name = 'questions/quiz_questions.html'
+
+#     def get_context_data(self, **kwargs):
+#         data = super(QuizQuestions, self).get_context_data(**kwargs)
+#         if self.request.POST:
+#             data['QuestionFormSet'] = QuestionFormSet(self.request.POST, instance=self.get_object())
+#         else:
+#             data['QuestionFormSet'] = QuestionFormSet(instance=self.get_object())
+#         return data
+
+#     def form_valid(self, form):
+#         # context = self.get_context_data()
+#         # sponsorships = context['sponsorships']
+#         # with transaction.commit_on_success():
+#         #     form.instance.created_by = self.request.user
+#         #     form.instance.updated_by = self.request.user
+#         #     self.object = form.save()
+#         # if sponsorships.is_valid():
+#         #     sponsorships.instance = self.object
+#         #     sponsorships.save()
+#         return super(QuizQuestions, self).form_valid(form)
+
+#     def get_success_url(self):
+#         return reverse('sponsors')

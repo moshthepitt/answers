@@ -67,7 +67,6 @@
                 <ul class="nav">
                     {% if request.user.is_authenticated %}
                     <li><a href="{% url 'dashboard' %}"><i class="glyphicon glyphicon-home"></i> {% trans "Dashboard" %}</a></li>
-                    <li><a href="{% url 'account_logout' %}"><i class="glyphicon glyphicon-user"></i> {% trans "Logout" %}</a></li>
                     <li class="submenu">
                          <a href="{% url 'questions:quiz_list' %}">
                             <i class="glyphicon glyphicon-list"></i> {% trans "Question Sets" %}
@@ -81,7 +80,7 @@
                     </li>
                     <li class="submenu">
                          <a href="{% url 'reviews:review_list' %}">
-                            <i class="glyphicon glyphicon-list"></i> {% trans "Reviews" %}
+                            <i class="glyphicon glyphicon-list-alt"></i> {% trans "Reviews" %}
                             <span class="caret pull-right"></span>
                          </a>
                          <!-- Sub menu -->
@@ -92,6 +91,7 @@
                             <li><a href="{% url 'reviews:peer_review_add' %}">{% trans "Add Peer Review" %}</a></li>
                         </ul>
                     </li>
+                    <li><a href="{% url 'account_logout' %}"><i class="glyphicon glyphicon-user"></i> {% trans "Logout" %}</a></li>
                     {% else %}
                     <li><a href="{% url 'account_login' %}"><i class="glyphicon glyphicon-user"></i> {% trans "Login" %}</a></li>
                     {% endif %}

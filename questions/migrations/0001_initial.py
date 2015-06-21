@@ -78,8 +78,8 @@ class Migration(migrations.Migration):
                 ('updated_on', models.DateTimeField(auto_now=True, verbose_name='Updated on')),
                 ('title', models.CharField(max_length=300, verbose_name='Title')),
                 ('slug', autoslug.fields.AutoSlugField(editable=True, unique=True, populate_from=b'title')),
-                ('description', models.TextField(help_text='A more detailed description of the quiz', verbose_name='Description', blank=True)),
-                ('question_ordering', models.CharField(default=b'2', help_text='How should the questions in this quix be ordered?', max_length=1, verbose_name='Question Ordering', choices=[(b'1', 'Date'), (b'2', 'Alphabetical'), (b'3', 'Random')])),
+                ('description', models.TextField(help_text='A more detailed description of the question set', verbose_name='Description', blank=True)),
+                ('question_ordering', models.CharField(default=b'2', help_text='How should the questions in this question set be ordered?', max_length=1, verbose_name='Question Ordering', choices=[(b'1', 'Date'), (b'2', 'Alphabetical'), (b'3', 'Random')])),
                 ('max_questions', models.PositiveIntegerField(default=None, help_text='Number of questions to be answered on each attempt.', null=True, verbose_name='Max Questions', blank=True)),
                 ('answers_after_question', models.BooleanField(default=False, help_text='Show answers after each question?', verbose_name='Answers after question')),
                 ('answers_at_end', models.BooleanField(default=False, help_text='Show answers at the end of the whole quiz?', verbose_name='Answers at end')),
@@ -166,7 +166,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='question',
             name='quiz',
-            field=models.ManyToManyField(to='questions.Quiz', verbose_name='Quiz', blank=True),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, verbose_name='Quuestion Set', to='questions.Quiz'),
         ),
         migrations.AddField(
             model_name='multiplechoiceoption',

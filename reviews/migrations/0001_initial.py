@@ -3,13 +3,12 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 import django.db.models.deletion
-from django.conf import settings
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ('users', '0001_initial'),
         ('questions', '0001_initial'),
     ]
 
@@ -22,10 +21,11 @@ class Migration(migrations.Migration):
                 ('updated_on', models.DateTimeField(auto_now=True, verbose_name='Updated on')),
                 ('title', models.CharField(max_length=300, verbose_name='Title', blank=True)),
                 ('quiz', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, verbose_name='Question Set', to='questions.Quiz')),
-                ('reviewers', models.ManyToManyField(related_name='peer_reviewers', verbose_name='Reviewers', to=settings.AUTH_USER_MODEL, blank=True)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, default=None, blank=True, to=settings.AUTH_USER_MODEL, null=True, verbose_name='User')),
+                ('reviewers', models.ManyToManyField(help_text='The people who are going to take this review', related_name='peer_reviewers', verbose_name='Reviewers', to='users.UserProfile', blank=True)),
+                ('userprofile', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, default=None, to='users.UserProfile', blank=True, help_text='The person being reviewed', null=True, verbose_name='User')),
             ],
             options={
+                'ordering': ['created_on'],
                 'verbose_name': 'Review',
                 'verbose_name_plural': 'Reviews',
             },

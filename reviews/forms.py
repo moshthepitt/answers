@@ -34,7 +34,7 @@ class PeerReviewForm(ModelForm):
 
     class Meta:
         model = Review
-        fields = ['title', 'user', 'quiz', 'reviewers']
+        fields = ['title', 'userprofile', 'quiz', 'reviewers']
 
     def __init__(self, *args, **kwargs):
         super(PeerReviewForm, self).__init__(*args, **kwargs)
@@ -43,7 +43,7 @@ class PeerReviewForm(ModelForm):
         self.helper.form_method = 'post'
         self.helper.layout = Layout(
             Field('title'),
-            Field('user'),
+            Field('userprofile'),
             Field('quiz'),
             Field('reviewers'),
             ButtonHolder(
