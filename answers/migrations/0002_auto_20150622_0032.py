@@ -3,14 +3,13 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 import django.db.models.deletion
-from django.conf import settings
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
         ('answers', '0001_initial'),
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ('users', '0001_initial'),
         ('questions', '0001_initial'),
         ('reviews', '0001_initial'),
     ]
@@ -28,8 +27,8 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='answer',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, default=None, blank=True, to=settings.AUTH_USER_MODEL, null=True, verbose_name='User'),
+            name='userprofile',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, default=None, blank=True, to='users.UserProfile', null=True, verbose_name='User'),
         ),
         migrations.AddField(
             model_name='multiplechoiceanswer',
