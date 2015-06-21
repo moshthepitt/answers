@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block all_content %} 
+	<h3>{% trans "Reviews" %}</h3>
+	{% if object_list %}
+	  <div class="table-responsive">
+	    <table class="table">
+	      <tbody>
+	      	{% for object in object_list %}
+	      		<tr>
+	      			<td><a href="{% url 'reports:review' object.pk %}">{{object}}</a></td>
+	      		</tr>
+	      	{% endfor %}
+	      </tbody>
+	    </table>
+	  </div>
+  	{% endif %}
+{% endblock %}

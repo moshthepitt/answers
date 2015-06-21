@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 {% load staticfiles %}
 {% load compress %}
-
+{% load i18n %}
 <html lang="en">
   <head> 
     <meta charset="utf-8">
@@ -31,45 +31,68 @@
 
   <body>
 
-    <div class="container">
-      <div class="header">
-        <nav>
-          <ul class="nav nav-pills pull-right">
-            <li role="presentation" class="active"><a href="{% url 'home' %}">Home</a></li>
-            <li role="presentation"><a href="#">Another Link</a></li>
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">{% trans "Toggle navigation" %}</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="{% url 'home' %}">{{site.name}}</a>
+        </div>
+        <div class="collapse navbar-collapse pull-right">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="{% url 'home' %}">{% trans "Home" %}</a></li>
+            {% if request.user.is_authenticated %}
+            <li><a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans "Account" %} <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="{% url 'account_change_password' %}">{% trans "Change password" %}</a></li>
+              </ul>
+            </li>
+            <li><a href="{% url 'account_logout' %}">{% trans "Logout" %}</a></li>
+            {% else %}
+            <li><a href="{% url 'account_login' %}">{% trans "Login" %}</a></li>
+            {% endif %}
           </ul>
-        </nav>
-        <h3 class="text-muted">{{site.name}}</h3>
+        </div><!--/.nav-collapse -->
       </div>
+    </div>
 
-      {% block messages %}
-      {% if messages %}
-          {% for message in messages %}
-          <div class="alert alert-{% if message.tags %}{{ message.tags }}{% endif %} alert-dismissible" role="alert">
-            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-            {{ message }}
+    <div id="wrap">
+      <div class="container">
+
+        {% block messages %}
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{% if message.tags %}{{ message.tags }}{% endif %} alert-dismissible" role="alert">
+              <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+              {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}        
+        {% endblock %}
+
+        {% block all_content %} 
+        <div class="row">
+          <div class="col-md-9" id="main-content">
+          {% block main_content %}{% endblock %}
           </div>
-          {% endfor %}
-      {% endif %}        
-      {% endblock %}
-
-      {% block all_content %} 
-      <div class="row">
-        <div class="col-md-9" id="main-content">
-        {% block main_content %}{% endblock %}
+          <div class="col-md-3" id="sidebar">
+          {% block sidebar_content %}{% endblock %}
+          </div>
         </div>
-        <div class="col-md-3" id="sidebar">
-        {% block sidebar_content %}{% endblock %}
-        </div>
-      </div>
-      {% endblock %}
+        {% endblock %}
 
-      <footer class="footer">
-        <p>&copy; {{ site.name }} {% now "Y" %}</p>
-      </footer>
+        <footer class="footer">
+          <p>&copy; {{ site.name }} {% now "Y" %}</p>
+        </footer>
 
-    </div> <!-- /container -->
-
+      </div> <!-- /container -->
+    </div>
     
     {% compress js %}
     <script src="{% static 'js/jquery.min.js' %}"></script>

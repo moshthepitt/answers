@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block all_content %} 
+  <h3>{% trans "Dashboard" %}</h3>
+
+  <p>{% trans "Welcome back" %} {{request.user.userprofile.get_display_name}}</p>
+
+  {% if pending_reviews %}
+  <div class="list-group">    
+    {% for review in pending_reviews %}
+    	<a href="{{review.get_absolute_url}}" class="list-group-item">{{review}}</a>
+    {% endfor %}
+  </div>
+  {% endif %}
+{% endblock %}

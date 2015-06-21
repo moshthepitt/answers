@@ -15,6 +15,7 @@ urlpatterns = patterns('',
 
     url(r'^q/', include('questions.urls', namespace='questions')),
     url(r'^reviews/', include('reviews.urls', namespace='reviews')),
+    url(r'^reports/', include('reports.urls', namespace='reports')),
 
     url(r'^page/', include('django.contrib.flatpages.urls')),
 )

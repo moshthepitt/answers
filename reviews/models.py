@@ -17,12 +17,13 @@ class Review(models.Model):
     class Meta:
         verbose_name = _("Review")
         verbose_name_plural = _("Reviews")
+        ordering = ['created_on']
 
     def __str__(self):
-        if self.title:
+        if self.user:
+            return _("Peer Review: {user}").format(user=self.user.userprofile.get_display_name())
+        elif self.title:
             return self.title
-        elif self.user:
-            return "{user} {quiz}".format(user=self.user.userprofile.get_display_name(), quiz=self.quiz.title)
         else:
             return "{quiz}".format(quiz=self.quiz.title)
 

@@ -2,5 +2,7 @@
 {% load crispy_forms_tags %}
 
 {% block all_content %} 
-  {% crispy form form_helper %}
+	<h3>{{object}}</h3>
+	<p>{{object.quiz.description}}</p>
+ 	{% crispy form form_helper %}
 {% endblock %}
