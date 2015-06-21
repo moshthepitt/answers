@@ -1,8 +1,16 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 
-{% block all_content %} 
-	<h3>{{object}}</h3>
-	<p>{{object.quiz.description}}</p>
- 	{% crispy form form_helper %}
+{% block page_content %} 
+	<div class="row">
+		<div class="col-md-12">
+			<div class="content-box-header">
+				<div class="panel-title">{{object}}</div>
+			</div>
+			<div class="content-box-large box-with-header">
+				<p>{{object.quiz.description}}</p>
+				{% crispy form form_helper %}
+			</div>
+		</div>
+	</div>
 {% endblock %}

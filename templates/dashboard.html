@@ -1,16 +1,28 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block all_content %} 
-  <h3>{% trans "Dashboard" %}</h3>
-
-  <p>{% trans "Welcome back" %} {{request.user.userprofile.get_display_name}}</p>
-
-  {% if pending_reviews %}
-  <div class="list-group">    
-    {% for review in pending_reviews %}
-    	<a href="{{review.get_absolute_url}}" class="list-group-item">{{review}}</a>
-    {% endfor %}
-  </div>
-  {% endif %}
+{% block page_content %} 
+	<div class="row">	  
+	  <div class="col-md-6">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="content-box-header">
+					<div class="panel-title">{% trans "Pending Reviews" %}</div>
+				</div>
+				<div class="content-box-large box-with-header">
+					{% if pending_reviews %}
+						<p>{% trans "Please complete the following reviews:" %}</p>
+						<div class="list-group">    
+						  {% for review in pending_reviews %}
+						  	<a href="{{review.get_absolute_url}}" class="list-group-item list-group-item-info">{{review}}</a>
+						  {% endfor %}
+						</div>
+					{% else %}
+						<p>{% trans "No pending reviews" %}</p>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	  </div>	  
+	</div>
 {% endblock %}

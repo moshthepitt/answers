@@ -11,7 +11,7 @@ class ReviewView(ReviewMixin, FormMixin, DetailView):
     model = Review
 
     def get_success_url(self):
-        return reverse('home')
+        return reverse('dashboard')
 
     def get_form_class(self):
         return make_quiz_form(self.object.quiz)
