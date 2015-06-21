@@ -1,4 +1,6 @@
 from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView
+from django.views.generic.edit import UpdateView
 from django.views.generic.edit import FormMixin
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.utils.translation import ugettext as _
@@ -7,6 +9,7 @@ from django.utils.html import format_html
 from datatableview.views import DatatableView
 
 from questions.models import Quiz
+from questions.forms import QuizForm
 from questions.forms import make_quiz_form, quiz_form_helper, save_quiz_form
 
 
@@ -57,5 +60,19 @@ class QuizDatatableView(DatatableView):
 
     def get_actions(self, instance, *args, **kwargs):
         return format_html(
-            '<a href="{}">Edit</a>', reverse('questions:quiz', args=[instance.pk])
+            '<a href="{}">Edit</a>', reverse('questions:quiz_edit', args=[instance.pk])
         )
+
+
+class QuizUpdate(UpdateView):
+    model = Quiz
+    form_class = QuizForm
+    template_name = "questions/quiz_edit.html"
+    success_url = reverse_lazy('questions:quiz_list')
+
+
+class QuizAdd(CreateView):
+    model = Quiz
+    form_class = QuizForm
+    template_name = "questions/quiz_add.html"
+    success_url = reverse_lazy('questions:quiz_list')

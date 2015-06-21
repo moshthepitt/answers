@@ -1,13 +1,36 @@
+# -*- coding: utf-8 -*-
 from collections import OrderedDict
 
 from django.forms.models import fields_for_model
-from django.forms import BaseForm
+from django.forms import BaseForm, ModelForm
 from django.utils.translation import ugettext as _
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit
+from crispy_forms.layout import Layout, Submit, HTML, Field, ButtonHolder
 
-from questions.models import MultipleChoiceOption, MultipleChoiceQuestion
+from questions.models import MultipleChoiceOption, MultipleChoiceQuestion, Quiz
+
+
+class QuizForm(ModelForm):
+
+    class Meta:
+        model = Quiz
+        fields = ['title', 'description', 'question_ordering']
+
+    def __init__(self, *args, **kwargs):
+        super(QuizForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_id = 'location-form'
+        self.helper.form_method = 'post'
+        self.helper.layout = Layout(
+            Field('title'),
+            Field('description'),
+            Field('question_ordering'),
+            ButtonHolder(
+                Submit('submit', _('Save'), css_class='btn-success'),
+                HTML("<a class='btn btn-default' href='{% url \"questions:quiz_list\" %}'>Cancel</a>")
+            )
+        )
 
 
 def make_quiz_form(quiz):

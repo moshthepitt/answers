@@ -76,7 +76,7 @@
                          <!-- Sub menu -->
                          <ul>
                             <li><a href="{% url 'questions:quiz_list' %}">{% trans "View Question Sets" %}</a></li>
-                            <li><a href="signup.html">{% trans "Add Question Set" %}</a></li>
+                            <li><a href="{% url 'questions:quiz_add' %}">{% trans "Add Question Set" %}</a></li>
                         </ul>
                     </li>
                     {% else %}

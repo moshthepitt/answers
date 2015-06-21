@@ -41,7 +41,7 @@ class Category(MPTTModel):
 
 class Quiz(models.Model):
 
-    """A quiz is a collection os questions"""
+    """A quiz is a collection of questions"""
 
     # ordering choices
     DATE_ORDER = '1'
@@ -57,12 +57,13 @@ class Quiz(models.Model):
     created_on = models.DateTimeField(_("Created on"), auto_now_add=True)
     updated_on = models.DateTimeField(_("Updated on"), auto_now=True)
     title = models.CharField(_("Title"), max_length=300, blank=False)
-    slug = AutoSlugField(populate_from='title', editable=True, unique=True, null=False, max_length=255)
+    slug = AutoSlugField(
+        populate_from='title', editable=True, unique=True, null=False, max_length=255)
     category = models.ForeignKey(Category, null=True, blank=True, verbose_name=_("Category"))
     description = models.TextField(
-        _("Description"), blank=True, help_text=_("A more detailed description of the quiz"))
+        _("Description"), blank=True, help_text=_("A more detailed description of the question set"))
     question_ordering = models.CharField(
-        _("Question Ordering"), max_length=1, choices=QUESTION_ORDERING_CHOICES, blank=False, default=ALPHABETICAL_ORDER, help_text=_("How should the questions in this quix be ordered?"))
+        _("Question Ordering"), max_length=1, choices=QUESTION_ORDERING_CHOICES, blank=False, default=ALPHABETICAL_ORDER, help_text=_("How should the questions in this question set be ordered?"))
     max_questions = models.PositiveIntegerField(
         blank=True, null=True, default=None, verbose_name=_("Max Questions"),
         help_text=_("Number of questions to be answered on each attempt."))
