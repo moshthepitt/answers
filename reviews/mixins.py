@@ -11,9 +11,9 @@ class ReviewMixin(object):
     def dispatch(self, *args, **kwargs):
         review = self.get_object()
         # dont allow a non reviewer to review
-        if review.reviewers.all() and (self.request.user not in review.reviewers.all()):
-            return redirect('home')
+        if review.reviewers.all() and (self.request.user.userprofile not in review.reviewers.all()):
+            return redirect('dashboard')
         # not more than one reviews
-        if Answer.objects.filter(user=self.request.user).filter(review=review).exists():
-            return redirect('home')
+        if Answer.objects.filter(userprofile=self.request.user.userprofile).filter(review=review).exists():
+            return redirect('dashboard')
         return super(ReviewMixin, self).dispatch(*args, **kwargs)

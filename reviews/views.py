@@ -80,7 +80,7 @@ class ReviewDatatableView(DatatableView):
 
     def get_queryset(self):
         queryset = super(ReviewDatatableView, self).get_queryset()
-        return queryset.filter(user=None)
+        return queryset.filter(userprofile=None)
 
     def get_actions(self, instance, *args, **kwargs):
         return format_html(
@@ -104,7 +104,7 @@ class PeerReviewDatatableView(DatatableView):
 
     def get_queryset(self):
         queryset = super(PeerReviewDatatableView, self).get_queryset()
-        return queryset.exclude(user=None)
+        return queryset.exclude(userprofile=None)
 
     def get_actions(self, instance, *args, **kwargs):
         return format_html(

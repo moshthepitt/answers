@@ -9,7 +9,7 @@ from django.forms.models import inlineformset_factory
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, HTML, Field, ButtonHolder
 
-from questions.models import MultipleChoiceOption, MultipleChoiceQuestion, Quiz, Question
+from questions.models import MultipleChoiceOption, MultipleChoiceQuestion, Quiz, RatingQuestion
 
 
 class QuizForm(ModelForm):
@@ -37,16 +37,25 @@ class QuizForm(ModelForm):
 class QuestionForm(ModelForm):
 
     class Meta:
-        model = Question
+        model = RatingQuestion
         fields = ['title']
 
     def __init__(self, *args, **kwargs):
         super(QuestionForm, self).__init__(*args, **kwargs)
-        self.fields['title'].true = False
+        self.fields['title'].required = True
 
 
-# QuestionFormSet = inlineformset_factory(
-#     Quiz, Question, form=QuestionForm, can_delete=True, extra=5)
+class QuestionFormSetHelper(FormHelper):
+
+    def __init__(self, *args, **kwargs):
+        super(QuestionFormSetHelper, self).__init__(*args, **kwargs)
+        self.form_tag = False
+        self.form_method = 'post'
+        self.template = 'bootstrap3/table_inline_formset.html'
+
+
+QuestionFormSet = inlineformset_factory(
+    Quiz, RatingQuestion, form=QuestionForm, can_delete=True, extra=5)
 
 
 def make_quiz_form(quiz):
@@ -81,7 +90,7 @@ def save_quiz_form(quiz, form, user=None, review=None):
             answer = AnswerModel(
                 question=question,
                 answer=questions_answer,
-                user=user,
+                userprofile=user.userprofile,
                 review=review
             )
             answer.save()

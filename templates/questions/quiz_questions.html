@@ -9,7 +9,12 @@
 				<div class="panel-title">{% trans "Edit Questions" %} {{object}}</div>
 			</div>
 			<div class="content-box-large box-with-header">
-				{% crispy QuestionFormSet %}
+				<form method="post">
+					{% csrf_token %}
+					{% crispy QuestionFormSet QuestionFormSetHelper %}
+					<input type="submit" class="btn btn-success" value="Submit" />
+					<a href="{% url 'questions:quiz_list' %}" class="btn btn-default">{% trans "Cancel" %}</a>
+				</form>
 			</div>
 		</div>
 	</div>
