@@ -1,4 +1,3 @@
-from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 
 from reviews.models import Review
@@ -29,19 +28,6 @@ def user_review_report(review):
     review.company_score = overall_company_score['avg']
     review.company_percentage_score = review.company_score * 100 / 5
     return (review, scores)
-
-
-class ReviewListView(ListView):
-
-    model = Review
-    template_name = "reports/reviews_list.html"
-
-    def get_queryset(self):
-        return Review.objects.exclude(answer=None)
-
-    def get_context_data(self, **kwargs):
-        context = super(ReviewListView, self).get_context_data(**kwargs)
-        return context
 
 
 class ReviewView(DetailView):
