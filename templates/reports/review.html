@@ -16,7 +16,9 @@
 					  	<thead>
 					  		<tr>
 					  			<th width="75%">{% trans "Statement" %}</th>
-					  			<th>{% trans "Individual Score" %}</th>
+					  			{% if show_individual %}
+						  			<th>{% trans "Individual Score" %}</th>
+					  			{% endif %}
 					  			<th>{% trans "Avg Score" %}</th>
 					  		</tr>
 					  	</thead>
@@ -24,13 +26,17 @@
 							{% for question in scores %}
 								<tr>
 									<td>{{question.title}}</td>
-									<td>{{question.percentage_score|floatformat:2}}%</td>
+									{% if show_individual %}
+										<td>{{question.percentage_score|floatformat:2}}%</td>
+									{% endif %}
 									<td>{{question.company_percentage_score|floatformat:2}}%</td>
 								</tr>
 							{% endfor %}
 								<tr>
 									<th>{% trans "Total" %}</th>
-									<th>{{review.percentage_score|floatformat:2}}%</th>
+									{% if show_individual %}
+										<th>{{review.percentage_score|floatformat:2}}%</th>
+									{% endif %}
 									<th>{{review.company_percentage_score|floatformat:2}}%</th>
 								</tr>
 						</tbody>

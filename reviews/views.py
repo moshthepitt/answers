@@ -96,9 +96,10 @@ class PeerReviewDatatableView(DatatableView):
         'structure_template': "datatableview/bootstrap_structure.html",
         'columns': [
             'title',
+            (_("User"), 'userprofile', 'get_user'),
             (_("Actions"), 'id', 'get_actions'),
         ],
-        'search_fields': ['title'],
+        'search_fields': ['title', 'userprofile__user__last_name', 'userprofile__user__first_name', 'userprofile__user__username'],
         'unsortable_columns': ['id'],
     }
     review_type = None
@@ -107,8 +108,11 @@ class PeerReviewDatatableView(DatatableView):
         queryset = super(PeerReviewDatatableView, self).get_queryset()
         return queryset.exclude(userprofile=None)
 
+    def get_user(self, instance, *args, **kwargs):
+        return instance.userprofile.get_display_name()
+
     def get_actions(self, instance, *args, **kwargs):
         return format_html(
             '<a href="{}">Edit</a> | <a href="{}">Report</a>', reverse(
-                'reviews:peer_review_edit', args=[instance.pk]), reverse('reports:review', args=[instance.pk])
+                'reviews:peer_review_edit', args=[instance.pk]), reverse('reports:peer_review', args=[instance.pk])
         )
