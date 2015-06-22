@@ -12,7 +12,7 @@ class UserProfileForm(ModelForm):
 
     class Meta:
         model = UserProfile
-        fields = ['is_manager', 'manager']
+        fields = ['is_manager', 'is_admin', 'manager']
 
     def __init__(self, *args, **kwargs):
         super(UserProfileForm, self).__init__(*args, **kwargs)
@@ -22,6 +22,7 @@ class UserProfileForm(ModelForm):
         self.helper.layout = Layout(
             Field('manager'),
             Field('is_manager'),
+            Field('is_admin'),
             ButtonHolder(
                 Submit('submit', _('Save'), css_class='btn-success'),
                 HTML("<a class='btn btn-default' href='{% url \"users:user_list\" %}'>Cancel</a>")

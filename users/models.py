@@ -17,6 +17,8 @@ class UserProfile(models.Model):
         _("Is Manager"), help_text=_("Is this user a manager"), default=False)
     manager = models.ForeignKey("self", verbose_name=_('Manager'), help_text=_(
         "Select this user's manager"), blank=True, null=True, default=None)
+    is_admin = models.BooleanField(
+        _("Is Administrator"), help_text=_("Should this user have administrative privileges"), default=False)
 
     class Meta:
         verbose_name = _("Staff Profile")
