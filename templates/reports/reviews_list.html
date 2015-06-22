@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% load i18n %}
 
+{% block title %} {% trans "Reviews" %} {% endblock %}
+
 {% block all_content %} 
 	<h3>{% trans "Reviews" %}</h3>
 	{% if object_list %}

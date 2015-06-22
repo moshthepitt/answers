@@ -4,7 +4,7 @@
 {% load i18n %}
 <html>
   <head>
-    <title>{{site.name}}</title>
+    <title>{% block title %}{{site.name}}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% block meta_keywords %}<meta name="keywords" content="" />{% endblock %}
     {% block meta_description %}<meta name="description" content="" />{% endblock %}

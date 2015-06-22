@@ -20,7 +20,7 @@ class UserProfile(models.Model):
         return self.user.username
 
     def __str__(self):
-        return _("{user}'s profile").format(user=self.user)
+        return self.get_display_name()
 
 
 # S I G N A L S
