@@ -17,7 +17,8 @@ class ReviewForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(ReviewForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.form_id = 'reviewn-form'
+        self.fields['reviewers'].required = False
+        self.helper.form_id = 'review-form'
         self.helper.form_method = 'post'
         self.helper.layout = Layout(
             Field('title'),
@@ -39,7 +40,9 @@ class PeerReviewForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(PeerReviewForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.form_id = 'reviewn-form'
+        self.fields['reviewers'].required = False
+        self.fields['userprofile'].required = True
+        self.helper.form_id = 'review-form'
         self.helper.form_method = 'post'
         self.helper.layout = Layout(
             Field('title'),
