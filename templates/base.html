@@ -67,6 +67,7 @@
                 <ul class="nav">
                     {% if request.user.is_authenticated %}
                     <li><a href="{% url 'dashboard' %}"><i class="glyphicon glyphicon-home"></i> {% trans "Dashboard" %}</a></li>
+                    <li><a href="{% url 'reports:report_list' %}"><i class="glyphicon glyphicon-ok"></i> {% trans "Reports" %}</a></li>
                     <li class="submenu">
                          <a href="{% url 'questions:quiz_list' %}">
                             <i class="glyphicon glyphicon-list"></i> {% trans "Question Sets" %}
