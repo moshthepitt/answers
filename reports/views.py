@@ -1,17 +1,9 @@
 from django.views.generic.detail import DetailView
-from django.core.urlresolvers import reverse
-from django.utils.translation import ugettext as _
-from django.utils.html import format_html
 from django.db.models import Value, Avg
 from django.db.models.functions import Coalesce
-from django.shortcuts import get_object_or_404
-from django.http import Http404
-
-from datatableview.views import DatatableView
 
 from reviews.models import Review
 from answers.models import Answer
-from users.models import UserProfile
 
 
 def user_review_report(review):
@@ -49,36 +41,3 @@ class ReviewView(DetailView):
         context['scores'] = report[1]
         context['show_individual'] = self.show_individual
         return context
-
-
-class ReviewersDatatableView(DatatableView):
-    model = UserProfile
-    template_name = "reports/reviewers_list.html"
-    datatable_options = {
-        'structure_template': "datatableview/bootstrap_structure.html",
-        'columns': [
-            (_("Username"), 'user__username'),
-            (_("First Name"), 'user__first_name'),
-            (_("Last Name"), 'user__last_name'),
-            (_("Actions"), 'id', 'get_actions'),
-        ],
-        'search_fields': ['title'],
-        'unsortable_columns': ['id'],
-    }
-    review_type = None
-
-    def get_queryset(self):
-        # queryset = super(ReviewersDatatableView, self).get_queryset()
-        queryset = self.object.userprofile_set.all()
-        return queryset
-
-    def get_actions(self, instance, *args, **kwargs):
-        return format_html(
-            '<a href="{}">Report</a>', 1
-        )
-
-    def dispatch(self, *args, **kwargs):
-        if 'pk' not in kwargs:
-            raise Http404
-        self.object = get_object_or_404(Review, pk=kwargs['pk'])
-        return super(ReviewersDatatableView, self).dispatch(*args, **kwargs)
