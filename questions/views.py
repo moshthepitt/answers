@@ -8,6 +8,7 @@ from django.utils.html import format_html
 from django.shortcuts import render, get_object_or_404, redirect
 
 from datatableview.views import DatatableView
+from core.mixins import AdminMixin
 
 from questions.models import Quiz
 from questions.forms import QuizForm, QuestionFormSet, QuestionFormSetHelper
@@ -18,7 +19,7 @@ class QuizView(FormMixin, DetailView):
     model = Quiz
 
     def get_success_url(self):
-        return reverse('home')
+        return reverse('dashboard')
 
     def get_form_class(self):
         return make_quiz_form(self.object)
@@ -46,7 +47,11 @@ class QuizView(FormMixin, DetailView):
         return super(QuizView, self).dispatch(*args, **kwargs)
 
 
-class QuizDatatableView(DatatableView):
+class QuizDatatableView(AdminMixin, DatatableView):
+    """
+    Allows you to manage question sets
+    """
+
     model = Quiz
     template_name = "questions/quiz_list.html"
     datatable_options = {
@@ -66,14 +71,14 @@ class QuizDatatableView(DatatableView):
         )
 
 
-class QuizUpdate(UpdateView):
+class QuizUpdate(AdminMixin, UpdateView):
     model = Quiz
     form_class = QuizForm
     template_name = "questions/quiz_edit.html"
     success_url = reverse_lazy('questions:quiz_list')
 
 
-class QuizAdd(CreateView):
+class QuizAdd(AdminMixin, CreateView):
     model = Quiz
     form_class = QuizForm
     template_name = "questions/quiz_add.html"

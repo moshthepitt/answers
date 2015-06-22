@@ -4,19 +4,20 @@ from django.utils.translation import ugettext as _
 from django.utils.html import format_html
 
 from datatableview.views import DatatableView
+from core.mixins import AdminMixin
 
 from users.models import UserProfile
 from users.forms import UserProfileForm
 
 
-class UserProfileUpdate(UpdateView):
+class UserProfileUpdate(AdminMixin, UpdateView):
     model = UserProfile
     form_class = UserProfileForm
     template_name = "users/user_edit.html"
     success_url = reverse_lazy('users:user_list')
 
 
-class UserProfileDatatableView(DatatableView):
+class UserProfileDatatableView(AdminMixin, DatatableView):
     model = UserProfile
     template_name = "users/user_list.html"
     datatable_options = {

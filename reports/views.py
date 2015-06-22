@@ -7,6 +7,7 @@ from django.utils.html import format_html
 
 from datatableview.views import DatatableView
 
+from reports.mixins import ReportMixin
 from reviews.models import Review
 from answers.models import Answer
 
@@ -34,7 +35,7 @@ def user_review_report(review):
     return (review, scores)
 
 
-class ReviewView(DetailView):
+class ReviewView(ReportMixin, DetailView):
     model = Review
     template_name = "reports/review.html"
     show_individual = False
