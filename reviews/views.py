@@ -84,7 +84,8 @@ class ReviewDatatableView(DatatableView):
 
     def get_actions(self, instance, *args, **kwargs):
         return format_html(
-            '<a href="{}">Edit</a>', reverse('reviews:review_edit', args=[instance.pk])
+            '<a href="{}">Edit</a> | <a href="{}">Report</a>', reverse(
+                'reviews:review_edit', args=[instance.pk]), reverse('reports:review', args=[instance.pk])
         )
 
 
@@ -108,5 +109,6 @@ class PeerReviewDatatableView(DatatableView):
 
     def get_actions(self, instance, *args, **kwargs):
         return format_html(
-            '<a href="{}">Edit</a>', reverse('reviews:peer_review_edit', args=[instance.pk])
+            '<a href="{}">Edit</a> | <a href="{}">Report</a>', reverse(
+                'reviews:peer_review_edit', args=[instance.pk]), reverse('reports:review', args=[instance.pk])
         )
