@@ -13,6 +13,15 @@ class UserProfile(models.Model):
     created_on = models.DateTimeField(_("Created on"), auto_now_add=True)
     updated_on = models.DateTimeField(_("Updated on"), auto_now=True)
     user = models.OneToOneField(User, verbose_name=_("User"))
+    is_manager = models.BooleanField(
+        _("Is Manager"), help_text=_("Is this user a manager"), default=False)
+    manager = models.ForeignKey("self", verbose_name=_('Manager'), help_text=_(
+        "Select this user's manager"), blank=True, null=True, default=None)
+
+    class Meta:
+        verbose_name = _("Staff Profile")
+        verbose_name_plural = _("Staff Profiles")
+        ordering = ['user__first_name', 'created_on']
 
     def get_display_name(self):
         if self.user.get_full_name():
