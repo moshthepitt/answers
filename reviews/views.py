@@ -61,8 +61,14 @@ class ReviewAdd(AdminMixin, CreateView):
     success_url = reverse_lazy('reviews:review_list')
 
 
-PeerReviewUpdate = ReviewUpdate.as_view(form_class=PeerReviewForm)
-PeerReviewAdd = ReviewAdd.as_view(form_class=PeerReviewForm)
+PeerReviewUpdate = ReviewUpdate.as_view(
+    form_class=PeerReviewForm,
+    success_url=reverse_lazy('reviews:peer_review_list')
+)
+PeerReviewAdd = ReviewAdd.as_view(
+    form_class=PeerReviewForm,
+    success_url=reverse_lazy('reviews:peer_review_list')
+)
 
 
 class ReviewDatatableView(AdminMixin, DatatableView):
