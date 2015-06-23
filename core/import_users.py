@@ -17,6 +17,3 @@ def import_users(filename):
         )
         result = User(**data)
         result.save()
-
-
-

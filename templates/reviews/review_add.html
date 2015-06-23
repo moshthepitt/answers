@@ -1,8 +1,13 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load crispy_forms_tags %}
+{% load staticfiles %}
 
 {% block title %} {% trans "Add Review" %} {% endblock %}
+
+{% block extracss %}
+<link rel="stylesheet" type="text/css" href="{% static 'select2/css/select2.min.css' %}" />
+{% endblock %}
 
 {% block page_content %} 
 	<div class="row">
@@ -15,4 +20,20 @@
 			</div>
 		</div>
 	</div>
+{% endblock %}
+
+{% block extrajs %}
+<script src="{% static 'select2/js/select2.full.min.js' %}"></script>
+<script>
+	$("#select-user").select2({
+		placeholder: "{% trans 'Select a user' %}",
+	});
+	$("#select-quiz").select2({
+		placeholder: "{% trans 'Select a Question Set' %}",
+	});
+	$("#select-reviewers").select2({
+		placeholder: "{% trans 'Select users' %}",
+		allowClear: true
+	});
+</script>
 {% endblock %}

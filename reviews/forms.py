@@ -22,8 +22,8 @@ class ReviewForm(ModelForm):
         self.helper.form_method = 'post'
         self.helper.layout = Layout(
             Field('title'),
-            Field('quiz'),
-            Field('reviewers'),
+            Field('quiz', id="select-quiz"),
+            Field('reviewers', id="select-reviewers"),
             ButtonHolder(
                 Submit('submit', _('Save'), css_class='btn-success'),
                 HTML("<a class='btn btn-default' href='{% url \"reviews:review_list\" %}'>Cancel</a>")
@@ -46,9 +46,9 @@ class PeerReviewForm(ModelForm):
         self.helper.form_method = 'post'
         self.helper.layout = Layout(
             Field('title'),
-            Field('userprofile'),
-            Field('quiz'),
-            Field('reviewers'),
+            Field('userprofile', id="select-user"),
+            Field('quiz', id="select-quiz"),
+            Field('reviewers', id="select-reviewers"),
             ButtonHolder(
                 Submit('submit', _('Save'), css_class='btn-success'),
                 HTML("<a class='btn btn-default' href='{% url \"reviews:peer_review_list\" %}'>Cancel</a>")
