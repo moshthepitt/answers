@@ -23,7 +23,7 @@ class Review(models.Model):
 
     def __str__(self):
         if self.userprofile:
-            return _("Peer Review: {user}").format(user=self.userprofile.get_display_name())
+            return _("{title}: {user}").format(title=self.title, user=self.userprofile.get_display_name())
         elif self.title:
             return self.title
         else:
