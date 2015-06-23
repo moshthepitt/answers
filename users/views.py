@@ -23,13 +23,13 @@ class UserProfileDatatableView(AdminMixin, DatatableView):
     datatable_options = {
         'structure_template': "datatableview/bootstrap_structure.html",
         'columns': [
-            (_("Username"), 'user__username'),
             (_("First Name"), 'user__first_name'),
             (_("Last Name"), 'user__last_name'),
+            (_("Email"), 'user__email'),
             'manager',
             (_("Actions"), 'id', 'get_actions'),
         ],
-        'search_fields': ['userprofile__user__last_name', 'userprofile__user__first_name', 'userprofile__user__username'],
+        'search_fields': ['userprofile__user__last_name', 'userprofile__user__first_name', 'userprofile__user__email'],
         'unsortable_columns': ['id'],
     }
 
