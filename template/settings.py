@@ -152,6 +152,7 @@ SOCIALACCOUNT_PROVIDERS = {
         'METHOD': 'js_sdk'  # instead of 'oauth2'
     }
 }
+ACCOUNT_USERNAME_BLACKLIST = ['mosh', 'moshthepitt', 'kelvin', 'nicole', 'jay', "wambere"]
 
 # crispy forms
 CRISPY_TEMPLATE_PACK = 'bootstrap3'

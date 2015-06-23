@@ -7,7 +7,10 @@
 {% block head_title %}{% trans "Signup" %}{% endblock %}
 
 {% block content %}
-<h3>{% trans "Sign Up" %}</h3>
+<h3>{% trans "Sign Up Closed" %}</h3>
+
+<p>{% trans "We are sorry, but the sign up is currently closed." %}</p>
+<!--h3>{% trans "Sign Up" %}</h3>
 
 <p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
 
@@ -18,7 +21,7 @@
   <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
   {% endif %}
   <button type="submit" class="btn btn-primary">{% trans "Sign Up" %} &raquo;</button>
-</form>
+</form>-->
 
 
 {% endblock %}
