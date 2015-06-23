@@ -15,6 +15,7 @@ django-suit==0.2.13
 django-suit-redactor==0.0.2
 funcy==1.5
 oauthlib==0.7.2
+psycopg2==2.6.1
 pyinotify==0.9.6
 python-dateutil==2.4.2
 python-openid==2.2.5
