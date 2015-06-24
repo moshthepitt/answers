@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load staticfiles %}
+
+{% block title %} {% trans "Sittings" %} {% endblock %}
+
+{% block extracss %}
+	<link type="text/css" rel="stylesheet" href="{% static 'datatables/css/jquery.dataTables.min.css' %}" />
+	<link type="text/css" rel="stylesheet" href="{% static 'datatables/css/dataTables.bootstrap.css' %}" />
+{% endblock %}
+
+{% block page_content %} 
+	<div class="row">
+		<div class="col-md-12">
+			<div class="content-box-header">
+				<div class="panel-title">{% trans "Sittings" %}</div>
+			</div>
+			<div class="content-box-large box-with-header">
+				<div class="alert alert-info" role="alert">	 
+					<p>{% trans "A sitting is used to relate Question Sets and Reviews" %}</p>
+				</div>
+				{{ datatable }}
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block extrajs %}
+	<script src="{% static 'datatables/js/jquery.dataTables.min.js' %}"></script>
+	<script src="{% static 'datatables/js/dataTables.bootstrap.js' %}"></script>
+	<script type="text/javascript" charset="utf8" src="{% static 'js/datatableview.min.js' %}"></script>
+{% endblock %}

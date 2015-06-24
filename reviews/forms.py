@@ -12,16 +12,18 @@ class ReviewForm(ModelForm):
 
     class Meta:
         model = Review
-        fields = ['title', 'quiz', 'reviewers']
+        fields = ['title', 'sitting', 'quiz', 'reviewers']
 
     def __init__(self, *args, **kwargs):
         super(ReviewForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.fields['reviewers'].required = False
+        self.fields['sitting'].required = True
         self.helper.form_id = 'review-form'
         self.helper.form_method = 'post'
         self.helper.layout = Layout(
             Field('title'),
+            Field('sitting'),
             Field('quiz', id="select-quiz"),
             Field('reviewers', id="select-reviewers"),
             ButtonHolder(
@@ -35,17 +37,19 @@ class PeerReviewForm(ModelForm):
 
     class Meta:
         model = Review
-        fields = ['title', 'userprofile', 'quiz', 'reviewers']
+        fields = ['title', 'sitting', 'userprofile', 'quiz', 'reviewers']
 
     def __init__(self, *args, **kwargs):
         super(PeerReviewForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.fields['reviewers'].required = False
         self.fields['userprofile'].required = True
+        self.fields['sitting'].required = True
         self.helper.form_id = 'review-form'
         self.helper.form_method = 'post'
         self.helper.layout = Layout(
             Field('title'),
+            Field('sitting'),
             Field('userprofile', id="select-user"),
             Field('quiz', id="select-quiz"),
             Field('reviewers', id="select-reviewers"),

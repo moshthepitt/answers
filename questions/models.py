@@ -39,6 +39,26 @@ class Category(MPTTModel):
         return self.title
 
 
+class Sitting(models.Model):
+    """
+    A sitting is a relationship between a Review and a Quiz
+    for example if you want to use a certain Quiz as a peer review,
+    it would make sense to have a session to relate them
+    so that you can get the peer review's average score using the session
+    instead of the quiz (because a Quiz is reusable)
+    """
+    created_on = models.DateTimeField(_("Created on"), auto_now_add=True)
+    updated_on = models.DateTimeField(_("Updated on"), auto_now=True)
+    title = models.CharField(_("Title"), max_length=300, blank=True)
+
+    class Meta:
+        verbose_name = _("Sitting")
+        verbose_name_plural = _("Sittings")
+
+    def __str__(self):
+        return self.title
+
+
 class Quiz(models.Model):
 
     """A quiz is a collection of questions"""

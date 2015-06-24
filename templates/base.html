@@ -81,6 +81,17 @@
                         </ul>
                     </li>
                     <li class="submenu">
+                         <a href="{% url 'questions:sitting_list' %}">
+                            <i class="glyphicon glyphicon-list"></i> {% trans "Sittings" %}
+                            <span class="caret pull-right"></span>
+                         </a>
+                         <!-- Sub menu -->
+                         <ul>
+                            <li><a href="{% url 'questions:sitting_list' %}">{% trans "View Sittings" %}</a></li>
+                            <li><a href="{% url 'questions:sitting_add' %}">{% trans "Add Sitting" %}</a></li>
+                        </ul>
+                    </li>
+                    <li class="submenu">
                          <a href="{% url 'reviews:review_list' %}">
                             <i class="glyphicon glyphicon-list-alt"></i> {% trans "Reviews" %}
                             <span class="caret pull-right"></span>

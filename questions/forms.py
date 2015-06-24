@@ -10,6 +10,27 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, HTML, Field, ButtonHolder
 
 from questions.models import MultipleChoiceOption, MultipleChoiceQuestion, Quiz, RatingQuestion
+from questions.models import Sitting
+
+
+class SittingForm(ModelForm):
+
+    class Meta:
+        model = Sitting
+        fields = ['title']
+
+    def __init__(self, *args, **kwargs):
+        super(SittingForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_id = 'sitting-form'
+        self.helper.form_method = 'post'
+        self.helper.layout = Layout(
+            Field('title'),
+            ButtonHolder(
+                Submit('submit', _('Save'), css_class='btn-success'),
+                HTML("<a class='btn btn-default' href='{% url \"questions:sitting_list\" %}'>Cancel</a>")
+            )
+        )
 
 
 class QuizForm(ModelForm):

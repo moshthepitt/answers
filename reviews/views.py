@@ -78,9 +78,10 @@ class ReviewDatatableView(AdminMixin, DatatableView):
         'structure_template': "datatableview/bootstrap_structure.html",
         'columns': [
             'title',
+            'sitting',
             (_("Actions"), 'id', 'get_actions'),
         ],
-        'search_fields': ['title'],
+        'search_fields': ['title', 'sitting__title'],
         'unsortable_columns': ['id'],
     }
     review_type = None
@@ -103,10 +104,11 @@ class PeerReviewDatatableView(AdminMixin, DatatableView):
         'structure_template': "datatableview/bootstrap_structure.html",
         'columns': [
             'title',
+            'sitting',
             (_("User"), 'userprofile', 'get_user'),
             (_("Actions"), 'id', 'get_actions'),
         ],
-        'search_fields': ['title', 'userprofile__user__last_name', 'userprofile__user__first_name', 'userprofile__user__username'],
+        'search_fields': ['title', 'userprofile__user__last_name', 'userprofile__user__first_name', 'userprofile__user__username', 'sitting__title'],
         'unsortable_columns': ['id'],
     }
     review_type = None

@@ -17,7 +17,7 @@ def user_review_report(review):
     for question in review.quiz.get_questions():
         score = Answer.objects.filter(question=question).filter(
             review=review).aggregate(avg=Coalesce(Avg('ratinganswer__answer'), Value(0)))
-        company_score = Answer.objects.filter(question=question).filter(
+        company_score = Answer.objects.filter(question=question).filter(review__sitting=review.sitting).filter(
             review__quiz=review.quiz).aggregate(avg=Coalesce(Avg('ratinganswer__answer'), Value(0)))
         question.score = score['avg']
         question.percentage_score = question.score * 100 / 5
@@ -26,7 +26,7 @@ def user_review_report(review):
         scores.append(question)
     overall_score = Answer.objects.filter(review=review).aggregate(
         avg=Coalesce(Avg('ratinganswer__answer'), Value(0)))
-    overall_company_score = Answer.objects.filter(review__quiz=review.quiz).aggregate(
+    overall_company_score = Answer.objects.filter(review__quiz=review.quiz).filter(review__sitting=review.sitting).aggregate(
         avg=Coalesce(Avg('ratinganswer__answer'), Value(0)))
     review.score = overall_score['avg']
     review.percentage_score = review.score * 100 / 5
@@ -50,6 +50,7 @@ class ReviewView(ReportMixin, DetailView):
 
 
 class ReviewReportDatatableView(DatatableView):
+
     """
     Displays a list of reviews that the user has access to
     """
@@ -78,7 +79,8 @@ class ReviewReportDatatableView(DatatableView):
             any report of someone they manage
         """
         queryset = super(ReviewReportDatatableView, self).get_queryset()
-        queryset = queryset.filter(Q(userprofile=self.request.user.userprofile) | Q(userprofile__manager=self.request.user.userprofile))
+        queryset = queryset.filter(Q(userprofile=self.request.user.userprofile) | Q(
+            userprofile__manager=self.request.user.userprofile))
         return queryset
 
     def get_actions(self, instance, *args, **kwargs):

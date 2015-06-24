@@ -10,8 +10,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from datatableview.views import DatatableView
 from core.mixins import AdminMixin
 
-from questions.models import Quiz
-from questions.forms import QuizForm, QuestionFormSet, QuestionFormSetHelper
+from questions.models import Quiz, Sitting
+from questions.forms import QuizForm, QuestionFormSet, QuestionFormSetHelper, SittingForm
 from questions.forms import make_quiz_form, quiz_form_helper, save_quiz_form
 
 
@@ -45,6 +45,44 @@ class QuizView(FormMixin, DetailView):
     def dispatch(self, *args, **kwargs):
         self.object = self.get_object()
         return super(QuizView, self).dispatch(*args, **kwargs)
+
+
+class SittingDatatableView(AdminMixin, DatatableView):
+    """
+    Allows you to manage sittings
+    """
+
+    model = Sitting
+    template_name = "questions/sitting_list.html"
+    datatable_options = {
+        'structure_template': "datatableview/bootstrap_structure.html",
+        'columns': [
+            'title',
+            (_("Actions"), 'id', 'get_actions'),
+        ],
+        'search_fields': ['title'],
+        'unsortable_columns': ['id'],
+    }
+
+    def get_actions(self, instance, *args, **kwargs):
+        return format_html(
+            '<a href="{}">Edit</a>', reverse(
+                'questions:sitting_edit', args=[instance.pk])
+        )
+
+
+class SittingUpdate(AdminMixin, UpdateView):
+    model = Sitting
+    form_class = SittingForm
+    template_name = "questions/sitting_edit.html"
+    success_url = reverse_lazy('questions:sitting_list')
+
+
+class SittingAdd(AdminMixin, CreateView):
+    model = Sitting
+    form_class = SittingForm
+    template_name = "questions/sitting_add.html"
+    success_url = reverse_lazy('questions:sitting_list')
 
 
 class QuizDatatableView(AdminMixin, DatatableView):
