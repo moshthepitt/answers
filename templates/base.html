@@ -104,7 +104,17 @@
                             <li><a href="{% url 'reviews:peer_review_add' %}">{% trans "Add Peer Review" %}</a></li>
                         </ul>
                     </li>
-                    <li><a href="{% url 'users:user_list' %}"><i class="glyphicon glyphicon-user"></i> {% trans "Users" %}</a></li>
+                    <li class="submenu">
+                      <a href="{% url 'users:user_list' %}">
+                        <i class="glyphicon glyphicon-user"></i> {% trans "Users" %}
+                        <span class="caret pull-right"></span>
+                      </a>
+                      <ul>
+                        <li><a href="{% url 'users:user_list' %}">{% trans "View Users" %}</a></li>
+                        <li><a href="{% url 'users:user_group_add' %}">{% trans "Add Group" %}</a></li>
+                        <li><a href="{% url 'users:user_group_list' %}">{% trans "View Groups" %}</a></li>
+                      </ul>                      
+                    </li>
                     {% endif %}
                     <li><a href="{% url 'account_logout' %}"><i class="glyphicon glyphicon-log-out"></i> {% trans "Logout" %}</a></li>
                     {% else %}

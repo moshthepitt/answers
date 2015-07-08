@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load crispy_forms_tags %}
+{% load staticfiles %}
+
+{% block extracss %}
+<link rel="stylesheet" type="text/css" href="{% static 'select2/css/select2.min.css' %}" />
+{% endblock %}
 
 {% block title %} {% trans "Edit User" %} {% endblock %}
 
@@ -15,4 +20,16 @@
 			</div>
 		</div>
 	</div>
+{% endblock %}
+
+{% block extrajs %}
+<script src="{% static 'select2/js/select2.full.min.js' %}"></script>
+<script>
+	$("#manager").select2({
+		placeholder: "{% trans 'Select a manager' %}",
+	});
+	$("#group").select2({
+		placeholder: "{% trans 'Select group(s)' %}",
+	});
+</script>
 {% endblock %}
