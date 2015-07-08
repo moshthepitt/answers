@@ -5,6 +5,24 @@ from django.utils.translation import ugettext_lazy as _
 User = settings.AUTH_USER_MODEL
 
 
+class UserGroup(models.Model):
+    created_on = models.DateTimeField(_("Created on"), auto_now_add=True)
+    updated_on = models.DateTimeField(_("Updated on"), auto_now=True)
+    name = models.CharField(_("Group Name"), max_length=300, blank=False)
+    parent = models.ForeignKey(
+        "self", verbose_name=_('Parent Group'), blank=True, null=True, default=None)
+    manager = models.ForeignKey(
+        "UserProfile", verbose_name=_('Group Manager'), blank=True, null=True, default=None)
+
+    class Meta:
+        verbose_name = _("User Group")
+        verbose_name_plural = _("User Groups")
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+
 class UserProfile(models.Model):
 
     """
@@ -19,10 +37,11 @@ class UserProfile(models.Model):
         "Select this user's manager"), blank=True, null=True, default=None)
     is_admin = models.BooleanField(
         _("Is Administrator"), help_text=_("Should this user have administrative privileges"), default=False)
+    group = models.ManyToManyField(UserGroup, blank=True, default=None)
 
     class Meta:
-        verbose_name = _("Staff Profile")
-        verbose_name_plural = _("Staff Profiles")
+        verbose_name = _("User Profile")
+        verbose_name_plural = _("User Profiles")
         ordering = ['user__first_name', 'created_on']
 
     def get_display_name(self):
