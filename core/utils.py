@@ -1,11 +1,11 @@
-from django.contrib.auth.models import User
-
+from itertools import imap
 import uuid
 from datetime import datetime
 import os
 
 from django.template.defaultfilters import slugify
 from django.utils.deconstruct import deconstructible
+from django.contrib.auth.models import User
 
 
 @deconstructible
@@ -42,3 +42,8 @@ def fake_users(number=10):
                          )
         User.objects.create_user(**user_data)
     return "%s users created!" % number
+
+
+def lists_overlap(a, b):
+    sb = set(b)
+    return any(imap(sb.__contains__, a))

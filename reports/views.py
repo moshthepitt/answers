@@ -60,6 +60,7 @@ class ReviewReportDatatableView(DatatableView):
         'structure_template': "datatableview/bootstrap_structure.html",
         'columns': [
             'title',
+            'sitting',
             (_("User"), 'userprofile', 'get_user'),
             (_("Actions"), 'id', 'get_actions'),
         ],
@@ -80,8 +81,8 @@ class ReviewReportDatatableView(DatatableView):
         """
         queryset = super(ReviewReportDatatableView, self).get_queryset()
         queryset = queryset.filter(Q(userprofile=self.request.user.userprofile) | Q(
-            userprofile__manager=self.request.user.userprofile))
-        return queryset
+            userprofile__manager=self.request.user.userprofile) | Q(userprofile__group__manager=self.request.user.userprofile))
+        return queryset.distinct()
 
     def get_actions(self, instance, *args, **kwargs):
         if instance.userprofile:

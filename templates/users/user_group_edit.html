@@ -7,13 +7,13 @@
 <link rel="stylesheet" type="text/css" href="{% static 'select2/css/select2.min.css' %}" />
 {% endblock %}
 
-{% block title %} {% trans "Edit User" %} {% endblock %}
+{% block title %} {% trans "Edit Group" %} {% endblock %}
 
 {% block page_content %} 
 	<div class="row">
 		<div class="col-md-12">
 			<div class="content-box-header">
-				<div class="panel-title">{% trans "Edit User" %} {{object}}</div>
+				<div class="panel-title">{% trans "Edit Group" %} {{object}}</div>
 			</div>
 			<div class="content-box-large box-with-header">
 				{% crispy form %}
@@ -25,13 +25,13 @@
 {% block extrajs %}
 <script src="{% static 'select2/js/select2.full.min.js' %}"></script>
 <script>
+	$("#parent").select2({
+		allowClear: true,
+		placeholder: "{% trans 'Select a parent' %}",
+	});
 	$("#manager").select2({
 		allowClear: true,
 		placeholder: "{% trans 'Select a manager' %}",
-	});
-	$("#group").select2({
-		allowClear: true,
-		placeholder: "{% trans 'Select group(s)' %}",
 	});
 </script>
 {% endblock %}
