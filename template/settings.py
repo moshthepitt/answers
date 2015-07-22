@@ -72,6 +72,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     # third party
+    'ajaxerrors.middleware.ShowAJAXErrors',
 )
 
 

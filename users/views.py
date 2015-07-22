@@ -28,10 +28,10 @@ class UserProfileDatatableView(AdminMixin, DatatableView):
             (_("Last Name"), 'user__last_name'),
             (_("Email"), 'user__email'),
             'manager',
-            (_('Group'), 'group', 'get_groups'),
+            (_('Group'), 'id', 'get_groups'),
             (_("Actions"), 'id', 'get_actions'),
         ],
-        'search_fields': ['userprofile__user__last_name', 'userprofile__user__first_name', 'userprofile__user__email'],
+        'search_fields': ['user__last_name', 'user__first_name', 'user__email'],
         'unsortable_columns': ['id', 'group'],
     }
 
