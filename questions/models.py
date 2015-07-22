@@ -96,7 +96,7 @@ class Quiz(models.Model):
         help_text=_("Show answers at the end of the whole quiz?"),
         verbose_name=_("Answers at end"))
     single_attempt = models.BooleanField(
-        blank=False, default=False,
+        blank=False, default=True,
         help_text=_("If yes, only one attempt by"
                     " a user will be permitted."
                     " Non users cannot sit this exam."),

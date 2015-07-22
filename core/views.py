@@ -1,4 +1,5 @@
 from django.views.generic.base import TemplateView
+from django.db.models import Q
 
 from reviews.models import Review
 
@@ -18,6 +19,9 @@ class DashboardView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(DashboardView, self).get_context_data(**kwargs)
-        context['pending_reviews'] = Review.objects.filter(
-            reviewers=self.request.user.userprofile).exclude(answer__userprofile=self.request.user.userprofile)
+        pending_reviews = Review.objects.filter(
+            reviewers=self.request.user.userprofile).exclude(
+            Q(answer__userprofile=self.request.user.userprofile) & Q(quiz__single_attempt=True)
+        )
+        context['pending_reviews'] = pending_reviews
         return context
