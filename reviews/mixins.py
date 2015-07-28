@@ -13,7 +13,7 @@ class ReviewMixin(object):
     def dispatch(self, *args, **kwargs):
         review = self.get_object()
         # dont allow a non reviewer to review
-        if review.reviewers.all() and (self.request.user.userprofile not in review.reviewers.all()):
+        if (self.request.user.userprofile not in review.reviewers.all()) and (not review.public):
             messages.add_message(
                 self.request, messages.WARNING, _('Sorry, you do not have access to that section'))
             return redirect('dashboard')
