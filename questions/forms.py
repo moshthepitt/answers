@@ -94,7 +94,7 @@ def make_quiz_form(quiz):
             answer_field.queryset = MultipleChoiceOption.objects.filter(question=question)
             if answer_field.queryset.filter(other=True).exists():
                 other_field = CharField()
-                other_field.widget.attrs['class'] = "other-field"
+                other_field.widget.attrs['class'] = "other-field id_answer_{}".format(question.id)
                 other_field.label = _("If you selected Other, please specify what you meant")
                 other_field.required = False
             else:
@@ -119,9 +119,8 @@ def make_custom_cleaned_quiz_form(quiz):
             cleaned_data = super(NewForm, self).clean()
             for question in quiz.get_questions():
                 answer_field = 'answer_{}'.format(question.id)
-                if answer_field in cleaned_data:
+                if answer_field in cleaned_data and question._meta.model == MultipleChoiceQuestion:
                     questions_answer = cleaned_data[answer_field]
-                if question._meta.model == MultipleChoiceQuestion:
                     other_field = 'other_{}'.format(question.id)
                     if questions_answer.other:
                         if (other_field not in cleaned_data) or (not cleaned_data[other_field]):
