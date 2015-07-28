@@ -16,3 +16,29 @@
 		</div>
 	</div>
 {% endblock %}
+
+{% block extrajs %}
+<script>
+	$(document).ready(function() {
+		$("select").each(function(){
+			var this_id = $(this).attr("id");
+			var answer = $("#" + this_id + " option:selected").text();
+			if (answer == "Other") {
+				$('.other-field.' + this_id).parents('div[class^="form-group"]').show();	
+			} else {
+				$('.other-field.' + this_id).parents('div[class^="form-group"]').hide();
+			}
+		});
+	});
+
+	$("select").change(function(){
+		var this_id = $(this).attr("id");
+		var answer = $("#" + this_id + " option:selected").text();
+		if (answer == "Other") {
+			$('.other-field.' + this_id).parents('div[class^="form-group"]').show();	
+		} else {
+			$('.other-field.' + this_id).parents('div[class^="form-group"]').hide();
+		}
+	});
+</script>
+{% endblock %}

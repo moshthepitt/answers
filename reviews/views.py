@@ -12,7 +12,7 @@ from core.mixins import AdminMixin
 from reviews.models import Review
 from reviews.mixins import ReviewMixin
 from reviews.forms import ReviewForm, PeerReviewForm
-from questions.forms import make_quiz_form, quiz_form_helper, save_quiz_form
+from questions.forms import quiz_form_helper, save_quiz_form, make_custom_cleaned_quiz_form
 
 
 class ReviewView(ReviewMixin, FormMixin, DetailView):
@@ -22,7 +22,7 @@ class ReviewView(ReviewMixin, FormMixin, DetailView):
         return reverse('dashboard')
 
     def get_form_class(self):
-        return make_quiz_form(self.object.quiz)
+        return make_custom_cleaned_quiz_form(self.object.quiz)
 
     def post(self, request, *args, **kwargs):
         form = self.get_form()

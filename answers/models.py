@@ -59,6 +59,23 @@ class MultipleChoiceAnswer(Answer):
         return self.question.title
 
 
+class MultipleChoiceOtherAnswer(models.Model):
+    """
+    The text input when the "Other" option of a multiple choice questions is selected
+    """
+    created_on = models.DateTimeField(_("Created on"), auto_now_add=True)
+    updated_on = models.DateTimeField(_("Updated on"), auto_now=True)
+    answer = models.ForeignKey(MultipleChoiceAnswer, verbose_name=_("Answer"))
+    body = models.CharField(_("Text answer"), max_length=255)
+
+    class Meta:
+        verbose_name = _("Multiple Choice Other Answer")
+        verbose_name_plural = _("Multiple Choice Other Answers")
+
+    def __str__(self):
+        return self.body
+
+
 class RatingAnswer(Answer):
     # choices
     VERY_POOR = 1
