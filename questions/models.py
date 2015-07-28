@@ -40,6 +40,7 @@ class Category(MPTTModel):
 
 
 class Sitting(models.Model):
+
     """
     A sitting is a relationship between a Review and a Quiz
     for example if you want to use a certain Quiz as a peer review,
@@ -235,6 +236,8 @@ class MultipleChoiceOption(models.Model):
         "Input the answer as you want it displayed"))
     correct_answer = models.BooleanField(
         _("Correct Answer"), default=False, help_text=_("Is this a correct answer?"))
+    other = models.BooleanField(_("Other Option"), default=False, help_text=_(
+        "This field will present an option to input text instead of one of the presented choices"))
 
     class Meta:
         verbose_name = _("Multiple Choice Answer")
