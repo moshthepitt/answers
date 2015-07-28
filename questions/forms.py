@@ -2,7 +2,7 @@
 from collections import OrderedDict
 
 from django.forms.models import fields_for_model
-from django.forms import BaseForm, ModelForm
+from django.forms import BaseForm, ModelForm, CharField
 from django.utils.translation import ugettext as _
 from django.forms.models import inlineformset_factory
 
@@ -11,6 +11,7 @@ from crispy_forms.layout import Layout, Submit, HTML, Field, ButtonHolder
 
 from questions.models import MultipleChoiceOption, MultipleChoiceQuestion, Quiz, RatingQuestion
 from questions.models import Sitting
+from answers.models import MultipleChoiceOtherAnswer
 
 
 class SittingForm(ModelForm):
@@ -88,7 +89,16 @@ def make_quiz_form(quiz):
         answer_field.label = question.title
         if question._meta.model == MultipleChoiceQuestion:
             answer_field.queryset = MultipleChoiceOption.objects.filter(question=question)
+            if answer_field.queryset.filter(other=True).exists():
+                other_field = CharField()
+                other_field.widget.attrs['class'] = "other-field"
+                other_field.label = _("If you selected Other, please specify what you meant")
+                other_field.required = False
+            else:
+                other_field = None
         form_fields['answer_{}'.format(question.id)] = answer_field
+        if other_field:
+            form_fields['other_{}'.format(question.id)] = other_field
     return type('QuizForm', (BaseForm,), {'base_fields': form_fields})
 
 
@@ -115,3 +125,12 @@ def save_quiz_form(quiz, form, user=None, review=None):
                 review=review
             )
             answer.save()
+        if question._meta.model == MultipleChoiceQuestion:
+            other_field = 'other_{}'.format(question.id)
+            if questions_answer.other and other_field in form.cleaned_data:
+                questions_other = form.cleaned_data[other_field]
+                other_answer = MultipleChoiceOtherAnswer(
+                    answer=answer,
+                    body=questions_other
+                )
+                other_answer.save()
