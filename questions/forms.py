@@ -7,7 +7,8 @@ from django.utils.translation import ugettext as _
 from django.forms.models import inlineformset_factory
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, HTML, Field, ButtonHolder
+from crispy_forms.layout import Layout, Submit, HTML
+from crispy_forms.bootstrap import Field, FormActions
 
 from questions.models import MultipleChoiceOption, MultipleChoiceQuestion, Quiz, RatingQuestion
 from questions.models import Sitting
@@ -27,7 +28,7 @@ class SittingForm(ModelForm):
         self.helper.form_method = 'post'
         self.helper.layout = Layout(
             Field('title'),
-            ButtonHolder(
+            FormActions(
                 Submit('submit', _('Save'), css_class='btn-success'),
                 HTML("<a class='btn btn-default' href='{% url \"questions:sitting_list\" %}'>Cancel</a>")
             )
@@ -49,7 +50,7 @@ class QuizForm(ModelForm):
             Field('title'),
             Field('description'),
             Field('question_ordering'),
-            ButtonHolder(
+            FormActions(
                 Submit('submit', _('Save'), css_class='btn-success'),
                 HTML("<a class='btn btn-default' href='{% url \"questions:quiz_list\" %}'>Cancel</a>")
             )

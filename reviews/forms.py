@@ -3,7 +3,8 @@ from django.forms import ModelForm
 from django.utils.translation import ugettext as _
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, HTML, Field, ButtonHolder
+from crispy_forms.layout import Layout, Submit, HTML
+from crispy_forms.bootstrap import Field, FormActions
 
 from reviews.models import Review
 
@@ -26,7 +27,7 @@ class ReviewForm(ModelForm):
             Field('sitting'),
             Field('quiz', id="select-quiz"),
             Field('reviewers', id="select-reviewers"),
-            ButtonHolder(
+            FormActions(
                 Submit('submit', _('Save'), css_class='btn-success'),
                 HTML("<a class='btn btn-default' href='{% url \"reviews:review_list\" %}'>Cancel</a>")
             )
@@ -53,7 +54,7 @@ class PeerReviewForm(ModelForm):
             Field('userprofile', id="select-user"),
             Field('quiz', id="select-quiz"),
             Field('reviewers', id="select-reviewers"),
-            ButtonHolder(
+            FormActions(
                 Submit('submit', _('Save'), css_class='btn-success'),
                 HTML("<a class='btn btn-default' href='{% url \"reviews:peer_review_list\" %}'>Cancel</a>")
             )

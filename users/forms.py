@@ -3,7 +3,8 @@ from django.forms import ModelForm
 from django.utils.translation import ugettext as _
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, HTML, Field, ButtonHolder
+from crispy_forms.layout import Layout, Submit, HTML
+from crispy_forms.bootstrap import Field, FormActions
 
 from users.models import UserProfile, UserGroup
 
@@ -24,7 +25,7 @@ class UserProfileForm(ModelForm):
             Field('group', id="group"),
             Field('is_manager'),
             Field('is_admin'),
-            ButtonHolder(
+            FormActions(
                 Submit('submit', _('Save'), css_class='btn-success'),
                 HTML("<a class='btn btn-default' href='{% url \"users:user_list\" %}'>Cancel</a>")
             )
@@ -46,7 +47,7 @@ class UserGroupForm(ModelForm):
             Field('name'),
             Field('parent', id="parent"),
             Field('manager', id="manager"),
-            ButtonHolder(
+            FormActions(
                 Submit('submit', _('Save'), css_class='btn-success'),
                 HTML("<a class='btn btn-default' href='{% url \"users:user_group_list\" %}'>Cancel</a>")
             )
