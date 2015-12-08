@@ -121,10 +121,11 @@ def make_custom_cleaned_quiz_form(quiz):
                 answer_field = 'answer_{}'.format(question.id)
                 if answer_field in cleaned_data and question._meta.model == MultipleChoiceQuestion:
                     questions_answer = cleaned_data[answer_field]
-                    other_field = 'other_{}'.format(question.id)
-                    if questions_answer.other:
-                        if (other_field not in cleaned_data) or (not cleaned_data[other_field]):
-                            raise ValidationError({other_field: _("Please input a value")})
+                    if questions_answer:
+                        other_field = 'other_{}'.format(question.id)
+                        if questions_answer.other:
+                            if (other_field not in cleaned_data) or (not cleaned_data[other_field]):
+                                raise ValidationError({other_field: _("Please input a value")})
             return cleaned_data
 
     return NewForm
@@ -155,7 +156,7 @@ def save_quiz_form(quiz, form, user=None, review=None):
             answer.save()
         if question._meta.model == MultipleChoiceQuestion:
             other_field = 'other_{}'.format(question.id)
-            if questions_answer.other and other_field in form.cleaned_data:
+            if questions_answer and questions_answer.other and other_field and other_field in form.cleaned_data:
                 questions_other = form.cleaned_data[other_field]
                 other_answer = MultipleChoiceOtherAnswer(
                     answer=answer,
