@@ -1,4 +1,4 @@
-Django==1.9
+Django==1.8.7
 Pillow==3.0.0
 argparse==1.2.1
 django-ajaxerrors==1.1
