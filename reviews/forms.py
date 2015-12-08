@@ -27,6 +27,7 @@ class ReviewForm(ModelForm):
             Field('sitting'),
             Field('quiz', id="select-quiz"),
             Field('reviewers', id="select-reviewers"),
+            Field('public'),
             FormActions(
                 Submit('submit', _('Save'), css_class='btn-success'),
                 HTML("<a class='btn btn-default' href='{% url \"reviews:review_list\" %}'>Cancel</a>")

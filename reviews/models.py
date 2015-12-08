@@ -17,6 +17,7 @@ class Review(models.Model):
     quiz = models.ForeignKey(Quiz, verbose_name=_("Question Set"), on_delete=models.PROTECT)
     reviewers = models.ManyToManyField(UserProfile, verbose_name=_("Reviewers"), help_text=_(
         "The people who are going to take this review"), related_name='peer_reviewers', blank=True)
+    public = models.BooleanField(_("Open"), default=False, help_text=_("Is this review open to all users?"))
 
     class Meta:
         verbose_name = _("Review")
