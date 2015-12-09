@@ -5,6 +5,8 @@ from django.forms.models import fields_for_model
 from django.forms import BaseForm, ModelForm, CharField, ValidationError
 from django.utils.translation import ugettext as _
 from django.forms.models import inlineformset_factory
+from django.utils.html import format_html
+from django.utils.encoding import smart_str
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, HTML
@@ -92,6 +94,10 @@ def make_quiz_form(quiz):
         answer_field = model_fields['answer']
         answer_field.label = question.title
         other_field = None
+        if question.image:
+            answer_field.label = format_html("<img src='{}' class='img-responsive' alt='{}' title='{}' />", question.image.url, smart_str(question.title), smart_str(question.title))
+        else:
+            answer_field.label = smart_str(question.title)
         if question._meta.model == MultipleChoiceQuestion:
             answer_field.queryset = MultipleChoiceOption.objects.filter(question=question)
             if answer_field.queryset.filter(other=True).exists():
