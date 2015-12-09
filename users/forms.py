@@ -40,6 +40,7 @@ class UserGroupForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(UserGroupForm, self).__init__(*args, **kwargs)
+        # print self.fields['parent'].queryset.exclude(id__exact=self.instance.id)
         self.helper = FormHelper()
         self.helper.form_id = 'usergroup-form'
         self.helper.form_method = 'post'

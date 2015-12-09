@@ -7,7 +7,7 @@ from django.utils.translation import ugettext as _
 from django.utils.html import format_html
 
 from datatableview.views import DatatableView
-from core.mixins import AdminMixin
+from core.mixins import AdminMixin, CustomerQuerysetMixin
 from saas.mixins import CustomerSaveMixin, CustomerListViewMixin, CustomerCheckMixin
 
 from reviews.models import Review
@@ -48,14 +48,14 @@ class ReviewView(CustomerCheckMixin, ReviewMixin, FormMixin, DetailView):
         return super(ReviewView, self).dispatch(*args, **kwargs)
 
 
-class ReviewUpdate(AdminMixin, CustomerCheckMixin, CustomerSaveMixin, UpdateView):
+class ReviewUpdate(AdminMixin, CustomerCheckMixin, CustomerSaveMixin, CustomerQuerysetMixin, UpdateView):
     model = Review
     form_class = ReviewForm
     template_name = "reviews/review_edit.html"
     success_url = reverse_lazy('reviews:review_list')
 
 
-class ReviewAdd(AdminMixin, CustomerSaveMixin, CreateView):
+class ReviewAdd(AdminMixin, CustomerSaveMixin, CustomerQuerysetMixin, CreateView):
     model = Review
     form_class = ReviewForm
     template_name = "reviews/review_add.html"

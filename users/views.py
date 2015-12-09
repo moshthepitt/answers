@@ -5,14 +5,14 @@ from django.utils.translation import ugettext as _
 from django.utils.html import format_html
 
 from datatableview.views import DatatableView
-from core.mixins import AdminMixin
+from core.mixins import AdminMixin, CustomerQuerysetMixin
 from saas.mixins import CustomerSaveMixin, CustomerListViewMixin, CustomerCheckMixin
 
 from users.models import UserProfile, UserGroup
 from users.forms import UserProfileForm, UserGroupForm
 
 
-class UserProfileUpdate(AdminMixin, CustomerCheckMixin, CustomerSaveMixin, UpdateView):
+class UserProfileUpdate(AdminMixin, CustomerCheckMixin, CustomerSaveMixin, CustomerQuerysetMixin, UpdateView):
     model = UserProfile
     form_class = UserProfileForm
     template_name = "users/user_edit.html"
@@ -50,14 +50,14 @@ class UserProfileDatatableView(AdminMixin, CustomerListViewMixin, DatatableView)
         return ", ".join(map(str, [x.name for x in instance.group.all()]))
 
 
-class UserGroupAdd(AdminMixin, CreateView):
+class UserGroupAdd(AdminMixin, CustomerQuerysetMixin, CreateView):
     model = UserGroup
     form_class = UserGroupForm
     template_name = "users/user_group_add.html"
     success_url = reverse_lazy('users:user_group_list')
 
 
-class UserGroupUpdate(AdminMixin, CustomerCheckMixin, UpdateView):
+class UserGroupUpdate(AdminMixin, CustomerCheckMixin, CustomerQuerysetMixin, UpdateView):
     model = UserGroup
     form_class = UserGroupForm
     template_name = "users/user_group_edit.html"
