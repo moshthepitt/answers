@@ -19,7 +19,7 @@ class DashboardView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(DashboardView, self).get_context_data(**kwargs)
-        pending_reviews = Review.objects.filter(
+        pending_reviews = Review.objects.filter(customer=self.request.user.userprofile.customer).filter(
             Q(reviewers=self.request.user.userprofile) | Q(public=True)).exclude(
             Q(answer__userprofile=self.request.user.userprofile) & Q(quiz__single_attempt=True)
         )

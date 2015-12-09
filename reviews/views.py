@@ -8,7 +8,7 @@ from django.utils.html import format_html
 
 from datatableview.views import DatatableView
 from core.mixins import AdminMixin
-from saas.mixins import CustomerSaveMixin
+from saas.mixins import CustomerSaveMixin, CustomerListViewMixin
 
 from reviews.models import Review
 from reviews.mixins import ReviewMixin
@@ -72,7 +72,7 @@ PeerReviewAdd = ReviewAdd.as_view(
 )
 
 
-class ReviewDatatableView(AdminMixin, DatatableView):
+class ReviewDatatableView(AdminMixin, CustomerListViewMixin, DatatableView):
     model = Review
     template_name = "reviews/review_list.html"
     datatable_options = {
@@ -98,7 +98,7 @@ class ReviewDatatableView(AdminMixin, DatatableView):
         )
 
 
-class PeerReviewDatatableView(AdminMixin, DatatableView):
+class PeerReviewDatatableView(AdminMixin, CustomerListViewMixin, DatatableView):
     model = Review
     template_name = "reviews/peer_review_list.html"
     datatable_options = {

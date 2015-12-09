@@ -10,7 +10,7 @@ from django.contrib import messages
 
 from datatableview.views import DatatableView
 from core.mixins import AdminMixin
-from saas.mixins import CustomerSaveMixin
+from saas.mixins import CustomerSaveMixin, CustomerListViewMixin
 
 from questions.models import Quiz, Sitting
 from questions.forms import QuizForm, QuestionFormSet, QuestionFormSetHelper, SittingForm
@@ -49,7 +49,7 @@ class QuizView(FormMixin, DetailView):
         return super(QuizView, self).dispatch(*args, **kwargs)
 
 
-class SittingDatatableView(AdminMixin, DatatableView):
+class SittingDatatableView(AdminMixin, CustomerListViewMixin, DatatableView):
     """
     Allows you to manage sittings
     """
@@ -87,7 +87,7 @@ class SittingAdd(AdminMixin, CustomerSaveMixin, CreateView):
     success_url = reverse_lazy('questions:sitting_list')
 
 
-class QuizDatatableView(AdminMixin, DatatableView):
+class QuizDatatableView(AdminMixin, CustomerListViewMixin, DatatableView):
     """
     Allows you to manage question sets
     """

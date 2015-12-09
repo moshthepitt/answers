@@ -23,3 +23,14 @@ class CustomerSaveMixin(object):
     def form_invalid(self, form):
         messages.add_message(self.request, messages.WARNING, _('Please fix the errors below'))
         return super(CustomerSaveMixin, self).form_invalid(form)
+
+
+class CustomerListViewMixin(object):
+
+    """
+    Makes sure the queryset filters by Customer
+    """
+
+    def get_queryset(self):
+        queryset = super(CustomerListViewMixin, self).get_queryset().filter(customer=self.request.user.userprofile.customer)
+        return queryset

@@ -8,6 +8,7 @@ from django.utils.html import format_html
 from datatableview.views import DatatableView
 
 from reports.mixins import ReportMixin
+from saas.mixins import CustomerListViewMixin
 from reviews.models import Review
 from answers.models import Answer
 
@@ -49,7 +50,7 @@ class ReviewView(ReportMixin, DetailView):
         return context
 
 
-class ReviewReportDatatableView(DatatableView):
+class ReviewReportDatatableView(CustomerListViewMixin, DatatableView):
 
     """
     Displays a list of reviews that the user has access to
