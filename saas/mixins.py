@@ -1,4 +1,6 @@
 from django.contrib import messages
+from django.http import Http404
+# from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
 
 
@@ -37,3 +39,20 @@ class CustomerListViewMixin(object):
         else:
             queryset = super(CustomerListViewMixin, self).get_queryset().none()
         return queryset
+
+
+class CustomerCheckMixin(object):
+
+    """
+    Used in detail and update views to ensure that the user has the right to view the object
+    """
+
+    def dispatch(self, *args, **kwargs):
+        if self.request.user.is_authenticated():
+            # if current user is not tied to a customer then redirect them away
+            if not self.request.user.userprofile.customer:
+                raise Http404
+            # if current user is not tied to a subscription then redirect them away
+            if self.request.user.userprofile.customer != self.get_object().customer:
+                raise Http404
+        return super(CustomerCheckMixin, self).dispatch(*args, **kwargs)

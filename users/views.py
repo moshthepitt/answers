@@ -6,13 +6,13 @@ from django.utils.html import format_html
 
 from datatableview.views import DatatableView
 from core.mixins import AdminMixin
-from saas.mixins import CustomerSaveMixin, CustomerListViewMixin
+from saas.mixins import CustomerSaveMixin, CustomerListViewMixin, CustomerCheckMixin
 
 from users.models import UserProfile, UserGroup
 from users.forms import UserProfileForm, UserGroupForm
 
 
-class UserProfileUpdate(AdminMixin, CustomerSaveMixin, UpdateView):
+class UserProfileUpdate(AdminMixin, CustomerCheckMixin, CustomerSaveMixin, UpdateView):
     model = UserProfile
     form_class = UserProfileForm
     template_name = "users/user_edit.html"
@@ -57,7 +57,7 @@ class UserGroupAdd(AdminMixin, CreateView):
     success_url = reverse_lazy('users:user_group_list')
 
 
-class UserGroupUpdate(AdminMixin, UpdateView):
+class UserGroupUpdate(AdminMixin, CustomerCheckMixin, UpdateView):
     model = UserGroup
     form_class = UserGroupForm
     template_name = "users/user_group_edit.html"

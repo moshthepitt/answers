@@ -10,7 +10,7 @@ from django.contrib import messages
 
 from datatableview.views import DatatableView
 from core.mixins import AdminMixin
-from saas.mixins import CustomerSaveMixin, CustomerListViewMixin
+from saas.mixins import CustomerSaveMixin, CustomerListViewMixin, CustomerCheckMixin
 
 from questions.models import Quiz, Sitting
 from questions.forms import QuizForm, QuestionFormSet, QuestionFormSetHelper, SittingForm
@@ -73,7 +73,7 @@ class SittingDatatableView(AdminMixin, CustomerListViewMixin, DatatableView):
         )
 
 
-class SittingUpdate(AdminMixin, CustomerSaveMixin, UpdateView):
+class SittingUpdate(AdminMixin, CustomerCheckMixin, CustomerSaveMixin, UpdateView):
     model = Sitting
     form_class = SittingForm
     template_name = "questions/sitting_edit.html"
@@ -111,7 +111,7 @@ class QuizDatatableView(AdminMixin, CustomerListViewMixin, DatatableView):
         )
 
 
-class QuizUpdate(AdminMixin, CustomerSaveMixin, UpdateView):
+class QuizUpdate(AdminMixin, CustomerCheckMixin, CustomerSaveMixin, UpdateView):
     model = Quiz
     form_class = QuizForm
     template_name = "questions/quiz_edit.html"
@@ -126,7 +126,7 @@ class QuizAdd(AdminMixin, CustomerSaveMixin, CreateView):
 
 
 def quiz_questions(request, pk):
-    quiz = get_object_or_404(Quiz, pk=pk)
+    quiz = get_object_or_404(Quiz, pk=pk, customer=request.user.userprofile.customer)
     if request.method == "POST":
         formset = QuestionFormSet(request.POST, instance=quiz)
         if formset.is_valid():

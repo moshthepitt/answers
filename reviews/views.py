@@ -8,7 +8,7 @@ from django.utils.html import format_html
 
 from datatableview.views import DatatableView
 from core.mixins import AdminMixin
-from saas.mixins import CustomerSaveMixin, CustomerListViewMixin
+from saas.mixins import CustomerSaveMixin, CustomerListViewMixin, CustomerCheckMixin
 
 from reviews.models import Review
 from reviews.mixins import ReviewMixin
@@ -48,7 +48,7 @@ class ReviewView(ReviewMixin, FormMixin, DetailView):
         return super(ReviewView, self).dispatch(*args, **kwargs)
 
 
-class ReviewUpdate(AdminMixin, CustomerSaveMixin, UpdateView):
+class ReviewUpdate(AdminMixin, CustomerCheckMixin, CustomerSaveMixin, UpdateView):
     model = Review
     form_class = ReviewForm
     template_name = "reviews/review_edit.html"
