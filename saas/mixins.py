@@ -32,5 +32,8 @@ class CustomerListViewMixin(object):
     """
 
     def get_queryset(self):
-        queryset = super(CustomerListViewMixin, self).get_queryset().filter(customer=self.request.user.userprofile.customer)
+        if self.request.user.userprofile.customer:
+            queryset = super(CustomerListViewMixin, self).get_queryset().filter(customer=self.request.user.userprofile.customer)
+        else:
+            queryset = super(CustomerListViewMixin, self).get_queryset().none()
         return queryset
