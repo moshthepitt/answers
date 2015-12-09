@@ -13,8 +13,9 @@ class CustomerSaveMixin(object):
     def form_valid(self, form):
         self.saved_object = form.save()
         if self.request.user.userprofile and self.request.user.userprofile.customer:
-            self.saved_object.customer = self.request.user.userprofile.customer
-            self.saved_object.save()
-            messages.add_message(
-                self.request, messages.SUCCESS, _('Successfully saved {0}'.format(self.model._meta.verbose_name.title())))
+            if not self.saved_object.customer or (self.saved_object.customer and self.saved_object.customer != self.request.user.userprofile.customer):
+                self.saved_object.customer = self.request.user.userprofile.customer
+                self.saved_object.save()
+        messages.add_message(
+            self.request, messages.SUCCESS, _('Successfully saved {0}'.format(self.model._meta.verbose_name.title())))
         return super(CustomerSaveMixin, self).form_valid(form)
