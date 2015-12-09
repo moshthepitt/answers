@@ -19,3 +19,7 @@ class CustomerSaveMixin(object):
         messages.add_message(
             self.request, messages.SUCCESS, _('Successfully saved {0}'.format(self.model._meta.verbose_name.title())))
         return super(CustomerSaveMixin, self).form_valid(form)
+
+    def form_invalid(self, form):
+        messages.add_message(self.request, messages.WARNING, _('Please fix the errors below'))
+        return super(CustomerSaveMixin, self).form_invalid(form)

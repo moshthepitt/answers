@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse_lazy, reverse
 from django.utils.translation import ugettext as _
 from django.utils.html import format_html
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
 
 from datatableview.views import DatatableView
 from core.mixins import AdminMixin
@@ -130,6 +131,8 @@ def quiz_questions(request, pk):
         formset = QuestionFormSet(request.POST, instance=quiz)
         if formset.is_valid():
             formset.save()
+            messages.add_message(
+                request, messages.SUCCESS, _('Successfully saved {0}'.format(quiz._meta.verbose_name.title())))
             return redirect(reverse('questions:quiz_list'))
     else:
         formset = QuestionFormSet(instance=quiz)

@@ -56,7 +56,7 @@ class Sitting(models.Model):
     """
     created_on = models.DateTimeField(_("Created on"), auto_now_add=True)
     updated_on = models.DateTimeField(_("Updated on"), auto_now=True)
-    title = models.CharField(_("Title"), max_length=300, blank=True)
+    title = models.CharField(_("Title"), max_length=300, blank=False)
     customer = models.ForeignKey(Customer, verbose_name=_(
         "Customer"), on_delete=models.PROTECT, blank=True, null=True, default=None)
 
