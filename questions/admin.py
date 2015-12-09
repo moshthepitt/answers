@@ -4,7 +4,7 @@ from polymorphic.admin import PolymorphicParentModelAdmin  # , PolymorphicChildM
 
 from questions.models import Quiz, Question, MultipleChoiceQuestion, MultipleChoiceOption
 from questions.models import RatingQuestion, TextQuestion, EssayQuestion, BooleanQuestion
-from questions.models import Category
+from questions.models import Category, Sitting
 
 
 class QuizAdmin(admin.ModelAdmin):
@@ -12,6 +12,10 @@ class QuizAdmin(admin.ModelAdmin):
 
 
 class CategoryAdmin(admin.ModelAdmin):
+    pass
+
+
+class SittingAdmin(admin.ModelAdmin):
     pass
 
 
@@ -56,6 +60,7 @@ class QuestionAdmin(PolymorphicParentModelAdmin):
 
 admin.site.register(Quiz, QuizAdmin)
 admin.site.register(Category, CategoryAdmin)
+admin.site.register(Sitting, SittingAdmin)
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(MultipleChoiceQuestion, MultipleChoiceQuestionAdmin)
 admin.site.register(MultipleChoiceOption, MultipleChoiceOptionAdmin)

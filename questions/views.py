@@ -9,6 +9,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 
 from datatableview.views import DatatableView
 from core.mixins import AdminMixin
+from saas.mixins import CustomerSaveMixin
 
 from questions.models import Quiz, Sitting
 from questions.forms import QuizForm, QuestionFormSet, QuestionFormSetHelper, SittingForm
@@ -71,14 +72,14 @@ class SittingDatatableView(AdminMixin, DatatableView):
         )
 
 
-class SittingUpdate(AdminMixin, UpdateView):
+class SittingUpdate(AdminMixin, CustomerSaveMixin, UpdateView):
     model = Sitting
     form_class = SittingForm
     template_name = "questions/sitting_edit.html"
     success_url = reverse_lazy('questions:sitting_list')
 
 
-class SittingAdd(AdminMixin, CreateView):
+class SittingAdd(AdminMixin, CustomerSaveMixin, CreateView):
     model = Sitting
     form_class = SittingForm
     template_name = "questions/sitting_add.html"
@@ -109,14 +110,14 @@ class QuizDatatableView(AdminMixin, DatatableView):
         )
 
 
-class QuizUpdate(AdminMixin, UpdateView):
+class QuizUpdate(AdminMixin, UpdateView, CustomerSaveMixin):
     model = Quiz
     form_class = QuizForm
     template_name = "questions/quiz_edit.html"
     success_url = reverse_lazy('questions:quiz_list')
 
 
-class QuizAdd(AdminMixin, CreateView):
+class QuizAdd(AdminMixin, CreateView, CustomerSaveMixin):
     model = Quiz
     form_class = QuizForm
     template_name = "questions/quiz_add.html"
