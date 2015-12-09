@@ -91,6 +91,7 @@ def make_quiz_form(quiz):
         model_fields = fields_for_model(AnswerModel)
         answer_field = model_fields['answer']
         answer_field.label = question.title
+        other_field = None
         if question._meta.model == MultipleChoiceQuestion:
             answer_field.queryset = MultipleChoiceOption.objects.filter(question=question)
             if answer_field.queryset.filter(other=True).exists():
@@ -98,8 +99,6 @@ def make_quiz_form(quiz):
                 other_field.widget.attrs['class'] = "other-field id_answer_{}".format(question.id)
                 other_field.label = _("If you selected Other, please specify what you meant")
                 other_field.required = False
-            else:
-                other_field = None
         form_fields['answer_{}'.format(question.id)] = answer_field
         if other_field:
             form_fields['other_{}'.format(question.id)] = other_field

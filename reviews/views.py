@@ -16,7 +16,7 @@ from reviews.forms import ReviewForm, PeerReviewForm
 from questions.forms import quiz_form_helper, save_quiz_form, make_custom_cleaned_quiz_form
 
 
-class ReviewView(ReviewMixin, FormMixin, DetailView):
+class ReviewView(CustomerCheckMixin, ReviewMixin, FormMixin, DetailView):
     model = Review
 
     def get_success_url(self):
