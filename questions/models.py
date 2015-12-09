@@ -2,6 +2,7 @@ from django.core.validators import MaxValueValidator
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
+from django.utils.encoding import python_2_unicode_compatible
 
 from autoslug import AutoSlugField
 from mptt.fields import TreeForeignKey
@@ -9,8 +10,10 @@ from mptt.models import MPTTModel
 from polymorphic import PolymorphicModel
 
 from core.utils import PathAndRename
+from saas.models import Customer
 
 
+@python_2_unicode_compatible
 class Category(MPTTModel):
 
     """Category Model"""
@@ -23,6 +26,8 @@ class Category(MPTTModel):
         _("Description"), blank=True, help_text=_("A more detailed description of the category"))
     parent = TreeForeignKey("Category", blank=True, null=True, default=None,
                             verbose_name=_("Parent Category"), on_delete=models.PROTECT)
+    customer = models.ForeignKey(Customer, verbose_name=_(
+        "Customer"), on_delete=models.PROTECT, blank=True, null=True, default=None)
     active = models.BooleanField(_("Active"), default=True)
     # Sortable property
     order = models.PositiveIntegerField()
@@ -39,6 +44,7 @@ class Category(MPTTModel):
         return self.title
 
 
+@python_2_unicode_compatible
 class Sitting(models.Model):
 
     """
@@ -51,6 +57,8 @@ class Sitting(models.Model):
     created_on = models.DateTimeField(_("Created on"), auto_now_add=True)
     updated_on = models.DateTimeField(_("Updated on"), auto_now=True)
     title = models.CharField(_("Title"), max_length=300, blank=True)
+    customer = models.ForeignKey(Customer, verbose_name=_(
+        "Customer"), on_delete=models.PROTECT, blank=True, null=True, default=None)
 
     class Meta:
         verbose_name = _("Sitting")
@@ -60,6 +68,7 @@ class Sitting(models.Model):
         return self.title
 
 
+@python_2_unicode_compatible
 class Quiz(models.Model):
 
     """A quiz is a collection of questions"""
@@ -80,7 +89,9 @@ class Quiz(models.Model):
     title = models.CharField(_("Title"), max_length=300, blank=False)
     slug = AutoSlugField(
         populate_from='title', editable=True, unique=True, null=False, max_length=255)
-    category = models.ForeignKey(Category, null=True, blank=True, verbose_name=_("Category"))
+    category = models.ForeignKey(Category, null=True, blank=True, verbose_name=_("Category"), on_delete=models.PROTECT)
+    customer = models.ForeignKey(Customer, verbose_name=_(
+        "Customer"), on_delete=models.PROTECT, blank=True, null=True, default=None)
     description = models.TextField(
         _("Description"), blank=True, help_text=_("A more detailed description of the question set"))
     question_ordering = models.CharField(
@@ -144,6 +155,7 @@ class Quiz(models.Model):
         return self.title
 
 
+@python_2_unicode_compatible
 class Question(PolymorphicModel):
 
     """
@@ -163,7 +175,7 @@ class Question(PolymorphicModel):
         _("Required"), default=True, help_text=_("Is this question required?"))
     explanation = models.TextField(_("Explanation"), blank=True, help_text=_(
         "Explanation to be shown after the question has been answered"))
-    category = models.ForeignKey(Category, null=True, blank=True, verbose_name=_("Category"))
+    category = models.ForeignKey(Category, null=True, blank=True, verbose_name=_("Category"), on_delete=models.PROTECT)
 
     class Meta:
         verbose_name = _("Question")
@@ -174,6 +186,7 @@ class Question(PolymorphicModel):
         return self.title
 
 
+@python_2_unicode_compatible
 class TextQuestion(Question):
 
     """A type of question that expects short text answers"""
@@ -190,6 +203,7 @@ class TextQuestion(Question):
         return self.title
 
 
+@python_2_unicode_compatible
 class EssayQuestion(Question):
 
     """A type of question that expects essay type answers"""
@@ -206,6 +220,7 @@ class EssayQuestion(Question):
         return self.title
 
 
+@python_2_unicode_compatible
 class MultipleChoiceQuestion(Question):
 
     """
@@ -225,13 +240,14 @@ class MultipleChoiceQuestion(Question):
         return self.title
 
 
+@python_2_unicode_compatible
 class MultipleChoiceOption(models.Model):
 
     """The answer choices to a multipel choice question"""
 
     created_on = models.DateTimeField(_("Created on"), auto_now_add=True)
     updated_on = models.DateTimeField(_("Updated on"), auto_now=True)
-    question = models.ForeignKey(MultipleChoiceQuestion, verbose_name=_("Question"))
+    question = models.ForeignKey(MultipleChoiceQuestion, verbose_name=_("Question"), on_delete=models.CASCADE)
     title = models.CharField(_("Answer"), max_length=300, blank=False, help_text=_(
         "Input the answer as you want it displayed"))
     correct_answer = models.BooleanField(
@@ -247,6 +263,7 @@ class MultipleChoiceOption(models.Model):
         return self.title
 
 
+@python_2_unicode_compatible
 class RatingQuestion(Question):
 
     """A question used to rate things from Very Poor/Very Bad to Very Good"""
@@ -263,6 +280,7 @@ class RatingQuestion(Question):
         return self.title
 
 
+@python_2_unicode_compatible
 class BooleanQuestion(Question):
 
     """A type of question where the user is expected to select from two options: True/False, Yes/No, etc"""

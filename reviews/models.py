@@ -1,15 +1,20 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
+from django.utils.encoding import python_2_unicode_compatible
 
 from questions.models import Quiz, Sitting
 from users.models import UserProfile
+from saas.models import Customer
 
 
+@python_2_unicode_compatible
 class Review(models.Model):
     created_on = models.DateTimeField(_("Created on"), auto_now_add=True)
     updated_on = models.DateTimeField(_("Updated on"), auto_now=True)
     title = models.CharField(_("Title"), max_length=300, blank=True)
+    customer = models.ForeignKey(Customer, verbose_name=_(
+        "Customer"), on_delete=models.PROTECT, blank=True, null=True, default=None)
     userprofile = models.ForeignKey(UserProfile, verbose_name=_("User"), help_text=_(
         "The person being reviewed"), on_delete=models.PROTECT, blank=True, null=True, default=None)
     sitting = models.ForeignKey(

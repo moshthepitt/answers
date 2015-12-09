@@ -45,6 +45,7 @@ INSTALLED_APPS = (
     'answers',
     'reviews',
     'reports',
+    'saas',
     # third party
     'allauth',
     'allauth.account',
