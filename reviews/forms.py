@@ -13,7 +13,7 @@ class ReviewForm(ModelForm):
 
     class Meta:
         model = Review
-        fields = ['title', 'sitting', 'quiz', 'reviewers']
+        fields = ['title', 'sitting', 'quiz', 'reviewers', 'public']
 
     def __init__(self, *args, **kwargs):
         super(ReviewForm, self).__init__(*args, **kwargs)

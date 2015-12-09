@@ -48,14 +48,14 @@ class ReviewView(ReviewMixin, FormMixin, DetailView):
         return super(ReviewView, self).dispatch(*args, **kwargs)
 
 
-class ReviewUpdate(AdminMixin, UpdateView, CustomerSaveMixin):
+class ReviewUpdate(AdminMixin, CustomerSaveMixin, UpdateView):
     model = Review
     form_class = ReviewForm
     template_name = "reviews/review_edit.html"
     success_url = reverse_lazy('reviews:review_list')
 
 
-class ReviewAdd(AdminMixin, CreateView, CustomerSaveMixin):
+class ReviewAdd(AdminMixin, CustomerSaveMixin, CreateView):
     model = Review
     form_class = ReviewForm
     template_name = "reviews/review_add.html"

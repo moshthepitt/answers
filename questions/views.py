@@ -110,14 +110,14 @@ class QuizDatatableView(AdminMixin, DatatableView):
         )
 
 
-class QuizUpdate(AdminMixin, UpdateView, CustomerSaveMixin):
+class QuizUpdate(AdminMixin, CustomerSaveMixin, UpdateView):
     model = Quiz
     form_class = QuizForm
     template_name = "questions/quiz_edit.html"
     success_url = reverse_lazy('questions:quiz_list')
 
 
-class QuizAdd(AdminMixin, CreateView, CustomerSaveMixin):
+class QuizAdd(AdminMixin, CustomerSaveMixin, CreateView):
     model = Quiz
     form_class = QuizForm
     template_name = "questions/quiz_add.html"
