@@ -6,12 +6,13 @@ from django.utils.html import format_html
 
 from datatableview.views import DatatableView
 from core.mixins import AdminMixin
+from saas.mixins import CustomerSaveMixin
 
 from users.models import UserProfile, UserGroup
 from users.forms import UserProfileForm, UserGroupForm
 
 
-class UserProfileUpdate(AdminMixin, UpdateView):
+class UserProfileUpdate(AdminMixin, CustomerSaveMixin, UpdateView):
     model = UserProfile
     form_class = UserProfileForm
     template_name = "users/user_edit.html"
