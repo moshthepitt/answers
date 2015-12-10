@@ -50,14 +50,14 @@ class UserProfileDatatableView(AdminMixin, CustomerListViewMixin, DatatableView)
         return ", ".join(map(str, [x.name for x in instance.group.all()]))
 
 
-class UserGroupAdd(AdminMixin, CustomerQuerysetMixin, CreateView):
+class UserGroupAdd(AdminMixin, CustomerSaveMixin, CustomerQuerysetMixin, CreateView):
     model = UserGroup
     form_class = UserGroupForm
     template_name = "users/user_group_add.html"
     success_url = reverse_lazy('users:user_group_list')
 
 
-class UserGroupUpdate(AdminMixin, CustomerCheckMixin, CustomerQuerysetMixin, UpdateView):
+class UserGroupUpdate(AdminMixin, CustomerCheckMixin, CustomerSaveMixin, CustomerQuerysetMixin, UpdateView):
     model = UserGroup
     form_class = UserGroupForm
     template_name = "users/user_group_edit.html"
