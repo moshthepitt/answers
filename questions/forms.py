@@ -93,6 +93,7 @@ def make_quiz_form(quiz):
         model_fields = fields_for_model(AnswerModel)
         answer_field = model_fields['answer']
         answer_field.label = question.title
+        answer_field.required = question.required
         other_field = None
         if question.image:
             answer_field.label = format_html("<img src='{}' class='img-responsive' alt='{}' title='{}' />", question.image.url, smart_str(question.title), smart_str(question.title))
