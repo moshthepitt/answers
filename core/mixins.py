@@ -74,7 +74,7 @@ class CustomerQuerysetMixin(object):
             form.fields['parent'].queryset = UserGroup.objects.filter(
                 customer=self.request.user.userprofile.customer
             )
-            if type(self.get_object()) == UserGroup and detail_view:
+            if detail_view and type(self.get_object()) == UserGroup:
                 form.fields['parent'].queryset = UserGroup.objects.filter(
                     customer=self.request.user.userprofile.customer
                 ).exclude(id__exact=self.get_object().id)
@@ -84,7 +84,7 @@ class CustomerQuerysetMixin(object):
         try:
             form.fields['manager'].queryset = UserProfile.objects.filter(
                 customer=self.request.user.userprofile.customer)
-            if type(self.get_object()) == UserProfile and detail_view:
+            if detail_view and type(self.get_object()) == UserProfile:
                 form.fields['manager'].queryset = UserProfile.objects.filter(
                     customer=self.request.user.userprofile.customer
                 ).exclude(id__exact=self.get_object().id)
