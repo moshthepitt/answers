@@ -51,7 +51,9 @@
 						{% if item.answers %}
 							<h4>{{item.title}}</h4>
 							{% for answer in item.answers %}
-								<div class="well"><p>{{answer.answer|linebreaksbr}}</p></div>
+								{% if answer.answer %}
+									<div class="well"><p>{{answer.answer|linebreaksbr}}</p></div>
+								{% endif %}
 							{% endfor %}
 							<hr/>
 						{% endif %}
