@@ -1,0 +1,8 @@
+Hello {{username}},
+
+{{message}}
+
+Warm regards,
+
+JibuPro
+http://jibupro.com

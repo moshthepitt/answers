@@ -1,8 +1,12 @@
 from django.views.generic.base import TemplateView
 from django.db.models import Q
+from django.views.generic.edit import FormView
 
 from reviews.models import Review
 from reports.views import user_review_report
+
+from .mixins import AdminMixin
+from .forms import GenericMessage
 
 
 class HomePageView(TemplateView):
@@ -39,3 +43,13 @@ class DashboardView(TemplateView):
         context['pending_reviews'] = pending_reviews
         context['reports'] = reports
         return context
+
+
+class GenericMessageView(AdminMixin, FormView):
+    template_name = 'core/generic-message.html'
+    form_class = GenericMessage
+    success_url = '/dashboard/'
+
+    def form_valid(self, form):
+        form.send_email(self.request.user.userprofile.customer)
+        return super(GenericMessageView, self).form_valid(form)
