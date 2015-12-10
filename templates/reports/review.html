@@ -39,6 +39,9 @@
 									{% endif %}
 									<th>{{review.company_percentage_score|floatformat:2}}%</th>
 								</tr>
+								<tr>
+									<td colspan="3">{% trans "Based on" %} {{review.number_of_reviewers}} {% trans "out of" %} {{review.reviewers.count}} {% trans "reviewers" %}</td>
+								</tr>
 						</tbody>
 					  </table>
 					</div>

@@ -26,14 +26,21 @@ def user_review_report(review):
         question.company_score = company_score['avg']
         question.company_percentage_score = question.company_score * 100 / 5
         scores.append(question)
+
+    if scores:
+        number_of_reviewers = Answer.objects.filter(
+            review=review, review__sitting=review.sitting).count() / review.quiz.get_questions().count()
+
     overall_score = Answer.objects.filter(review=review).aggregate(
         avg=Coalesce(Avg('ratinganswer__answer'), Value(0)))
     overall_company_score = Answer.objects.filter(review__quiz=review.quiz).filter(review__sitting=review.sitting).aggregate(
         avg=Coalesce(Avg('ratinganswer__answer'), Value(0)))
+
     review.score = overall_score['avg']
     review.percentage_score = review.score * 100 / 5
     review.company_score = overall_company_score['avg']
     review.company_percentage_score = review.company_score * 100 / 5
+    review.number_of_reviewers = number_of_reviewers
     return (review, scores)
 
 
