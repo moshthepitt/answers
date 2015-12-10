@@ -6,7 +6,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit
 from crispy_forms.bootstrap import Field, FormActions
 
-from users.utils import send_email_to_users
+from users.tasks import task_send_email_to_users
 
 
 class GenericMessage(forms.Form):
@@ -29,7 +29,7 @@ class GenericMessage(forms.Form):
         from_email = self.cleaned_data['from_email']
         subject = self.cleaned_data['subject']
         message = self.cleaned_data['message']
-        return send_email_to_users(customer, from_name, from_email, subject, message)
+        return task_send_email_to_users.delay(customer.pk, from_name, from_email, subject, message)
 
     def __init__(self, *args, **kwargs):
         super(GenericMessage, self).__init__(*args, **kwargs)
