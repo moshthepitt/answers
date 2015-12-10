@@ -9,7 +9,7 @@ from core.views import HomePageView, DashboardView, GenericMessageView
 urlpatterns = [
     url(r'^$', HomePageView.as_view(), name='home'),
     url(r'^dashboard/$', login_required(DashboardView.as_view()), name='dashboard'),
-    url(r'^send-message/$', login_required(GenericMessageView.as_view()), name='dashboard'),
+    url(r'^send-message/$', login_required(GenericMessageView.as_view()), name='generic-message'),
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accounts/', include('allauth.urls')),
