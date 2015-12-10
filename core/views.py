@@ -28,12 +28,13 @@ class DashboardView(TemplateView):
 
         reports = []
         reviews = Review.objects.filter(userprofile=self.request.user.userprofile).order_by('-created_on')[:4]
-        sittings = [i.sitting for i in reviews]
-        current_sitting = max(set(sittings), key=sittings.count)
-        reviews = Review.objects.filter(userprofile=self.request.user.userprofile).filter(sitting=current_sitting).order_by('-created_on')[:3]
-        for review in reviews:
-            report = user_review_report(review)
-            reports.append(report)
+        if reviews:
+            sittings = [i.sitting for i in reviews]
+            current_sitting = max(set(sittings), key=sittings.count)
+            reviews = Review.objects.filter(userprofile=self.request.user.userprofile).filter(sitting=current_sitting).order_by('-created_on')[:3]
+            for review in reviews:
+                report = user_review_report(review)
+                reports.append(report)
 
         context['pending_reviews'] = pending_reviews
         context['reports'] = reports
