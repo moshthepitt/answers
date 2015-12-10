@@ -11,7 +11,7 @@ from users.utils import send_email_to_users
 
 class GenericMessage(forms.Form):
     from_name = forms.CharField(
-        label=_("Email Subject")
+        label=_("From Name")
     )
     from_email = forms.EmailField(
         label=_("From Email (Sender)")
