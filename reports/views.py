@@ -11,11 +11,12 @@ from reports.mixins import ReportMixin
 from saas.mixins import CustomerListViewMixin, CustomerCheckMixin
 from reviews.models import Review
 from answers.models import Answer
+from questions.models import RatingQuestion, EssayQuestion
 
 
 def user_review_report(review):
     scores = []
-    for question in review.quiz.get_questions():
+    for question in review.quiz.get_questions().instance_of(RatingQuestion):
         score = Answer.objects.filter(question=question).filter(
             review=review).aggregate(avg=Coalesce(Avg('ratinganswer__answer'), Value(0)))
         company_score = Answer.objects.filter(question=question).filter(review__sitting=review.sitting).filter(
@@ -36,6 +37,17 @@ def user_review_report(review):
     return (review, scores)
 
 
+def user_text_answers(review):
+    """
+    returns all the Essay type questions
+    """
+    result = []
+    for question in review.quiz.get_questions().instance_of(EssayQuestion):
+        question.answers = Answer.objects.filter(question=question).filter(review=review)
+        result.append(question)
+    return result
+
+
 class ReviewView(CustomerCheckMixin, ReportMixin, DetailView):
     model = Review
     template_name = "reports/review.html"
@@ -46,6 +58,7 @@ class ReviewView(CustomerCheckMixin, ReportMixin, DetailView):
         report = user_review_report(self.get_object())
         context['review'] = report[0]
         context['scores'] = report[1]
+        context['text_answers'] = user_text_answers(self.get_object())
         context['show_individual'] = self.show_individual
         return context
 

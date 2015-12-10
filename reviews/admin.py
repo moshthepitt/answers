@@ -4,6 +4,6 @@ from reviews.models import Review
 
 
 class ReviewAdmin(admin.ModelAdmin):
-    list_display = ['title', 'userprofile', 'quiz']
+    list_display = ['userprofile', 'quiz', 'title', 'sitting']
 
 admin.site.register(Review, ReviewAdmin)

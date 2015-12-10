@@ -43,6 +43,15 @@
 					  </table>
 					</div>
 				{% endif %}
+				{% if text_answers %}
+					{% for item in text_answers %}
+						<h4>{{item.title}}</h4>
+						{% for answer in item.answers %}
+							<div class="well"><p>{{answer.answer|linebreaksbr}}</p></div>
+						{% endfor %}
+						<hr/>
+					{% endfor %}
+				{% endif %}
 			</div>
 		</div>
 	</div>
