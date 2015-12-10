@@ -80,6 +80,7 @@ class ReviewDatatableView(AdminMixin, CustomerListViewMixin, DatatableView):
         'columns': [
             'title',
             'sitting',
+            'quiz',
             (_("Actions"), 'id', 'get_actions'),
         ],
         'search_fields': ['title', 'sitting__title'],
@@ -106,6 +107,7 @@ class PeerReviewDatatableView(AdminMixin, CustomerListViewMixin, DatatableView):
         'columns': [
             'title',
             'sitting',
+            'quiz',
             (_("User"), 'userprofile', 'get_user'),
             (_("Actions"), 'id', 'get_actions'),
         ],
