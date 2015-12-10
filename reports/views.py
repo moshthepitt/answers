@@ -62,6 +62,7 @@ class ReviewReportDatatableView(CustomerListViewMixin, DatatableView):
         'columns': [
             'title',
             'sitting',
+            'quiz',
             (_("User"), 'userprofile', 'get_user'),
             (_("Actions"), 'id', 'get_actions'),
         ],
