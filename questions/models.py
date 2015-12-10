@@ -133,7 +133,7 @@ class Quiz(models.Model):
 
     def get_question_order(self):
         if self.question_ordering == Quiz.DATE_ORDER:
-            return "-created_on"
+            return "created_on"
         elif self.question_ordering == Quiz.ALPHABETICAL_ORDER:
             return "title"
         elif self.question_ordering == Quiz.RANDOM_ORDER:
