@@ -31,11 +31,14 @@ class DashboardView(TemplateView):
         )
 
         reports = []
-        reviews = Review.objects.filter(userprofile=self.request.user.userprofile).order_by('-created_on')[:4]
+        reviews = Review.objects.filter(customer=self.request.user.userprofile.customer).filter(
+            userprofile=self.request.user.userprofile).order_by('-created_on')[:4]
         if reviews:
             sittings = [i.sitting for i in reviews]
             current_sitting = max(set(sittings), key=sittings.count)
-            reviews = Review.objects.filter(userprofile=self.request.user.userprofile).filter(sitting=current_sitting).order_by('-created_on')[:3]
+            reviews = Review.objects.filter(customer=self.request.user.userprofile.customer).filter(
+                userprofile=self.request.user.userprofile).filter(
+                sitting=current_sitting).order_by('-created_on')[:3]
             for review in reviews:
                 report = user_review_report(review)
                 reports.append(report)
