@@ -18,31 +18,34 @@ from questions.models import RatingQuestion, EssayQuestion, Sitting
 
 def user_review_report(review):
     scores = []
-    for question in review.quiz.get_questions().instance_of(RatingQuestion):
-        score = Answer.objects.filter(question=question).filter(
-            review=review).aggregate(avg=Coalesce(Avg('ratinganswer__answer'), Value(0)))
-        company_score = Answer.objects.filter(question=question).filter(review__sitting=review.sitting).filter(
-            review__quiz=review.quiz).aggregate(avg=Coalesce(Avg('ratinganswer__answer'), Value(0)))
-        question.score = score['avg']
-        question.percentage_score = question.score * 100 / 5
-        question.company_score = company_score['avg']
-        question.company_percentage_score = question.company_score * 100 / 5
-        scores.append(question)
+    if review.quiz:
+        for question in review.quiz.get_questions().instance_of(RatingQuestion):
+            score = Answer.objects.filter(question=question).filter(
+                review=review).aggregate(avg=Coalesce(Avg('ratinganswer__answer'), Value(0)))
+            company_score = Answer.objects.filter(question=question).filter(review__sitting=review.sitting).filter(
+                review__quiz=review.quiz).aggregate(avg=Coalesce(Avg('ratinganswer__answer'), Value(0)))
+            question.score = score['avg']
+            question.percentage_score = question.score * 100 / 5
+            question.company_score = company_score['avg']
+            question.company_percentage_score = question.company_score * 100 / 5
+            scores.append(question)
 
-    if scores:
-        number_of_reviewers = Answer.objects.filter(
-            review=review, review__sitting=review.sitting).count() / review.quiz.get_questions().count()
+        if scores:
+            number_of_reviewers = Answer.objects.filter(
+                review=review, review__sitting=review.sitting).count() / review.quiz.get_questions().count()
+        else:
+            number_of_reviewers = 0
 
-    overall_score = Answer.objects.filter(review=review).aggregate(
-        avg=Coalesce(Avg('ratinganswer__answer'), Value(0)))
-    overall_company_score = Answer.objects.filter(review__quiz=review.quiz).filter(review__sitting=review.sitting).aggregate(
-        avg=Coalesce(Avg('ratinganswer__answer'), Value(0)))
+        overall_score = Answer.objects.filter(review=review).aggregate(
+            avg=Coalesce(Avg('ratinganswer__answer'), Value(0)))
+        overall_company_score = Answer.objects.filter(review__quiz=review.quiz).filter(review__sitting=review.sitting).aggregate(
+            avg=Coalesce(Avg('ratinganswer__answer'), Value(0)))
 
-    review.score = overall_score['avg']
-    review.percentage_score = review.score * 100 / 5
-    review.company_score = overall_company_score['avg']
-    review.company_percentage_score = review.company_score * 100 / 5
-    review.number_of_reviewers = number_of_reviewers
+        review.score = overall_score['avg']
+        review.percentage_score = review.score * 100 / 5
+        review.company_score = overall_company_score['avg']
+        review.company_percentage_score = review.company_score * 100 / 5
+        review.number_of_reviewers = number_of_reviewers
     return (review, scores)
 
 
@@ -125,7 +128,7 @@ class PendingReviewsReportDatatableView(AdminMixin, CustomerListViewMixin, Datat
     Displays a list of reviews and how many people have reviewed
     """
     model = Review
-    template_name = "reports/report_list.html"
+    template_name = "reports/sitting_pending.html"
     datatable_options = {
         'structure_template': "datatableview/bootstrap_structure.html",
         'columns': [
@@ -165,6 +168,11 @@ class PendingReviewsReportDatatableView(AdminMixin, CustomerListViewMixin, Datat
             answered=ExpressionWrapper(F('no_answers') / F('no_questions'), output_field=FloatField())).order_by('answered')
 
         return queryset.distinct()
+
+    def get_context_data(self, **kwargs):
+        context = super(PendingReviewsReportDatatableView, self).get_context_data(**kwargs)
+        context['sitting'] = self.sitting
+        return context
 
     def dispatch(self, *args, **kwargs):
         self.sitting = get_object_or_404(Sitting, pk=self.kwargs['pk'])

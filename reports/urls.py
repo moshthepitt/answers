@@ -8,6 +8,6 @@ urlpatterns = [
     url(r'^peer-review/(?P<pk>\d+)/$',
         login_required(ReviewView.as_view(show_individual=True)), name='peer_review'),
     url(r'^reports/$', login_required(ReviewReportDatatableView.as_view()), name='report_list'),
-    url(r'^pending-reports/sitting/(?P<pk>\d+)/$',
+    url(r'^pending/sitting/(?P<pk>\d+)/$',
         login_required(PendingReviewsReportDatatableView.as_view()), name='pending_report_list'),
 ]
