@@ -70,7 +70,7 @@ class SittingDatatableView(AdminMixin, CustomerListViewMixin, DatatableView):
         return format_html(
             '<a href="{0}">Edit</a> | <a href="{1}">Completion Report</a>', reverse(
                 'questions:sitting_edit', args=[instance.pk]), reverse(
-                'reports:pending_report_list', args=[instance.pk])
+                'reports:sitting_completion_report', args=[instance.pk])
         )
 
 
