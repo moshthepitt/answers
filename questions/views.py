@@ -68,8 +68,9 @@ class SittingDatatableView(AdminMixin, CustomerListViewMixin, DatatableView):
 
     def get_actions(self, instance, *args, **kwargs):
         return format_html(
-            '<a href="{}">Edit</a>', reverse(
-                'questions:sitting_edit', args=[instance.pk])
+            '<a href="{0}">Edit</a> | <a href="{1}">Completion Report</a>', reverse(
+                'questions:sitting_edit', args=[instance.pk]), reverse(
+                'reports:pending_report_list', args=[instance.pk])
         )
 
 

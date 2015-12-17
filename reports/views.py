@@ -1,17 +1,19 @@
 from django.views.generic.detail import DetailView
-from django.db.models import Value, Avg, Q
+from django.db.models import Value, Avg, Q, F, Count, ExpressionWrapper, FloatField
 from django.db.models.functions import Coalesce
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from django.utils.html import format_html
+from django.shortcuts import get_object_or_404
 
 from datatableview.views import DatatableView
 
 from reports.mixins import ReportMixin
+from core.mixins import AdminMixin
 from saas.mixins import CustomerListViewMixin, CustomerCheckMixin
 from reviews.models import Review
 from answers.models import Answer
-from questions.models import RatingQuestion, EssayQuestion
+from questions.models import RatingQuestion, EssayQuestion, Sitting
 
 
 def user_review_report(review):
@@ -115,3 +117,55 @@ class ReviewReportDatatableView(CustomerListViewMixin, DatatableView):
             return format_html(
                 '<a href="{}">Report</a>', reverse('reports:review', args=[instance.pk])
             )
+
+
+class PendingReviewsReportDatatableView(AdminMixin, CustomerListViewMixin, DatatableView):
+
+    """
+    Displays a list of reviews and how many people have reviewed
+    """
+    model = Review
+    template_name = "reports/report_list.html"
+    datatable_options = {
+        'structure_template': "datatableview/bootstrap_structure.html",
+        'columns': [
+            (_("User"), 'userprofile', 'get_user'),
+            'title',
+            'sitting',
+            'quiz',
+            (_("No. of Reviewers"), 'no_reviewers', 'get_no_reviewers'),
+            (_("Completed"), 'answered', 'get_answered'),
+        ],
+        'search_fields': ['title', 'userprofile__user__last_name', 'userprofile__user__first_name', 'userprofile__user__username'],
+        'unsortable_columns': ['id'],
+    }
+
+    def get_user(self, instance, *args, **kwargs):
+        if instance.userprofile:
+            return instance.userprofile.get_display_name()
+        return ""
+
+    def get_answered(self, instance, *args, **kwargs):
+        return int(instance.answered)
+
+    def get_no_reviewers(self, instance, *args, **kwargs):
+        return instance.no_reviewers
+
+    def get_queryset(self):
+        """
+        return any report which is about the current user, or which they have access to
+        one has access to:
+            any report of someone they manage
+        """
+        queryset = super(PendingReviewsReportDatatableView, self).get_queryset()
+        queryset = queryset.exclude(userprofile=None).filter(sitting=self.sitting).annotate(
+            no_reviewers=Count('reviewers', distinct=True)).annotate(
+            no_answers=Count('answer', distinct=True)).annotate(
+            no_questions=Count('quiz__question', distinct=True)).annotate(
+            answered=ExpressionWrapper(F('no_answers') / F('no_questions'), output_field=FloatField())).order_by('anwered')
+
+        return queryset.distinct()
+
+    def dispatch(self, *args, **kwargs):
+        self.sitting = get_object_or_404(Sitting, pk=self.kwargs['pk'])
+        return super(PendingReviewsReportDatatableView, self).dispatch(*args, **kwargs)
