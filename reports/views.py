@@ -162,7 +162,7 @@ class PendingReviewsReportDatatableView(AdminMixin, CustomerListViewMixin, Datat
             no_reviewers=Count('reviewers', distinct=True)).annotate(
             no_answers=Count('answer', distinct=True)).annotate(
             no_questions=Count('quiz__question', distinct=True)).annotate(
-            answered=ExpressionWrapper(F('no_answers') / F('no_questions'), output_field=FloatField())).order_by('anwered')
+            answered=ExpressionWrapper(F('no_answers') / F('no_questions'), output_field=FloatField())).order_by('answered')
 
         return queryset.distinct()
 
