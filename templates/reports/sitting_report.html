@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %} {% trans "Report:" %} {{object}} {% endblock %}
+
+{% block page_content %} 
+	<div class="row">
+		<div class="col-md-12">
+			<div class="content-box-header">
+				<div class="panel-title">{% trans "Report:" %} {{object}}</div>
+			</div>
+			<div class="content-box-large box-with-header">
+				{% for question_set in sitting.question_sets %}
+					<h3>{{question_set}}</h3>
+					<div class="table-responsive">
+					  <table class="table table-striped table-bordered">
+					  	<thead>
+					  		<tr>
+					  			<th width="75%">{% trans "Statement" %}</th>
+					  			<th>{% trans "Avg Score" %}</th>
+					  		</tr>
+					  	</thead>
+					    <tbody>
+							{% for question in question_set.reported_questions %}
+								{% if question.company_score %}
+								<tr>
+									<td>{{question.title}}</td>
+									<td>{{question.company_percentage_score|floatformat:2}}%</td>
+								</tr>
+								{% endif %}
+							{% endfor %}
+								<tr>
+									<th>{% trans "Total" %}</th>
+									<th>{{question_set.company_percentage_score|floatformat:2}}%</th>
+								</tr>
+						</tbody>
+					  </table>
+					</div>
+				{% endfor %}
+				<h3>{% trans "Company Average" %}</h3>
+				<div class="table-responsive">
+				  <table class="table table-striped table-bordered">
+				  	<thead>
+				  		<tr>
+				  			<th width="75%"></th>
+				  			<th>{% trans "Avg Score" %}</th>
+				  		</tr>
+				  	</thead>
+				    <tbody>
+							<tr>
+								<th>{% trans "Total" %}</th>
+								<th>{{sitting.company_percentage_score|floatformat:2}}%</th>
+							</tr>
+					</tbody>
+				  </table>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

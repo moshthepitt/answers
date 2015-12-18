@@ -13,7 +13,7 @@ from core.mixins import AdminMixin
 from saas.mixins import CustomerListViewMixin, CustomerCheckMixin
 from reviews.models import Review
 from answers.models import Answer
-from questions.models import RatingQuestion, EssayQuestion, Sitting
+from questions.models import RatingQuestion, EssayQuestion, Sitting, Quiz
 
 
 def user_review_report(review):
@@ -58,6 +58,35 @@ def user_text_answers(review):
         question.answers = Answer.objects.filter(question=question).filter(review=review)
         result.append(question)
     return result
+
+
+def sitting_report(sitting):
+    """
+    Attempts to generate a company report of all questions sets in a sitting
+    """
+    question_sets = Quiz.objects.filter(review__sitting=sitting).distinct()
+    grand_overall_score = 0
+    for question_set in question_sets:
+        question_set.reported_questions = []
+        for question in question_set.get_questions().instance_of(RatingQuestion):
+            company_score = Answer.objects.filter(question=question).filter(review__sitting=sitting).filter(
+                review__quiz=question_set).aggregate(avg=Coalesce(Avg('ratinganswer__answer'), Value(0)))
+            question.company_score = company_score['avg']
+            question.company_percentage_score = question.company_score * 100 / 5
+
+            question_set.reported_questions.append(question)
+
+        overall_company_score = Answer.objects.exclude(ratinganswer__answer=None).filter(review__quiz=question_set).filter(review__sitting=sitting).aggregate(
+            avg=Coalesce(Avg('ratinganswer__answer'), Value(0)))
+        question_set.overall_company_score = overall_company_score['avg']
+        question_set.company_percentage_score = question_set.overall_company_score * 100 / 5
+        grand_overall_score += question_set.overall_company_score
+
+    sitting.question_sets = question_sets
+    sitting.overall_company_score = grand_overall_score / len(sitting.question_sets)
+    sitting.company_percentage_score = sitting.overall_company_score * 100 / 5
+
+    return sitting
 
 
 class ReviewView(CustomerCheckMixin, ReportMixin, DetailView):
@@ -177,3 +206,15 @@ class PendingReviewsReportDatatableView(AdminMixin, CustomerListViewMixin, Datat
     def dispatch(self, *args, **kwargs):
         self.sitting = get_object_or_404(Sitting, pk=self.kwargs['pk'])
         return super(PendingReviewsReportDatatableView, self).dispatch(*args, **kwargs)
+
+
+class SittingReport(CustomerCheckMixin, ReportMixin, DetailView):
+    model = Sitting
+    template_name = "reports/sitting_report.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(SittingReport, self).get_context_data(**kwargs)
+        context['sitting'] = sitting_report(self.get_object())
+        return context
+
+
