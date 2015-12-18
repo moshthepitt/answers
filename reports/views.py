@@ -14,6 +14,7 @@ from saas.mixins import CustomerListViewMixin, CustomerCheckMixin
 from reviews.models import Review
 from answers.models import Answer
 from questions.models import RatingQuestion, EssayQuestion, Sitting, Quiz
+from users.models import UserProfile
 
 
 def user_review_report(review):
@@ -218,3 +219,79 @@ class SittingReport(CustomerCheckMixin, ReportMixin, DetailView):
         return context
 
 
+class SittingUserRanks(AdminMixin, CustomerListViewMixin, DatatableView):
+
+    """
+    Displays a list of reviews and how many people have reviewed
+    """
+    model = UserProfile
+    template_name = "reports/sitting_ranks.html"
+    datatable_options = {
+        'structure_template': "datatableview/bootstrap_structure.html",
+        'columns': [
+            (_("First Name"), 'user__first_name'),
+            (_("Last Name"), 'user__last_name'),
+            (_("Score"), 'avg', 'get_avg'),
+        ],
+        'search_fields': ['user__last_name', 'user__first_name', 'user__email'],
+    }
+
+    def get_avg(self, instance, *args, **kwargs):
+        return "{}%".format(instance.avg * 100 / 5)
+
+    def get_queryset(self):
+        queryset = super(SittingUserRanks, self).get_queryset()
+        queryset = queryset.filter(
+            answer__review__sitting=self.sitting).annotate(
+            avg=Coalesce(Avg('answer__ratinganswer__answer'), Value(0))
+        ).order_by('-avg')
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super(SittingUserRanks, self).get_context_data(**kwargs)
+        context['sitting'] = self.sitting
+        return context
+
+    def dispatch(self, *args, **kwargs):
+        self.sitting = get_object_or_404(Sitting, pk=self.kwargs['pk'], customer=self.request.user.userprofile.customer)
+        return super(SittingUserRanks, self).dispatch(*args, **kwargs)
+
+
+class SittingQuizUserRanks(AdminMixin, CustomerListViewMixin, DatatableView):
+
+    """
+    Displays a list of reviews and how many people have reviewed
+    """
+    model = UserProfile
+    template_name = "reports/sitting_ranks.html"
+    datatable_options = {
+        'structure_template': "datatableview/bootstrap_structure.html",
+        'columns': [
+            (_("First Name"), 'user__first_name'),
+            (_("Last Name"), 'user__last_name'),
+            (_("Score"), 'avg', 'get_avg'),
+        ],
+        'search_fields': ['user__last_name', 'user__first_name', 'user__email'],
+    }
+
+    def get_avg(self, instance, *args, **kwargs):
+        return "{}%".format(instance.avg * 100 / 5)
+
+    def get_queryset(self):
+        queryset = super(SittingQuizUserRanks, self).get_queryset()
+        queryset = queryset.filter(answer__question__quiz=self.question_set).filter(
+            answer__review__sitting=self.sitting).annotate(
+            avg=Coalesce(Avg('answer__ratinganswer__answer'), Value(0))
+        ).order_by('-avg')
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super(SittingQuizUserRanks, self).get_context_data(**kwargs)
+        context['sitting'] = self.sitting
+        context['question_set'] = self.question_set
+        return context
+
+    def dispatch(self, *args, **kwargs):
+        self.sitting = get_object_or_404(Sitting, pk=self.kwargs['sitting_pk'], customer=self.request.user.userprofile.customer)
+        self.question_set = get_object_or_404(Quiz, pk=self.kwargs['quiz_pk'], customer=self.request.user.userprofile.customer)
+        return super(SittingQuizUserRanks, self).dispatch(*args, **kwargs)

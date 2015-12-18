@@ -68,10 +68,11 @@ class SittingDatatableView(AdminMixin, CustomerListViewMixin, DatatableView):
 
     def get_actions(self, instance, *args, **kwargs):
         return format_html(
-            '<a href="{0}">Edit</a> | <a href="{1}">Completion Report</a> | <a href="{2}">Company Report</a>', reverse(
+            '<a href="{0}">Edit</a> | <a href="{1}">Completion Report</a> | <a href="{2}">Company Report</a> | <a href="{3}">Rankings</a>', reverse(
                 'questions:sitting_edit', args=[instance.pk]), reverse(
                 'reports:sitting_completion_report', args=[instance.pk]), reverse(
-                'reports:sitting', args=[instance.pk])
+                'reports:sitting', args=[instance.pk]), reverse(
+                'reports:sitting_ranks', args=[instance.pk])
         )
 
 
