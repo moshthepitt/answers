@@ -125,8 +125,6 @@ class PeerReviewDatatableView(AdminMixin, CustomerListViewMixin, DatatableView):
 
     def get_actions(self, instance, *args, **kwargs):
         return format_html(
-            '<a href="{0}">Edit</a> | <a href="{1}">Report</a> | <a href="{2}">Rankings</a>', reverse(
-                'reviews:peer_review_edit', args=[instance.pk]), reverse(
-                'reports:peer_review', args=[instance.pk]), reverse(
-                'reports:quiz_ranks', args=[instance.sitting.pk, instance.quiz.pk])
+            '<a href="{}">Edit</a> | <a href="{}">Report</a>', reverse(
+                'reviews:peer_review_edit', args=[instance.pk]), reverse('reports:peer_review', args=[instance.pk])
         )
