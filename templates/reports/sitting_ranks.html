@@ -2,28 +2,37 @@
 {% load i18n %}
 {% load staticfiles %}
 
-{% block title %} {% trans "Ranking Report:" %} {{sitting}}  {{question_set}}{% endblock %}
-
-{% block extracss %}
-	<link type="text/css" rel="stylesheet" href="{% static 'datatables/css/jquery.dataTables.min.css' %}" />
-	<link type="text/css" rel="stylesheet" href="{% static 'datatables/css/dataTables.bootstrap.css' %}" />
-{% endblock %}
+{% block title %} {% trans "Ranking Report:" %} {{sitting}} {% endblock %}
 
 {% block page_content %} 
 	<div class="row">
 		<div class="col-md-12">
 			<div class="content-box-header">
-				<div class="panel-title">{% trans "Ranking Report:" %} {{sitting}} {{question_set}}</div>
+				<div class="panel-title">{% trans "Ranking Report:" %} {{sitting}} </div>
 			</div>
 			<div class="content-box-large box-with-header">
-				{{ datatable }}
+				<div class="table-responsive">
+				  <table class="table table-striped table-bordered">
+				  	<thead>
+				  		<tr>
+				  			<th width="50%">{% trans "Statement" %}</th>
+				  			{% for review in reviews %}
+				  				<th>{{review.quiz}}</th>
+				  			{% endfor %}
+				  		</tr>
+				  	</thead>
+				  	<tbody>
+				  		{% for userprofile in userprofiles %}
+				  			<tr>
+				  				<td>{{userprofile}}</td>
+			  					<th>{{userprofile.reports.0.percentage_score|floatformat:2}}%</th>
+			  					<th>{{userprofile.reports.1.percentage_score|floatformat:2}}%</th>
+				  			</tr>
+				  		{% endfor %}
+				  	</tbody>
+				 </table>
+				</div>
 			</div>
 		</div>
 	</div>
-{% endblock %}
-
-{% block extrajs %}
-	<script src="{% static 'datatables/js/jquery.dataTables.min.js' %}"></script>
-	<script src="{% static 'datatables/js/dataTables.bootstrap.js' %}"></script>
-	<script type="text/javascript" charset="utf8" src="{% static 'js/datatableview.min.js' %}"></script>
 {% endblock %}
