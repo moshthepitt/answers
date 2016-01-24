@@ -89,6 +89,8 @@ class Quiz(models.Model):
     title = models.CharField(_("Title"), max_length=300, blank=False)
     slug = AutoSlugField(
         populate_from='title', editable=True, unique=True, null=False, max_length=255)
+    image = models.ImageField(_("Image"), upload_to=PathAndRename(
+        "quiz/"), blank=True, null=True, default=None)
     category = models.ForeignKey(Category, null=True, blank=True, verbose_name=_("Category"), on_delete=models.PROTECT)
     customer = models.ForeignKey(Customer, verbose_name=_(
         "Customer"), on_delete=models.PROTECT, blank=True, null=True, default=None)
