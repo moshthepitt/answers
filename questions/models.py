@@ -96,6 +96,17 @@ class Quiz(models.Model):
         (ORDER_FIELD, _('Use Question Order Field')),
     )
 
+    # question widget type choices
+    DEFAULT_WIDGET = '1'
+    RADIO_WIDGET = '2'
+    CHECKBOX_WIDGET = '3'
+
+    QUESTION_WIDGET_CHOICES = (
+        (DEFAULT_WIDGET, _('Default')),
+        (RADIO_WIDGET, _('Radio Widget')),
+        (CHECKBOX_WIDGET, _('Checkbox Widget')),
+    )
+
     created_on = models.DateTimeField(_("Created on"), auto_now_add=True)
     updated_on = models.DateTimeField(_("Updated on"), auto_now=True)
     title = models.CharField(_("Title"), max_length=300, blank=False)
@@ -110,6 +121,8 @@ class Quiz(models.Model):
         _("Description"), blank=True, help_text=_("A more detailed description of the question set"))
     question_ordering = models.CharField(
         _("Question Ordering"), max_length=1, choices=QUESTION_ORDERING_CHOICES, blank=False, default=ALPHABETICAL_ORDER, help_text=_("How should the questions in this question set be ordered?"))
+    question_widget = models.CharField(
+        _("Question Widget"), max_length=1, choices=QUESTION_WIDGET_CHOICES, blank=False, default=DEFAULT_WIDGET, help_text=_("How should the answers to questions in this question set be presented?"))
     max_questions = models.PositiveIntegerField(
         blank=True, null=True, default=None, verbose_name=_("Max Questions"),
         help_text=_("Number of questions to be answered on each attempt."))
