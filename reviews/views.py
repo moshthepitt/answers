@@ -40,7 +40,7 @@ class ReviewView(CustomerCheckMixin, ReviewMixin, FormMixin, DetailView):
         context = super(ReviewView, self).get_context_data(**kwargs)
         form = self.get_form()
         context['form'] = form
-        context['form_helper'] = quiz_form_helper(self.object.quiz)
+        context['form_helper'] = quiz_form_helper(self.object.quiz, form)
         return context
 
     def dispatch(self, *args, **kwargs):

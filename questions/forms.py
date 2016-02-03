@@ -16,7 +16,7 @@ from sorl.thumbnail import get_thumbnail
 
 from questions.models import MultipleChoiceOption, MultipleChoiceQuestion, Quiz, RatingQuestion
 from questions.models import Sitting
-from answers.models import MultipleChoiceOtherAnswer
+from answers.models import MultipleChoiceOtherAnswer, MultipleChoiceAnswer, RatingAnswer
 
 from .utils import multiplechoice_to_radio
 
@@ -94,10 +94,13 @@ def make_quiz_form(quiz, select_to_radio=False):
     form_fields = OrderedDict()
     for question in quiz.get_questions():
         AnswerModel = question.get_answer_class()
-        if select_to_radio or quiz.question_widget == quiz.RADIO_WIDGET or question.widget == question.RADIO_WIDGET:
-            model_fields = fields_for_model(AnswerModel, formfield_callback=multiplechoice_to_radio)
+        if AnswerModel == MultipleChoiceAnswer or AnswerModel == RatingAnswer:
+            if select_to_radio or quiz.question_widget == quiz.RADIO_WIDGET or question.widget == question.RADIO_WIDGET:
+                model_fields = fields_for_model(AnswerModel, exclude=['userprofile', 'review'], formfield_callback=multiplechoice_to_radio)
+            else:
+                model_fields = fields_for_model(AnswerModel, exclude=['userprofile', 'review'])
         else:
-            model_fields = fields_for_model(AnswerModel)
+            model_fields = fields_for_model(AnswerModel, exclude=['userprofile', 'review'])
         answer_field = model_fields['answer']
         answer_field.label = question.title
         answer_field.required = question.required
@@ -151,8 +154,11 @@ def make_custom_cleaned_quiz_form(quiz, select_to_radio=False):
     return NewForm
 
 
-def quiz_form_helper(quiz, select_to_radio=False):
-    form = make_quiz_form(quiz, select_to_radio)
+def quiz_form_helper(quiz, form_to_use=None, select_to_radio=False):
+    if form_to_use:
+        form = form_to_use
+    else:
+        form = make_quiz_form(quiz, select_to_radio)
     helper = FormHelper()
     helper.form_id = 'quiz-{}-form'.format(quiz.id)
     helper.form_class = 'form quiz_form quiz-{}'.format(quiz.id)

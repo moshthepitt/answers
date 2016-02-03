@@ -4,7 +4,7 @@ from django.utils import timezone
 from .models import Sitting
 
 
-def multiplechoice_to_radio(f):
+def multiplechoice_to_radio(f, **kwargs):
     if isinstance(f.formfield(), ModelChoiceField):
         new_field = f.formfield()
         new_field.empty_label = None
