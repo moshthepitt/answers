@@ -21,7 +21,14 @@
         {% endif %}
 
         {% if field|is_radioselect %}
-            {% include 'bootstrap3/layout/radioselect.html' %}
+            {# field.field.widget_to_use == '1' ==> DEFAULT WIDGET  #}
+            {# field.field.widget_to_use == '2' ==> RADIO WIDGET  #}
+            {# field.field.widget_to_use == '3' ==> CHECKBOX WIDGET  #}
+            {% if field.field.widget_to_use == '2' %} 
+                {% include 'answers/bootstrap3/snippets/custom_radio.html' %}
+            {% else %}
+                {% include 'bootstrap3/layout/radioselect.html' %}
+            {% endif %}
         {% endif %}
 
         {% if not field|is_checkboxselectmultiple and not field|is_radioselect %}

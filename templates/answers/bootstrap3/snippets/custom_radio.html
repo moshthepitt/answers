@@ -1,0 +1,5 @@
+{% if field.field.has_image_answers %}
+    {% include 'answers/bootstrap3/field_layouts/radioimageselect.html' %}
+{% else %}
+    {% include 'answers/bootstrap3/field_layouts/radioselect.html' %}
+{% endif %}
