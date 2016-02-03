@@ -1,5 +1,5 @@
 Babel==2.1.1
-Django==1.8.7
+Django==1.8.9
 Pillow==3.0.0
 amqp==1.4.8
 anyjson==0.3.3
@@ -12,12 +12,12 @@ django-appconf==1.0.1
 django-autoslug==1.9.3
 django-cacheops==2.4.3
 django-compressor==1.6
-django-crispy-forms==1.5.2
+django-crispy-forms==1.6.0
 django-datatable-view==0.8.3
 django-debug-toolbar==1.4
 django-mptt==0.7.4
 django-phonenumber-field==1.0.0
-django-polymorphic==0.7.2
+django-polymorphic==0.8.1
 django-suit==0.2.15
 django-suit-redactor==0.0.2
 funcy==1.6
@@ -33,5 +33,6 @@ redis==2.10.5
 requests==2.8.1
 requests-oauthlib==0.5.0
 six==1.10.0
+sorl-thumbnail==12.3
 sqlparse==0.1.18
 wsgiref==0.1.2

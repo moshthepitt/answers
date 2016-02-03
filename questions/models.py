@@ -7,10 +7,12 @@ from django.utils.encoding import python_2_unicode_compatible
 from autoslug import AutoSlugField
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
-from polymorphic import PolymorphicModel
+from polymorphic.models import PolymorphicModel
+from sorl.thumbnail import ImageField
 
 from core.utils import PathAndRename
 from saas.models import Customer
+from .managers import QuizManager
 
 
 @python_2_unicode_compatible
@@ -59,6 +61,14 @@ class Sitting(models.Model):
     title = models.CharField(_("Title"), max_length=300, blank=False)
     customer = models.ForeignKey(Customer, verbose_name=_(
         "Customer"), on_delete=models.PROTECT, blank=True, null=True, default=None)
+    start = models.DateTimeField(_("Start"), blank=True, null=True, default=None, help_text=_(
+        "The time at which the user starts answering the questions"))
+    end = models.DateTimeField(_("End"), blank=True, null=True, default=None, help_text=_(
+        "The time at which the uer stops answering the questions"))
+    duration = models.PositiveIntegerField(_("Duration"), blank=True, null=True, default=None, help_text=_(
+        "The time allowed (in minutes) for the user to answer then questions"))
+    strict_duration = models.BooleanField(_("Strict Duration"), default=False, help_text=_(
+        "If True, no answers will be saved to the database after the duration is exceeded"))
 
     class Meta:
         verbose_name = _("Sitting")
@@ -89,7 +99,7 @@ class Quiz(models.Model):
     title = models.CharField(_("Title"), max_length=300, blank=False)
     slug = AutoSlugField(
         populate_from='title', editable=True, unique=True, null=False, max_length=255)
-    image = models.ImageField(_("Image"), upload_to=PathAndRename(
+    image = ImageField(_("Image"), upload_to=PathAndRename(
         "quiz/"), blank=True, null=True, default=None)
     category = models.ForeignKey(Category, null=True, blank=True, verbose_name=_("Category"), on_delete=models.PROTECT)
     customer = models.ForeignKey(Customer, verbose_name=_(
@@ -133,6 +143,8 @@ class Quiz(models.Model):
                     " taken by users who can edit"
                     " quizzes."))
 
+    objects = QuizManager()
+
     def get_question_order(self):
         if self.question_ordering == Quiz.DATE_ORDER:
             return "created_on"
@@ -171,13 +183,22 @@ class Question(PolymorphicModel):
         _("Question"), max_length=300, blank=False, help_text=_("The question as you want it displayed"))
     description = models.TextField(
         _("Description"), blank=True, help_text=_("A more detailed description of the question"))
-    image = models.ImageField(_("Image"), upload_to=PathAndRename(
+    image = ImageField(_("Image"), upload_to=PathAndRename(
         "questions/"), blank=True, null=True, default=None)
     required = models.BooleanField(
         _("Required"), default=True, help_text=_("Is this question required?"))
     explanation = models.TextField(_("Explanation"), blank=True, help_text=_(
         "Explanation to be shown after the question has been answered"))
     category = models.ForeignKey(Category, null=True, blank=True, verbose_name=_("Category"), on_delete=models.PROTECT)
+
+    def _has_image_answers(self):
+        if isinstance(self, MultipleChoiceQuestion):
+            return MultipleChoiceOption.objects.filter(question=self).exclude(image=None).exists()
+        return False
+
+    @property
+    def has_image_answers(self):
+        return self._has_image_answers()
 
     class Meta:
         verbose_name = _("Question")
@@ -252,6 +273,8 @@ class MultipleChoiceOption(models.Model):
     question = models.ForeignKey(MultipleChoiceQuestion, verbose_name=_("Question"), on_delete=models.CASCADE)
     title = models.CharField(_("Answer"), max_length=300, blank=False, help_text=_(
         "Input the answer as you want it displayed"))
+    image = ImageField(_("Image"), upload_to=PathAndRename(
+        "multiple-choice-options/"), blank=True, null=True, default=None)
     correct_answer = models.BooleanField(
         _("Correct Answer"), default=False, help_text=_("Is this a correct answer?"))
     other = models.BooleanField(_("Other Option"), default=False, help_text=_(

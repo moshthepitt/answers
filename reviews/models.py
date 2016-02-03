@@ -23,6 +23,14 @@ class Review(models.Model):
     reviewers = models.ManyToManyField(UserProfile, verbose_name=_("Reviewers"), help_text=_(
         "The people who are going to take this review"), related_name='peer_reviewers', blank=True)
     public = models.BooleanField(_("Open"), default=False, help_text=_("Is this review open to all users?"))
+    start = models.DateTimeField(_("Start"), blank=True, null=True, default=None, help_text=_(
+        "The time at which the user starts answering the questions"))
+    end = models.DateTimeField(_("End"), blank=True, null=True, default=None, help_text=_(
+        "The time at which the uer stops answering the questions"))
+    duration = models.PositiveIntegerField(_("Duration"), blank=True, null=True, default=None, help_text=_(
+        "The time allowed (in minutes) for the user to answer then questions"))
+    strict_duration = models.BooleanField(_("Strict Duration"), default=False, help_text=_(
+        "If True, no answers will be saved to the database after the duration is exceeded"))
 
     class Meta:
         verbose_name = _("Review")

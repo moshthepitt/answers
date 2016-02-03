@@ -8,6 +8,7 @@ from questions.models import Category, Sitting
 
 
 class QuizAdmin(admin.ModelAdmin):
+    list_display = ['title', 'category', 'customer']
     prepopulated_fields = {"slug": ("title",)}
 
 
@@ -24,6 +25,7 @@ class MultipleChoiceOptionInline(admin.TabularInline):
 
 
 class MultipleChoiceQuestionAdmin(admin.ModelAdmin):
+    list_display = ['title', 'category', 'quiz']
     inlines = [MultipleChoiceOptionInline, ]
 
 
