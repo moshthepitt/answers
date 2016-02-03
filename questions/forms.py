@@ -94,7 +94,7 @@ def make_quiz_form(quiz, select_to_radio=False):
     form_fields = OrderedDict()
     for question in quiz.get_questions():
         AnswerModel = question.get_answer_class()
-        if select_to_radio:
+        if select_to_radio or quiz.question_widget == quiz.RADIO_WIDGET:
             model_fields = fields_for_model(AnswerModel, formfield_callback=multiplechoice_to_radio)
         else:
             model_fields = fields_for_model(AnswerModel)
@@ -158,7 +158,7 @@ def quiz_form_helper(quiz, select_to_radio=False):
     helper.form_method = 'post'
     helper.html5_required = True
     helper.layout = Layout(*form.base_fields.keys())
-    if select_to_radio:
+    if select_to_radio or quiz.question_widget == quiz.RADIO_WIDGET:
         helper.all().wrap(Field, css_class="question-field", template="answers/bootstrap3/multichoice_radio_field.html")
     else:
         helper.all().wrap(Field, css_class="question-field")
