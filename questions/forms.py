@@ -94,7 +94,7 @@ def make_quiz_form(quiz, select_to_radio=False):
     form_fields = OrderedDict()
     for question in quiz.get_questions():
         AnswerModel = question.get_answer_class()
-        if select_to_radio or quiz.question_widget == quiz.RADIO_WIDGET:
+        if select_to_radio or quiz.question_widget == quiz.RADIO_WIDGET or question.widget == question.RADIO_WIDGET:
             model_fields = fields_for_model(AnswerModel, formfield_callback=multiplechoice_to_radio)
         else:
             model_fields = fields_for_model(AnswerModel)
@@ -103,6 +103,7 @@ def make_quiz_form(quiz, select_to_radio=False):
         answer_field.required = question.required
         # answer_field.question = question ?? should this be included
         answer_field.has_image_answers = question.has_image_answers
+        answer_field.widget_to_use = question.widget
         other_field = None
         if question.image:
             thumb_size = getattr(settings, 'QUESTION_LABEL_THUMBS_SIZE', "500x400")
