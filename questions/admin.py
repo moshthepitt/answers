@@ -1,15 +1,19 @@
 from django.contrib import admin
 
 from polymorphic.admin import PolymorphicParentModelAdmin  # , PolymorphicChildModelAdmin
+from sorl.thumbnail.admin import AdminImageMixin
 
 from questions.models import Quiz, Question, MultipleChoiceQuestion, MultipleChoiceOption
 from questions.models import RatingQuestion, TextQuestion, EssayQuestion, BooleanQuestion
 from questions.models import Category, Sitting
 
+from core.utils import image_file
 
-class QuizAdmin(admin.ModelAdmin):
-    list_display = ['title', 'category', 'customer']
+
+class QuizAdmin(AdminImageMixin, admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
+    list_display = ['title', 'image_thumb', 'category', 'draft']
+    image_thumb = image_file('obj.image', short_description='Image')
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -20,21 +24,23 @@ class SittingAdmin(admin.ModelAdmin):
     pass
 
 
-class MultipleChoiceOptionInline(admin.TabularInline):
+class MultipleChoiceOptionInline(AdminImageMixin, admin.TabularInline):
     model = MultipleChoiceOption
 
 
-class MultipleChoiceQuestionAdmin(admin.ModelAdmin):
+class MultipleChoiceQuestionAdmin(AdminImageMixin, admin.ModelAdmin):
     list_display = ['title', 'category', 'quiz']
+    list_filter = ['quiz']
     inlines = [MultipleChoiceOptionInline, ]
 
 
-class MultipleChoiceOptionAdmin(admin.ModelAdmin):
+class MultipleChoiceOptionAdmin(AdminImageMixin, admin.ModelAdmin):
     pass
 
 
 class RatingQuestionAdmin(admin.ModelAdmin):
     list_display = ['title', 'category']
+    list_filter = ['quiz']
 
 
 class TextQuestionAdmin(admin.ModelAdmin):

@@ -10,3 +10,20 @@
 	border:none!important;
 	background:transparent!important;
 }
+
+.btn-left {
+	text-align:left;
+}
+
+.image-selekta label > input { /* HIDE RADIO */
+  display:none;
+}
+
+.image-selekta label > input + img { /* IMAGE STYLES */
+  cursor:pointer;
+  border:2px solid transparent;
+}
+
+.image-selekta label > input:checked + img { /* (CHECKED) IMAGE STYLES */
+  border:2px solid #f00;
+}

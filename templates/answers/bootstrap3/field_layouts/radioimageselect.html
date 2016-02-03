@@ -1,0 +1,24 @@
+{% load crispy_forms_filters %}
+{% load l10n %}
+{% load thumbnail %}
+
+<div class="controls {{ field_class }} image-selekta"{% if flat_attrs %} {{ flat_attrs|safe }}{% endif %}>
+    {% include 'bootstrap3/layout/field_errors_block.html' %}
+    <div class="row">
+    {% for choice in field.field.queryset %}
+		<div class="col-md-3 col-sm-3 col-xs-6">      
+	        <label class="{% if inline_class %}radio-{{ inline_class }}{% endif %}">
+	            <input type="radio"{% if choice.pk|stringformat:"s" == field.value|stringformat:"s" %} checked="checked"{% endif %} name="{{ field.html_name }}" id="id_{{ field.html_name }}_{{ forloop.counter }}" value="{{ choice.pk|unlocalize }}" {{ field.field.widget.attrs|flatatt }}> 
+	            {% if choice.image %}
+		            {% thumbnail choice.image "200x200" crop="center" as im %}
+		                <img src="{{ im.url }}" alt="{{bar.name}}" class="img-responsive img-thumbnail" />
+		            {% endthumbnail %}
+	            {% else %}
+		            <img src="https://placeholdit.imgix.net/~text?txtsize=19&txt=200%C3%97200&w=200&h=200" class="img-responsive img-thumbnail" />
+	            {% endif %}
+	        </label>
+      	</div>
+    {% endfor %}
+    </div>
+    {% include 'bootstrap3/layout/help_text.html' %}
+</div>

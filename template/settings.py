@@ -56,6 +56,7 @@ INSTALLED_APPS = (
     'debug_toolbar',
     'datatableview',
     'compressor',
+    'sorl.thumbnail',
     # 'cacheops',
     'suit_redactor',
     'mptt',

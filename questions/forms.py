@@ -151,7 +151,7 @@ def make_custom_cleaned_quiz_form(quiz, select_to_radio=False):
 
 
 def quiz_form_helper(quiz, select_to_radio=False):
-    form = make_quiz_form(quiz)
+    form = make_quiz_form(quiz, select_to_radio)
     helper = FormHelper()
     helper.form_id = 'quiz-{}-form'.format(quiz.id)
     helper.form_class = 'form quiz_form quiz-{}'.format(quiz.id)
