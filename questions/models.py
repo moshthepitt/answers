@@ -193,6 +193,17 @@ class Question(PolymorphicModel):
     Base class for all types of questions
     """
 
+    # question widget type choices
+    DEFAULT_WIDGET = '1'
+    RADIO_WIDGET = '2'
+    CHECKBOX_WIDGET = '3'
+
+    WIDGET_CHOICES = (
+        (DEFAULT_WIDGET, _('Default')),
+        (RADIO_WIDGET, _('Radio Widget')),
+        (CHECKBOX_WIDGET, _('Checkbox Widget')),
+    )
+
     created_on = models.DateTimeField(_("Created on"), auto_now_add=True)
     updated_on = models.DateTimeField(_("Updated on"), auto_now=True)
     quiz = models.ForeignKey(Quiz, verbose_name=_("Quuestion Set"), on_delete=models.PROTECT)
@@ -207,6 +218,8 @@ class Question(PolymorphicModel):
     explanation = models.TextField(_("Explanation"), blank=True, help_text=_(
         "Explanation to be shown after the question has been answered"))
     category = models.ForeignKey(Category, null=True, blank=True, verbose_name=_("Category"), on_delete=models.PROTECT)
+    widget = models.CharField(
+        _("Widget"), max_length=1, choices=WIDGET_CHOICES, blank=False, default=DEFAULT_WIDGET, help_text=_("How should the answers to this question be presented?"))
     # Sortable property
     order = models.PositiveIntegerField()
 
