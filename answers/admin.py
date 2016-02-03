@@ -27,6 +27,8 @@ class BooleanAnswerAdmin(admin.ModelAdmin):
 
 class AnswerAdmin(PolymorphicParentModelAdmin):
     base_model = Answer
+    list_display = ['question', 'userprofile', 'review']
+    list_filter = ['review']
 
     child_models = (
         (TextAnswer, TextAnswerAdmin),
