@@ -87,11 +87,13 @@ class Quiz(models.Model):
     DATE_ORDER = '1'
     ALPHABETICAL_ORDER = '2'
     RANDOM_ORDER = '3'
+    ORDER_FIELD = '4'
 
     QUESTION_ORDERING_CHOICES = (
         (DATE_ORDER, _('Date')),
         (ALPHABETICAL_ORDER, _('Alphabetical')),
         (RANDOM_ORDER, _('Random')),
+        (ORDER_FIELD, _('Use Question Order Field')),
     )
 
     created_on = models.DateTimeField(_("Created on"), auto_now_add=True)
@@ -152,6 +154,8 @@ class Quiz(models.Model):
             return "title"
         elif self.question_ordering == Quiz.RANDOM_ORDER:
             return "?"
+        elif self.question_ordering == Quiz.ORDER_FIELD:
+            return "order"
         else:
             return "title"
 
@@ -190,6 +194,8 @@ class Question(PolymorphicModel):
     explanation = models.TextField(_("Explanation"), blank=True, help_text=_(
         "Explanation to be shown after the question has been answered"))
     category = models.ForeignKey(Category, null=True, blank=True, verbose_name=_("Category"), on_delete=models.PROTECT)
+    # Sortable property
+    order = models.PositiveIntegerField()
 
     def _has_image_answers(self):
         if isinstance(self, MultipleChoiceQuestion):
