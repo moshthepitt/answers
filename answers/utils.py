@@ -23,12 +23,14 @@ def calculate_multichoice_score(review):
             if answer.answer in correct_answers:
                 # this is correct
                 correct += 1
+                answer.correct = True
             else:
                 # this is wrong
                 pass
     result = {
         'correct': correct,
         'question_count': answers.count(),
-        'score': Decimal(correct) / Decimal(answers.count())
+        'score': Decimal(correct) / Decimal(answers.count()),
+        'answers': answers
     }
     return result

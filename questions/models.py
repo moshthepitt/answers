@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.core.validators import MaxValueValidator
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -32,7 +33,7 @@ class Category(MPTTModel):
         "Customer"), on_delete=models.PROTECT, blank=True, null=True, default=None)
     active = models.BooleanField(_("Active"), default=True)
     # Sortable property
-    order = models.PositiveIntegerField()
+    order = models.PositiveIntegerField(default=1)
 
     class MPTTMeta:
         order_insertion_by = ['order']
@@ -178,6 +179,16 @@ class Quiz(models.Model):
     def get_absolute_url(self):
         return reverse('questions:quiz', args=[self.slug])
 
+    def _decimal_passmark(self):
+        return self.pass_mark / Decimal(100.00)
+
+    @property
+    def decimal_passmark(self):
+        return self._decimal_passmark()
+
+    def more_like_this(self):
+        return Quiz.objects.active().exclude(id=self.pk).filter(category=self.category).order_by("?")
+
     class Meta:
         verbose_name = _("Question Set")
         verbose_name_plural = _("Question Sets")
@@ -221,11 +232,11 @@ class Question(PolymorphicModel):
     widget = models.CharField(
         _("Widget"), max_length=1, choices=WIDGET_CHOICES, blank=False, default=DEFAULT_WIDGET, help_text=_("How should the answers to this question be presented?"))
     # Sortable property
-    order = models.PositiveIntegerField()
+    order = models.PositiveIntegerField(default=1)
 
     def _has_image_answers(self):
         if isinstance(self, MultipleChoiceQuestion):
-            return MultipleChoiceOption.objects.filter(question=self).exclude(image=None).exists()
+            return MultipleChoiceOption.objects.filter(question=self).exclude(image=None).exclude(image='').exists()
         return False
 
     @property

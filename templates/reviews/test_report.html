@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags i18n %}
+
+{% block title %} {% trans "Score Report" %}: {{ object.quiz.title }} {% endblock %}
+
+{% block page_content %} 
+	<div class="row">
+		<div class="col-md-12">
+			<div class="content-box-header">
+				<div class="panel-title">{% trans "Score Report" %}: {{ object.quiz.title }}</div>
+			</div>
+			<div class="content-box-large box-with-header">
+			    <div class="status-three">
+			    	<div class="item {% if report.score >= object.quiz.decimal_passmark %}bg-green{% else %}bg-red{% endif %}">
+						<!-- Big Heading -->
+						<h4>{% widthratio report.score 1 100 %}%</h4>
+						<!-- Text -->
+						<span>{% trans "You got" %} {{report.correct}} {% trans "out of" %} {{report.question_count}} {% trans "right" %}</span>
+						<br/>
+						{% if report.score >= object.quiz.decimal_passmark %}
+							<span>{{object.quiz.success_text}}</span>
+						{% else %}
+							<span>{{object.quiz.fail_text}}</span>
+						{% endif %}						
+					</div>
+			    </div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

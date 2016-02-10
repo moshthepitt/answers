@@ -14,12 +14,17 @@ from reviews.models import Review
 from reviews.mixins import ReviewMixin
 from reviews.forms import ReviewForm, PeerReviewForm
 from questions.forms import quiz_form_helper, save_quiz_form, make_custom_cleaned_quiz_form
+from answers.utils import calculate_multichoice_score
 
 
 class ReviewView(CustomerCheckMixin, ReviewMixin, FormMixin, DetailView):
     model = Review
 
     def get_success_url(self):
+        # ### DIRTY HACK
+        if self.object.quiz and self.object.quiz.answers_at_end:
+            return reverse('reviews:test_report', args=[self.object.pk])
+        # ### DIRTY HACK
         return reverse('dashboard')
 
     def get_form_class(self):
@@ -33,6 +38,10 @@ class ReviewView(CustomerCheckMixin, ReviewMixin, FormMixin, DetailView):
             return self.form_invalid(form)
 
     def form_valid(self, form):
+        # ### DIRTY HACK
+        from answers.models import Answer
+        Answer.objects.filter(review=self.object).delete()
+        # ### DIRTY HACK
         save_quiz_form(self.object.quiz, form, self.request.user, self.object)
         return super(ReviewView, self).form_valid(form)
 
@@ -128,3 +137,13 @@ class PeerReviewDatatableView(AdminMixin, CustomerListViewMixin, DatatableView):
             '<a href="{}">Edit</a> | <a href="{}">Report</a>', reverse(
                 'reviews:peer_review_edit', args=[instance.pk]), reverse('reports:peer_review', args=[instance.pk])
         )
+
+
+class TestReportView(CustomerCheckMixin, DetailView):
+    model = Review
+    template_name = "reviews/test_report.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(TestReportView, self).get_context_data(**kwargs)
+        context['report'] = calculate_multichoice_score(self.get_object())
+        return context
