@@ -124,7 +124,7 @@ def make_quiz_form(quiz, select_to_radio=False):
             if quiz.show_question_numbers:
                 this_label = "{}. {}".format(question.order, this_label)
             if question.description:
-                answer_field.label = format_html("<span class='question-text-latel'>{}</span><p>{}</p>", smart_str(this_label), mark_safe(smart_str(question.description).replace('\n', '<br />')))
+                answer_field.label = format_html("<span class='question-text-latel'>{}</span><div>{}</div>", smart_str(this_label), mark_safe(smart_str(question.description).replace('\n', '<br />')))
             else:
                 answer_field.label = smart_str(this_label)
         if question._meta.model == MultipleChoiceQuestion:
