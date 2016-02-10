@@ -5,6 +5,7 @@ from django.views.generic.edit import FormMixin
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.utils.translation import ugettext as _
 from django.utils.html import format_html
+from django.contrib import messages
 
 from datatableview.views import DatatableView
 from core.mixins import AdminMixin, CustomerQuerysetMixin
@@ -44,6 +45,11 @@ class ReviewView(CustomerCheckMixin, ReviewMixin, FormMixin, DetailView):
         # ### DIRTY HACK
         save_quiz_form(self.object.quiz, form, self.request.user, self.object)
         return super(ReviewView, self).form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(
+            self.request, _('Please correct the errors below and then re-submit'), fail_silently=True)
+        return super(ReviewView, self).form_invalid(form)
 
     def get_context_data(self, **kwargs):
         context = super(ReviewView, self).get_context_data(**kwargs)

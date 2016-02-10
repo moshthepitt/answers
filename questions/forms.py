@@ -182,7 +182,7 @@ def quiz_form_helper(quiz, form_to_use=None, select_to_radio=False):
                           template="answers/bootstrap3/multichoice_radio_field.html")
     else:
         helper.all().wrap(Field, css_class="question-field")
-    helper.add_input(Submit('submit', _('Submit'), css_class='btn-success'))
+    helper.add_input(Submit('submit', _('Submit'), css_class='btn-success btn-block btn-lg'))
     return helper
 
 
