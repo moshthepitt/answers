@@ -195,6 +195,8 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Africa/Nairobi'
 
+QUESTION_LABEL_THUMBS_SIZE = "400"
+
 try:
     from local_settings import *
 except ImportError, e:

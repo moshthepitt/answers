@@ -127,6 +127,10 @@ class Quiz(models.Model):
     max_questions = models.PositiveIntegerField(
         blank=True, null=True, default=None, verbose_name=_("Max Questions"),
         help_text=_("Number of questions to be answered on each attempt."))
+    show_question_numbers = models.BooleanField(
+        blank=False, default=False,
+        help_text=_("Use the question.order field as question numbers"),
+        verbose_name=_("Show question numbers"))
     answers_after_question = models.BooleanField(
         blank=False, default=False,
         help_text=_("Show answers after each question?"),
@@ -326,6 +330,7 @@ class MultipleChoiceOption(models.Model):
     class Meta:
         verbose_name = _("Multiple Choice Answer")
         verbose_name_plural = _("Multiple Choice Answers")
+        ordering = ['created_on']
 
     def __str__(self):
         return self.title

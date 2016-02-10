@@ -7,6 +7,7 @@ from django.utils.translation import ugettext as _
 from django.forms.models import inlineformset_factory
 from django.utils.html import format_html
 from django.utils.encoding import smart_str
+from django.utils.safestring import mark_safe
 from django.conf import settings
 
 from crispy_forms.helper import FormHelper
@@ -36,7 +37,8 @@ class SittingForm(ModelForm):
             Field('title'),
             FormActions(
                 Submit('submit', _('Save'), css_class='btn-success'),
-                HTML("<a class='btn btn-default' href='{% url \"questions:sitting_list\" %}'>Cancel</a>")
+                HTML(
+                    "<a class='btn btn-default' href='{% url \"questions:sitting_list\" %}'>Cancel</a>")
             )
         )
 
@@ -58,7 +60,8 @@ class QuizForm(ModelForm):
             Field('question_ordering'),
             FormActions(
                 Submit('submit', _('Save'), css_class='btn-success'),
-                HTML("<a class='btn btn-default' href='{% url \"questions:quiz_list\" %}'>Cancel</a>")
+                HTML(
+                    "<a class='btn btn-default' href='{% url \"questions:quiz_list\" %}'>Cancel</a>")
             )
         )
 
@@ -96,13 +99,13 @@ def make_quiz_form(quiz, select_to_radio=False):
         AnswerModel = question.get_answer_class()
         if AnswerModel == MultipleChoiceAnswer or AnswerModel == RatingAnswer:
             if select_to_radio or quiz.question_widget == quiz.RADIO_WIDGET or question.widget == question.RADIO_WIDGET:
-                model_fields = fields_for_model(AnswerModel, exclude=['userprofile', 'review'], formfield_callback=multiplechoice_to_radio)
+                model_fields = fields_for_model(
+                    AnswerModel, exclude=['userprofile', 'review'], formfield_callback=multiplechoice_to_radio)
             else:
                 model_fields = fields_for_model(AnswerModel, exclude=['userprofile', 'review'])
         else:
             model_fields = fields_for_model(AnswerModel, exclude=['userprofile', 'review'])
         answer_field = model_fields['answer']
-        answer_field.label = question.title
         answer_field.required = question.required
         # answer_field.question = question ?? should this be included
         answer_field.has_image_answers = question.has_image_answers
@@ -112,9 +115,18 @@ def make_quiz_form(quiz, select_to_radio=False):
             thumb_size = getattr(settings, 'QUESTION_LABEL_THUMBS_SIZE', "500x400")
             thumb = get_thumbnail(question.image.file, thumb_size)
             answer_field.label = format_html(
-                "<img src='{}' class='img-responsive question-label' alt='{}' title='{}' /><span class='question-text-latel'>{}</span>", thumb.url, smart_str(question.title), smart_str(question.title), smart_str(question.title))
+                "<img src='{thumb}' class='img-responsive question-label' alt='{qtitle}' title='{qtitle}' /><span class='question-text-latel'>{qtitle}</span>", thumb=thumb.url, qtitle=smart_str(question.title))
+            if quiz.show_question_numbers:
+                answer_field.label = format_html(
+                    "<img src='{thumb}' class='img-responsive question-label' alt='{qtitle}' title='{qtitle}' /><span class='question-text-latel'>{qtitle}</span>", thumb=thumb.url, qtitle=smart_str("{}. {}".format(question.order, question.title)))
         else:
-            answer_field.label = smart_str(question.title)
+            this_label = question.title
+            if quiz.show_question_numbers:
+                this_label = "{}. {}".format(question.order, this_label)
+            if question.description:
+                answer_field.label = format_html("<span class='question-text-latel'>{}</span><p>{}</p>", smart_str(this_label), mark_safe(smart_str(question.description).replace('\n', '<br />')))
+            else:
+                answer_field.label = smart_str(this_label)
         if question._meta.model == MultipleChoiceQuestion:
             answer_field.queryset = MultipleChoiceOption.objects.filter(question=question)
             if answer_field.queryset.filter(other=True).exists():
@@ -166,7 +178,8 @@ def quiz_form_helper(quiz, form_to_use=None, select_to_radio=False):
     helper.html5_required = True
     helper.layout = Layout(*form.base_fields.keys())
     if select_to_radio or quiz.question_widget == quiz.RADIO_WIDGET:
-        helper.all().wrap(Field, css_class="question-field", template="answers/bootstrap3/multichoice_radio_field.html")
+        helper.all().wrap(Field, css_class="question-field",
+                          template="answers/bootstrap3/multichoice_radio_field.html")
     else:
         helper.all().wrap(Field, css_class="question-field")
     helper.add_input(Submit('submit', _('Submit'), css_class='btn-success'))
