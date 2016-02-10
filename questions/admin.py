@@ -13,6 +13,8 @@ from core.utils import image_file
 class QuizAdmin(AdminImageMixin, admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
     list_display = ['title', 'image_thumb', 'category', 'draft']
+    list_filter = ['category', 'draft']
+    list_editable = ['draft']
     image_thumb = image_file('obj.image', short_description='Image')
 
 
@@ -57,6 +59,10 @@ class BooleanQuestionAdmin(admin.ModelAdmin):
 
 class QuestionAdmin(PolymorphicParentModelAdmin):
     base_model = Question
+    list_display = ['title', 'category', 'quiz']
+    list_filter = ['quiz', 'category']
+    date_hierarchy = 'created_on'
+    search_fields = ['title', ]
 
     child_models = (
         (MultipleChoiceQuestion, MultipleChoiceQuestionAdmin),

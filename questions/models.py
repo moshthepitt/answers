@@ -206,7 +206,7 @@ class Question(PolymorphicModel):
 
     created_on = models.DateTimeField(_("Created on"), auto_now_add=True)
     updated_on = models.DateTimeField(_("Updated on"), auto_now=True)
-    quiz = models.ForeignKey(Quiz, verbose_name=_("Quuestion Set"), on_delete=models.PROTECT)
+    quiz = models.ForeignKey(Quiz, verbose_name=_("Question Set"), on_delete=models.PROTECT)
     title = models.CharField(
         _("Question"), max_length=300, blank=False, help_text=_("The question as you want it displayed"))
     description = models.TextField(
