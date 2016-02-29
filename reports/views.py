@@ -84,7 +84,10 @@ def sitting_report(sitting):
         grand_overall_score += question_set.overall_company_score
 
     sitting.question_sets = question_sets
-    sitting.overall_company_score = grand_overall_score / len(sitting.question_sets)
+    try:
+        sitting.overall_company_score = grand_overall_score / len(sitting.question_sets)
+    except ZeroDivisionError:
+        sitting.overall_company_score = 0
     sitting.company_percentage_score = sitting.overall_company_score * 100 / 5
 
     return sitting
