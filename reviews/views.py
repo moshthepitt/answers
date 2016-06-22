@@ -22,7 +22,7 @@ class ReviewView(CustomerCheckMixin, ReviewMixin, FormMixin, DetailView):
     model = Review
 
     def get_success_url(self):
-        # ### DIRTY HACK
+        # ### DIRTY HACK FOR DEEPAK
         if self.object.quiz and self.object.quiz.answers_at_end:
             return reverse('reviews:test_report', args=[self.object.pk])
         # ### DIRTY HACK
@@ -39,7 +39,7 @@ class ReviewView(CustomerCheckMixin, ReviewMixin, FormMixin, DetailView):
             return self.form_invalid(form)
 
     def form_valid(self, form):
-        # ### DIRTY HACK
+        # ### DIRTY HACK FOR DEEPAK
         from answers.models import Answer
         Answer.objects.filter(review=self.object).delete()
         # ### DIRTY HACK
