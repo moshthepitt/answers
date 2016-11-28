@@ -5,6 +5,7 @@ from django.views.generic.edit import FormMixin
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.utils.translation import ugettext as _
 from django.utils.html import format_html
+from django.utils import timezone
 from django.contrib import messages
 
 from datatableview.views import DatatableView
@@ -60,6 +61,9 @@ class ReviewView(CustomerCheckMixin, ReviewMixin, FormMixin, DetailView):
 
     def dispatch(self, *args, **kwargs):
         self.object = self.get_object()
+        if self.object.timed:
+            self.object.start = timezone.now()
+            self.object.save()
         return super(ReviewView, self).dispatch(*args, **kwargs)
 
 

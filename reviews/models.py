@@ -48,5 +48,10 @@ class Review(models.Model):
         else:
             return "{quiz}".format(quiz=self.quiz.title)
 
+    @property
+    def timed(self):
+        """Means that this review must be done in a time limit"""
+        return self.strict_duration and self.duration and self.duration > 0
+
     def get_absolute_url(self):
         return reverse('reviews:review', args=[self.pk])
