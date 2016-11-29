@@ -11,7 +11,7 @@ from django.utils.safestring import mark_safe
 from django.conf import settings
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, HTML
+from crispy_forms.layout import Layout, Submit, HTML, Fieldset
 from crispy_forms.bootstrap import Field, FormActions
 from sorl.thumbnail import get_thumbnail
 
@@ -69,7 +69,7 @@ class QuizForm(ModelForm):
 
     class Meta:
         model = Quiz
-        fields = ['title', 'description', 'question_ordering']
+        fields = ['title', 'description', 'use_categories', 'question_ordering']
 
     def __init__(self, *args, **kwargs):
         super(QuizForm, self).__init__(*args, **kwargs)
@@ -79,6 +79,7 @@ class QuizForm(ModelForm):
         self.helper.layout = Layout(
             Field('title'),
             Field('description'),
+            Field('use_categories'),
             Field('question_ordering'),
             FormActions(
                 Submit('submit', _('Save'), css_class='btn-success'),
@@ -198,7 +199,20 @@ def quiz_form_helper(quiz, form_to_use=None, select_to_radio=False):
     helper.form_class = 'form quiz_form quiz-{}'.format(quiz.id)
     helper.form_method = 'post'
     helper.html5_required = True
+    helper.render_required_fields = True
     helper.layout = Layout(*form.base_fields.keys())
+    if quiz.use_categories:
+        #  use fieldsets to separate question categories
+        categories = Category.objects.filter(question__quiz=quiz).distinct()
+        quiz_cats = {'answer_{}'.format(x.id): x.category for x in quiz.get_questions()}
+        layout_items = []
+        for cat in categories:
+            fieldset_items = [cat.title]
+            for answer_field in form.base_fields.keys():
+                if quiz_cats[answer_field] == cat:
+                    fieldset_items.append(answer_field)
+            layout_items.append(Fieldset(*fieldset_items))
+        helper.layout = Layout(*layout_items)
     if select_to_radio or quiz.question_widget == quiz.RADIO_WIDGET:
         helper.all().wrap(Field, css_class="question-field",
                           template="answers/bootstrap3/multichoice_radio_field.html")

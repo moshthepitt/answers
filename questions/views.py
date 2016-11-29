@@ -101,6 +101,7 @@ class QuizDatatableView(AdminMixin, CustomerListViewMixin, DatatableView):
         'structure_template': "datatableview/bootstrap_structure.html",
         'columns': [
             'title',
+            'use_categories',
             (_("Actions"), 'id', 'get_actions'),
         ],
         'search_fields': ['title'],
