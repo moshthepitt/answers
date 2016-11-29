@@ -89,12 +89,14 @@ class Quiz(models.Model):
     ALPHABETICAL_ORDER = '2'
     RANDOM_ORDER = '3'
     ORDER_FIELD = '4'
+    CATEGORY_FIELD = '5'
 
     QUESTION_ORDERING_CHOICES = (
         (DATE_ORDER, _('Date')),
         (ALPHABETICAL_ORDER, _('Alphabetical')),
         (RANDOM_ORDER, _('Random')),
         (ORDER_FIELD, _('Use Question Order Field')),
+        (CATEGORY_FIELD, _('Use Category')),
     )
 
     # question widget type choices
@@ -174,11 +176,16 @@ class Quiz(models.Model):
             return "?"
         elif self.question_ordering == Quiz.ORDER_FIELD:
             return "order"
+        elif self.question_ordering == Quiz.CATEGORY_FIELD:
+            return ["category__order", "order", "title"]
         else:
             return "title"
 
     def get_questions(self):
-        return self.question_set.all().order_by(self.get_question_order())
+        ordering = self.get_question_order()
+        if isinstance(ordering, list):
+            return self.question_set.all().order_by(*ordering)
+        return self.question_set.all().order_by(ordering)
 
     def get_absolute_url(self):
         return reverse('questions:quiz', args=[self.slug])

@@ -92,7 +92,7 @@ class QuestionForm(ModelForm):
 
     class Meta:
         model = RatingQuestion
-        fields = ['title']
+        fields = ['title', 'category', 'order']
 
     def __init__(self, *args, **kwargs):
         super(QuestionForm, self).__init__(*args, **kwargs)
