@@ -117,7 +117,8 @@ class Quiz(models.Model):
         populate_from='title', editable=True, unique=True, null=False, max_length=255)
     image = ImageField(_("Image"), upload_to=PathAndRename(
         "quiz/"), blank=True, null=True, default=None)
-    category = models.ForeignKey(Category, null=True, blank=True, verbose_name=_("Category"), on_delete=models.PROTECT)
+    category = models.ForeignKey(
+        Category, null=True, blank=True, verbose_name=_("Category"), on_delete=models.PROTECT)
     customer = models.ForeignKey(Customer, verbose_name=_(
         "Customer"), on_delete=models.PROTECT, blank=True, null=True, default=None)
     description = models.TextField(
@@ -147,6 +148,10 @@ class Quiz(models.Model):
                     " a user will be permitted."
                     " Non users cannot sit this exam."),
         verbose_name=_("Single Attempt"))
+    use_categories = models.BooleanField(
+        blank=False, default=False,
+        help_text=_("If yes, questions will be separated by categories."),
+        verbose_name=_("Use Categories"))
     pass_mark = models.SmallIntegerField(
         blank=True, default=0,
         help_text=_("Percentage required to pass exam."),
@@ -239,7 +244,8 @@ class Question(PolymorphicModel):
         _("Required"), default=True, help_text=_("Is this question required?"))
     explanation = models.TextField(_("Explanation"), blank=True, help_text=_(
         "Explanation to be shown after the question has been answered"))
-    category = models.ForeignKey(Category, null=True, blank=True, verbose_name=_("Category"), on_delete=models.PROTECT)
+    category = models.ForeignKey(
+        Category, null=True, blank=True, verbose_name=_("Category"), on_delete=models.PROTECT)
     widget = models.CharField(
         _("Widget"), max_length=1, choices=WIDGET_CHOICES, blank=False, default=DEFAULT_WIDGET, help_text=_("How should the answers to this question be presented?"))
     # Sortable property
@@ -324,7 +330,8 @@ class MultipleChoiceOption(models.Model):
 
     created_on = models.DateTimeField(_("Created on"), auto_now_add=True)
     updated_on = models.DateTimeField(_("Updated on"), auto_now=True)
-    question = models.ForeignKey(MultipleChoiceQuestion, verbose_name=_("Question"), on_delete=models.CASCADE)
+    question = models.ForeignKey(
+        MultipleChoiceQuestion, verbose_name=_("Question"), on_delete=models.CASCADE)
     title = models.CharField(_("Answer"), max_length=300, blank=False, help_text=_(
         "Input the answer as you want it displayed"))
     image = ImageField(_("Image"), upload_to=PathAndRename(
