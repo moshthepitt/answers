@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 
 from questions.views import QuizView, QuizDatatableView, QuizAdd, QuizUpdate
 from questions.views import SittingDatatableView, SittingAdd, SittingUpdate
+from questions.views import QuestionCategoryDatatableView, QuestionCategoryAdd, QuestionCategoryUpdate
 from questions.views import quiz_questions
 
 urlpatterns = [
@@ -14,4 +15,7 @@ urlpatterns = [
     url(r'^sittings/add/$', login_required(SittingAdd.as_view()), name='sitting_add'),
     url(r'^sittings/edit/(?P<pk>\d+)/$', login_required(SittingUpdate.as_view()), name='sitting_edit'),
     url(r'^sittings/$', login_required(SittingDatatableView.as_view()), name='sitting_list'),
+    url(r'^category/add/$', login_required(QuestionCategoryAdd.as_view()), name='category_add'),
+    url(r'^category/edit/(?P<pk>\d+)/$', login_required(QuestionCategoryUpdate.as_view()), name='category_edit'),
+    url(r'^category/$', login_required(QuestionCategoryDatatableView.as_view()), name='category_list'),
 ]

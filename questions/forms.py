@@ -16,7 +16,7 @@ from crispy_forms.bootstrap import Field, FormActions
 from sorl.thumbnail import get_thumbnail
 
 from questions.models import MultipleChoiceOption, MultipleChoiceQuestion, Quiz, RatingQuestion
-from questions.models import Sitting
+from questions.models import Sitting, Category
 from answers.models import MultipleChoiceOtherAnswer, MultipleChoiceAnswer, RatingAnswer
 
 from .utils import multiplechoice_to_radio
@@ -39,6 +39,28 @@ class SittingForm(ModelForm):
                 Submit('submit', _('Save'), css_class='btn-success'),
                 HTML(
                     "<a class='btn btn-default' href='{% url \"questions:sitting_list\" %}'>Cancel</a>")
+            )
+        )
+
+
+class CategoryForm(ModelForm):
+
+    class Meta:
+        model = Category
+        fields = ['title', 'order']
+
+    def __init__(self, *args, **kwargs):
+        super(CategoryForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_id = 'question-category-form'
+        self.helper.form_method = 'post'
+        self.helper.layout = Layout(
+            Field('title'),
+            Field('order'),
+            FormActions(
+                Submit('submit', _('Save'), css_class='btn-success'),
+                HTML(
+                    "<a class='btn btn-default' href='{% url \"questions:category_list\" %}'>Cancel</a>")
             )
         )
 

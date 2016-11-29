@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block title %} {% trans "Add Question Category" %} {% endblock %}
+
+{% block page_content %} 
+	<div class="row">
+		<div class="col-md-12">
+			<div class="content-box-header">
+				<div class="panel-title">{% trans "Add Question Category" %}</div>
+			</div>
+			<div class="content-box-large box-with-header">
+				{% crispy form %}
+			</div>
+		</div>
+	</div>
+{% endblock %}

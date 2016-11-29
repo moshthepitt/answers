@@ -75,9 +75,13 @@
                             <span class="caret pull-right"></span>
                          </a>
                          <!-- Sub menu -->
-                         <ul>
+                        <ul>
                             <li><a href="{% url 'questions:quiz_list' %}">{% trans "View Question Sets" %}</a></li>
                             <li><a href="{% url 'questions:quiz_add' %}">{% trans "Add Question Set" %}</a></li>
+                        </ul>
+                        <ul>
+                            <li><a href="{% url 'questions:category_list' %}">{% trans "View Categories" %}</a></li>
+                            <li><a href="{% url 'questions:category_add' %}">{% trans "Add Category" %}</a></li>
                         </ul>
                     </li>
                     <li class="submenu">

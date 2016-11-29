@@ -8,6 +8,7 @@ from reviews.models import Review
 quizzes = Quiz.objects.filter(id__in=[16, 17, 18])
 sitting = Sitting.objects.get(pk=7)
 
+# peer reviews
 with open('/srv/jibupro/documentation/customers/galana2016.csv', "rb") as ifile:
     reader = csv.reader(ifile)
     t = zip(reader)
@@ -25,3 +26,6 @@ for i in t:
             this_review.save()
             for person in reviewers:
                 this_review.reviewers.add(person.userprofile)
+            groups = this_user.userprofile.group.all()
+            for group in groups:
+                this_review.reviewers.add(group.manager)

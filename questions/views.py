@@ -12,8 +12,9 @@ from datatableview.views import DatatableView
 from core.mixins import AdminMixin
 from saas.mixins import CustomerSaveMixin, CustomerListViewMixin, CustomerCheckMixin
 
-from questions.models import Quiz, Sitting
+from questions.models import Quiz, Sitting, Category
 from questions.forms import QuizForm, QuestionFormSet, QuestionFormSetHelper, SittingForm
+from questions.forms import CategoryForm
 from questions.forms import make_quiz_form, quiz_form_helper, save_quiz_form
 
 
@@ -143,3 +144,42 @@ def quiz_questions(request, pk):
         'QuestionFormSetHelper': QuestionFormSetHelper,
         "object": quiz
     })
+
+
+class QuestionCategoryDatatableView(AdminMixin, CustomerListViewMixin, DatatableView):
+    """
+    Allows you to manage sittings
+    """
+
+    model = Category
+    template_name = "questions/category_list.html"
+    datatable_options = {
+        'structure_template': "datatableview/bootstrap_structure.html",
+        'columns': [
+            'title',
+            'order',
+            (_("Actions"), 'id', 'get_actions'),
+        ],
+        'search_fields': ['title'],
+        'unsortable_columns': ['id'],
+    }
+
+    def get_actions(self, instance, *args, **kwargs):
+        return format_html(
+            '<a href="{0}">Edit</a>', reverse(
+                'questions:category_edit', args=[instance.pk])
+        )
+
+
+class QuestionCategoryUpdate(AdminMixin, CustomerCheckMixin, CustomerSaveMixin, UpdateView):
+    model = Category
+    form_class = CategoryForm
+    template_name = "questions/category_edit.html"
+    success_url = reverse_lazy('questions:category_list')
+
+
+class QuestionCategoryAdd(AdminMixin, CustomerSaveMixin, CreateView):
+    model = Category
+    form_class = CategoryForm
+    template_name = "questions/sitting_add.html"
+    success_url = reverse_lazy('questions:category_list')
