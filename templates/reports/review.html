@@ -23,15 +23,52 @@
 					  		</tr>
 					  	</thead>
 					    <tbody>
-							{% for question in scores %}
+					    	{% if object.quiz.use_categories %}
+						    	{% regroup scores by category as cat_list %}
+						    	{% for cat in cat_list %}
+						    	    <tr><th colspace="3">{{ cat.grouper }}</th></th>
+									{% for question in cat.list %}
+										<tr>
+											<td>{{question.title}}</td>
+											{% if show_individual %}
+												<td>{{question.percentage_score|floatformat:2}}%</td>
+											{% endif %}
+											<td>{{question.company_percentage_score|floatformat:2}}%</td>
+										</tr>
+									{% endfor %}				    	        
+						    	{% endfor %}
+						    	<tr><th colspace="3">{% trans 'Totals' %}</th></th>
+						    	{% for category in review.scored_categories %}
+						    		{% if category.use_this %}
+							    		<tr>
+							    			<th>{{category}}</th>
+							    			{% if show_individual %}
+							    				<th>{{category.percentage_score|floatformat:2}}%</th>
+							    			{% endif %}
+							    			<th>{{category.company_percentage_score|floatformat:2}}%</th>
+							    		</tr>
+						    		{% endif %}
+						    	{% endfor %}
 								<tr>
-									<td>{{question.title}}</td>
+									<th>{% trans "Overall Score" %}</th>
 									{% if show_individual %}
-										<td>{{question.percentage_score|floatformat:2}}%</td>
+										<th>{{review.percentage_score|floatformat:2}}%</th>
 									{% endif %}
-									<td>{{question.company_percentage_score|floatformat:2}}%</td>
+									<th>{{review.company_percentage_score|floatformat:2}}%</th>
 								</tr>
-							{% endfor %}
+								<tr>
+									<td colspan="3">{% trans "Based on" %} {{review.number_of_reviewers}} {% trans "out of" %} {{review.reviewers.count}} {% trans "reviewers" %}</td>
+								</tr>
+							{% else %}
+								{% for question in scores %}
+									<tr>
+										<td>{{question.title}}</td>
+										{% if show_individual %}
+											<td>{{question.percentage_score|floatformat:2}}%</td>
+										{% endif %}
+										<td>{{question.company_percentage_score|floatformat:2}}%</td>
+									</tr>
+								{% endfor %}
 								<tr>
 									<th>{% trans "Total" %}</th>
 									{% if show_individual %}
@@ -42,6 +79,7 @@
 								<tr>
 									<td colspan="3">{% trans "Based on" %} {{review.number_of_reviewers}} {% trans "out of" %} {{review.reviewers.count}} {% trans "reviewers" %}</td>
 								</tr>
+							{% endif %}
 						</tbody>
 					  </table>
 					</div>

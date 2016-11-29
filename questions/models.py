@@ -35,6 +35,9 @@ class Category(MPTTModel):
     # Sortable property
     order = models.PositiveIntegerField(default=1)
 
+    def has_rating_questions(self, quiz):
+        return self.question_set.all().exclude(quiz=quiz, ratingquestion=None).exists()
+
     class MPTTMeta:
         order_insertion_by = ['order']
 
@@ -182,7 +185,7 @@ class Quiz(models.Model):
         elif self.question_ordering == Quiz.ORDER_FIELD:
             return "order"
         elif self.question_ordering == Quiz.CATEGORY_FIELD:
-            return ["category__order", "order", "title"]
+            return ["category__order", "category__title", "order", "title"]
         else:
             return "title"
 

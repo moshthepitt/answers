@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from django.views.generic.detail import DetailView
 from django.db.models import Value, Avg, Q, F, Count, ExpressionWrapper, FloatField
 from django.db.models.functions import Coalesce
@@ -13,13 +15,26 @@ from core.mixins import AdminMixin
 from saas.mixins import CustomerListViewMixin, CustomerCheckMixin
 from reviews.models import Review
 from answers.models import Answer
-from questions.models import RatingQuestion, EssayQuestion, Sitting, Quiz
+from questions.models import RatingQuestion, EssayQuestion, Sitting, Quiz, Category
 from users.models import UserProfile
 
 
 def user_review_report(review):
     scores = []
     if review.quiz:
+        # categories
+        categories = Category.objects.filter(question__quiz=review.quiz).distinct()
+        cat_dict = OrderedDict()
+        for cat in categories:
+            if cat.has_rating_questions(review.quiz):
+                cat.use_this = True
+            cat.total_score = 0
+            cat.total_percentage_score = 0
+            cat.total_company_score = 0
+            cat.total_company_percentage_score = 0
+            cat.no_questions = 0
+            cat_dict[cat.id] = cat
+
         for question in review.quiz.get_questions().instance_of(RatingQuestion):
             score = Answer.objects.filter(question=question).filter(
                 review=review).aggregate(avg=Coalesce(Avg('ratinganswer__answer'), Value(0)))
@@ -29,6 +44,14 @@ def user_review_report(review):
             question.percentage_score = question.score * 100 / 5
             question.company_score = company_score['avg']
             question.company_percentage_score = question.company_score * 100 / 5
+            categories
+            if question.category:
+                this_cat = cat_dict[question.category.id]
+                this_cat.total_score += question.score
+                this_cat.total_percentage_score += question.percentage_score
+                this_cat.total_company_score += question.company_score
+                this_cat.total_company_percentage_score += question.company_percentage_score
+                this_cat.no_questions += 1
             scores.append(question)
 
         if scores:
@@ -42,11 +65,24 @@ def user_review_report(review):
         overall_company_score = Answer.objects.filter(review__quiz=review.quiz).filter(review__sitting=review.sitting).aggregate(
             avg=Coalesce(Avg('ratinganswer__answer'), Value(0)))
 
+        for cat2 in categories:
+            if cat2.no_questions <= 0:
+                cat2.score = 0
+                cat2.percentage_score = 0
+                cat2.company_score = 0
+                cat2.company_percentage_score = 0
+            else:
+                cat2.score = cat2.total_score / cat2.no_questions
+                cat2.percentage_score = cat2.total_percentage_score / cat2.no_questions
+                cat2.company_score = cat2.total_company_score / cat2.no_questions
+                cat2.company_percentage_score = cat2.total_company_percentage_score / cat2.no_questions
+
         review.score = overall_score['avg']
         review.percentage_score = review.score * 100 / 5
         review.company_score = overall_company_score['avg']
         review.company_percentage_score = review.company_score * 100 / 5
         review.number_of_reviewers = number_of_reviewers
+        review.scored_categories = categories
     return (review, scores)
 
 
