@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from questions.models import Quiz, Sitting
 from reviews.models import Review
 
-quizzes = Quiz.objects.filter(id__in=[16, 17, 18])
+quizzes = Quiz.objects.filter(id__in=[19])
 sitting = Sitting.objects.get(pk=7)
 
 # peer reviews
