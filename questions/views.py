@@ -182,5 +182,5 @@ class QuestionCategoryUpdate(AdminMixin, CustomerCheckMixin, CustomerSaveMixin, 
 class QuestionCategoryAdd(AdminMixin, CustomerSaveMixin, CreateView):
     model = Category
     form_class = CategoryForm
-    template_name = "questions/sitting_add.html"
+    template_name = "questions/category_add.html"
     success_url = reverse_lazy('questions:category_list')

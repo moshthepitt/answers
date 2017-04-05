@@ -2,7 +2,7 @@
 from collections import OrderedDict
 
 from django.forms.models import fields_for_model
-from django.forms import BaseForm, ModelForm, CharField, ValidationError
+from django.forms import BaseForm, ModelForm, CharField, ValidationError, BaseInlineFormSet
 from django.utils.translation import ugettext as _
 from django.forms.models import inlineformset_factory
 from django.utils.html import format_html
@@ -109,8 +109,20 @@ class QuestionFormSetHelper(FormHelper):
         self.template = 'bootstrap3/table_inline_formset.html'
 
 
+class BaseQuestionFormSet(BaseInlineFormSet):
+
+    def __init__(self, *args, **kwargs):
+        super(BaseQuestionFormSet, self).__init__(*args, **kwargs)
+        if 'instance' in kwargs:
+            quiz_instance = kwargs['instance']
+            for form in self.forms:
+                if 'category' in form.fields:
+                    form.fields['category'].queryset = Category.objects.filter(
+                        customer=quiz_instance.customer)
+
+
 QuestionFormSet = inlineformset_factory(
-    Quiz, RatingQuestion, form=QuestionForm, can_delete=True, extra=5)
+    Quiz, RatingQuestion, form=QuestionForm, formset=BaseQuestionFormSet, can_delete=True, extra=5)
 
 
 def make_quiz_form(quiz, select_to_radio=False):
@@ -147,7 +159,8 @@ def make_quiz_form(quiz, select_to_radio=False):
             if quiz.show_question_numbers:
                 this_label = "{}. {}".format(question.order, this_label)
             if question.description:
-                answer_field.label = format_html("<span class='question-text-latel'>{}</span><div class='question-description'>{}</div>", smart_str(this_label), mark_safe(smart_str(question.description).replace('\n', '<br />')))
+                answer_field.label = format_html("<span class='question-text-latel'>{}</span><div class='question-description'>{}</div>", smart_str(
+                    this_label), mark_safe(smart_str(question.description).replace('\n', '<br />')))
             else:
                 answer_field.label = smart_str(this_label)
         if question._meta.model == MultipleChoiceQuestion:
