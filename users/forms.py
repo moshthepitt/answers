@@ -16,6 +16,7 @@ class UserProfileForm(ModelForm):
         fields = ['is_manager', 'is_admin', 'manager', 'group']
 
     def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
         super(UserProfileForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_id = 'userprofile-form'

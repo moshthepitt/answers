@@ -49,6 +49,13 @@ def import_geminia_users(filename, password, customer_id):
 def geminia_user_groups(filename, customer_id):
     """
     Creates use groups fro Geminia
+    Useage:
+        from documentation.customers.geminia2017 import geminia_user_groups
+
+        filename = "example.csv"
+        customer_id = 6
+
+        geminia_user_groups(filename, customer_id)
     """
     try:
         this_customer = Customer.objects.get(pk=customer_id)
