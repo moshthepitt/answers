@@ -154,6 +154,7 @@ SOCIALACCOUNT_QUERY_EMAIL = True
 EMAIL_CONFIRMATION_DAYS = 14
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USER_DISPLAY = 'users.utils.get_user_display'
 SOCIALACCOUNT_PROVIDERS = {
     'facebook': {
         'SCOPE': ['email', 'publish_stream'],

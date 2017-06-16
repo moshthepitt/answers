@@ -9,3 +9,7 @@ def send_email_to_users(customer, from_name, from_email, subject, message):
         sender = '{0} <{1}>'.format(from_name, from_email)
         for userprofile in userprofiles:
             generic_email(userprofile.user, sender, subject, message)
+
+
+def get_user_display(user):
+    return user.userprofile.get_display_name()
