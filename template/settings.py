@@ -188,6 +188,13 @@ CACHEOPS = {
     '*.*': ('all', 60 * 10),
 }
 
+# Suit
+SUIT_CONFIG = {
+    'ADMIN_NAME': 'JibuPro',
+    'SEARCH_URL': '',
+
+}
+
 # CELERY STUFF
 BROKER_URL = 'redis://localhost:6379'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379'

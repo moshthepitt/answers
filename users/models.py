@@ -10,6 +10,9 @@ User = settings.AUTH_USER_MODEL
 
 @python_2_unicode_compatible
 class UserGroup(models.Model):
+    """
+    A group of users e.g. a department in an organisation
+    """
     created_on = models.DateTimeField(_("Created on"), auto_now_add=True)
     updated_on = models.DateTimeField(_("Updated on"), auto_now=True)
     customer = models.ForeignKey(Customer, verbose_name=_(
