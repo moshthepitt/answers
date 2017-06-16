@@ -11,8 +11,8 @@ def import_users(filename, password=None, customer=None):
         t = zip(reader)
     import_list = [x[0] for x in t]
     for i, row in enumerate(import_list):
-        first_name = row[0].strip()
-        last_name = row[1].strip()
+        first_name = row[0].strip().title()
+        last_name = row[1].strip().title()
         if not last_name:
             names = first_name.split(" ")
             if len(names) > 1:
