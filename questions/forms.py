@@ -2,7 +2,8 @@
 from collections import OrderedDict
 
 from django.forms.models import fields_for_model
-from django.forms import BaseForm, ModelForm, CharField, ValidationError, BaseInlineFormSet
+from django.forms import BaseForm, ModelForm, CharField, ValidationError
+from django.forms import Select, BaseInlineFormSet, RadioSelect
 from django.utils.translation import ugettext as _
 from django.forms.models import inlineformset_factory
 from django.utils.html import format_html
@@ -132,14 +133,25 @@ def make_quiz_form(quiz, select_to_radio=False):
     form_fields = OrderedDict()
     for question in quiz.get_questions():
         AnswerModel = question.get_answer_class()
+        model_fields = fields_for_model(AnswerModel, exclude=['userprofile', 'review'])
         if AnswerModel == MultipleChoiceAnswer or AnswerModel == RatingAnswer:
-            if select_to_radio or quiz.question_widget == quiz.RADIO_WIDGET or question.widget == question.RADIO_WIDGET:
+            if select_to_radio or (quiz.question_widget == quiz.RADIO_WIDGET) or (question.widget == question.RADIO_WIDGET):
                 model_fields = fields_for_model(
                     AnswerModel, exclude=['userprofile', 'review'], formfield_callback=multiplechoice_to_radio)
-            else:
-                model_fields = fields_for_model(AnswerModel, exclude=['userprofile', 'review'])
-        else:
-            model_fields = fields_for_model(AnswerModel, exclude=['userprofile', 'review'])
+                # Begin Diry hack
+                # for when radio select has for some reason not been set by fields_for_model
+                # this happens for RatingAnswer objects
+                # first we check if choices exist to avoid none choice fields
+                if hasattr(model_fields['answer'], '_choices'):
+                    # then we check if the widget is still Select
+                    if isinstance(model_fields['answer'].widget, Select):
+                        # we manually make it into a Radio Select field
+                        model_fields['answer'].widget = RadioSelect()
+                        # we remove the empty answer choice usually preset in Select Fields
+                        if not model_fields['answer']._choices[0][0]:
+                            model_fields['answer']._choices.pop(0)
+                # End Diry hack
+
         answer_field = model_fields['answer']
         answer_field.required = question.required
         # answer_field.question = question ?? should this be included
