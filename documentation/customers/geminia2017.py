@@ -49,7 +49,7 @@ def import_geminia_users(filename, password, customer_id):
 def geminia_user_groups(filename, customer_id):
     """
     Creates use groups fro Geminia
-    Useage:
+    Usage:
         from documentation.customers.geminia2017 import geminia_user_groups
 
         filename = "example.csv"
@@ -73,3 +73,36 @@ def geminia_user_groups(filename, customer_id):
                 dept = row[2].strip()
                 user_group = get_user_group(dept, this_customer)
                 this_user.userprofile.group.add(user_group)
+
+
+def geminia_managers(filename, customer_id):
+    """
+    Quickly assign managers to existing staff
+    Usage:
+        from documentation.customers.geminia2017 import geminia_managers
+
+        filename = "example.csv"
+        customer_id = 6
+
+        geminia_managers(filename, customer_id)
+    """
+    try:
+        this_customer = Customer.objects.get(pk=customer_id)
+    except Customer.DoesNotExist:
+        pass
+    else:
+        with open(filename, "rb") as ifile:
+            reader = csv.reader(ifile)
+            t = zip(reader)
+
+        import_list = [x[0] for x in t]
+
+        for row in import_list:
+            email = row[4].strip()
+            this_user = User.objects.filter(userprofile__customer=this_customer, email=email).first()
+            if this_user:
+                supervisor_email = row[5].strip()
+                this_supervisor = User.objects.filter(userprofile__customer=this_customer, email=supervisor_email).first()
+                if this_supervisor:
+                    this_user.userprofile.manager = this_supervisor.userprofile
+                    this_user.userprofile.save()
