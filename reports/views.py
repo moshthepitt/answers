@@ -1,7 +1,8 @@
 from collections import OrderedDict
 
 from django.views.generic.detail import DetailView
-from django.db.models import Value, Avg, Q, F, Count, ExpressionWrapper, FloatField
+from django.db.models import Value, Avg, Q, F, Count, ExpressionWrapper
+from django.db.models import FloatField
 from django.db.models.functions import Coalesce
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
@@ -15,7 +16,8 @@ from core.mixins import AdminMixin
 from saas.mixins import CustomerListViewMixin, CustomerCheckMixin
 from reviews.models import Review
 from answers.models import Answer
-from questions.models import RatingQuestion, EssayQuestion, Sitting, Quiz, Category
+from questions.models import RatingQuestion, EssayQuestion, Sitting, Quiz
+from questions.models import Category
 from users.models import UserProfile
 
 
@@ -23,7 +25,8 @@ def user_review_report(review):
     scores = []
     if review.quiz:
         # categories
-        categories = Category.objects.filter(question__quiz=review.quiz).distinct()
+        categories = Category.objects.filter(
+                        question__quiz=review.quiz).distinct()
         cat_dict = OrderedDict()
         for cat in categories:
             if cat.has_rating_questions(review.quiz):
@@ -35,34 +38,44 @@ def user_review_report(review):
             cat.no_questions = 0
             cat_dict[cat.id] = cat
 
-        for question in review.quiz.get_questions().instance_of(RatingQuestion):
+        for question in review.quiz.get_questions().instance_of(
+                            RatingQuestion):
             score = Answer.objects.filter(question=question).filter(
-                review=review).aggregate(avg=Coalesce(Avg('ratinganswer__answer'), Value(0)))
-            company_score = Answer.objects.filter(question=question).filter(review__sitting=review.sitting).filter(
-                review__quiz=review.quiz).aggregate(avg=Coalesce(Avg('ratinganswer__answer'), Value(0)))
+                review=review).aggregate(
+                avg=Coalesce(Avg('ratinganswer__answer'), Value(0)))
+            company_score = Answer.objects.filter(question=question).filter(
+                review__sitting=review.sitting).filter(
+                review__quiz=review.quiz).aggregate(
+                avg=Coalesce(Avg('ratinganswer__answer'), Value(0)))
             question.score = score['avg']
             question.percentage_score = question.score * 100 / 5
             question.company_score = company_score['avg']
-            question.company_percentage_score = question.company_score * 100 / 5
+            question.company_percentage_score = question.company_score \
+                * 100 / 5
             categories
             if question.category:
                 this_cat = cat_dict[question.category.id]
                 this_cat.total_score += question.score
                 this_cat.total_percentage_score += question.percentage_score
                 this_cat.total_company_score += question.company_score
-                this_cat.total_company_percentage_score += question.company_percentage_score
+                this_cat.total_company_percentage_score +=\
+                    question.company_percentage_score
                 this_cat.no_questions += 1
             scores.append(question)
 
         if scores:
             number_of_reviewers = Answer.objects.filter(
-                review=review, review__sitting=review.sitting).count() / review.quiz.get_questions().count()
+                review=review,
+                review__sitting=review.sitting).count() /\
+                review.quiz.get_questions().count()
         else:
             number_of_reviewers = 0
 
         overall_score = Answer.objects.filter(review=review).aggregate(
             avg=Coalesce(Avg('ratinganswer__answer'), Value(0)))
-        overall_company_score = Answer.objects.filter(review__quiz=review.quiz).filter(review__sitting=review.sitting).aggregate(
+        overall_company_score = Answer.objects.filter(
+            review__quiz=review.quiz).filter(
+            review__sitting=review.sitting).aggregate(
             avg=Coalesce(Avg('ratinganswer__answer'), Value(0)))
 
         for cat2 in categories:
@@ -73,9 +86,12 @@ def user_review_report(review):
                 cat2.company_percentage_score = 0
             else:
                 cat2.score = cat2.total_score / cat2.no_questions
-                cat2.percentage_score = cat2.total_percentage_score / cat2.no_questions
-                cat2.company_score = cat2.total_company_score / cat2.no_questions
-                cat2.company_percentage_score = cat2.total_company_percentage_score / cat2.no_questions
+                cat2.percentage_score = cat2.total_percentage_score /\
+                    cat2.no_questions
+                cat2.company_score = cat2.total_company_score /\
+                    cat2.no_questions
+                cat2.company_percentage_score =\
+                    cat2.total_company_percentage_score / cat2.no_questions
 
         review.score = overall_score['avg']
         review.percentage_score = review.score * 100 / 5
@@ -92,7 +108,8 @@ def user_text_answers(review):
     """
     result = []
     for question in review.quiz.get_questions().instance_of(EssayQuestion):
-        question.answers = Answer.objects.filter(question=question).filter(review=review)
+        question.answers = Answer.objects.filter(
+            question=question).filter(review=review)
         result.append(question)
     return result
 
@@ -105,23 +122,32 @@ def sitting_report(sitting):
     grand_overall_score = 0
     for question_set in question_sets:
         question_set.reported_questions = []
-        for question in question_set.get_questions().instance_of(RatingQuestion):
-            company_score = Answer.objects.filter(question=question).filter(review__sitting=sitting).filter(
-                review__quiz=question_set).aggregate(avg=Coalesce(Avg('ratinganswer__answer'), Value(0)))
+        for question in question_set.get_questions().instance_of(
+                RatingQuestion):
+            company_score = Answer.objects.filter(
+                question=question).filter(review__sitting=sitting).filter(
+                review__quiz=question_set).aggregate(
+                avg=Coalesce(Avg('ratinganswer__answer'), Value(0)))
             question.company_score = company_score['avg']
-            question.company_percentage_score = question.company_score * 100 / 5
+            question.company_percentage_score = question.company_score *\
+                100 / 5
 
             question_set.reported_questions.append(question)
 
-        overall_company_score = Answer.objects.exclude(ratinganswer__answer=None).filter(review__quiz=question_set).filter(review__sitting=sitting).aggregate(
+        overall_company_score = Answer.objects.exclude(
+            ratinganswer__answer=None).filter(
+            review__quiz=question_set).filter(
+            review__sitting=sitting).aggregate(
             avg=Coalesce(Avg('ratinganswer__answer'), Value(0)))
         question_set.overall_company_score = overall_company_score['avg']
-        question_set.company_percentage_score = question_set.overall_company_score * 100 / 5
+        question_set.company_percentage_score =\
+            question_set.overall_company_score * 100 / 5
         grand_overall_score += question_set.overall_company_score
 
     sitting.question_sets = question_sets
     try:
-        sitting.overall_company_score = grand_overall_score / len(sitting.question_sets)
+        sitting.overall_company_score = grand_overall_score /\
+            len(sitting.question_sets)
     except ZeroDivisionError:
         sitting.overall_company_score = 0
     sitting.company_percentage_score = sitting.overall_company_score * 100 / 5
@@ -160,7 +186,9 @@ class ReviewReportDatatableView(CustomerListViewMixin, DatatableView):
             (_("User"), 'userprofile', 'get_user'),
             (_("Actions"), 'id', 'get_actions'),
         ],
-        'search_fields': ['title', 'userprofile__user__last_name', 'userprofile__user__first_name', 'userprofile__user__username'],
+        'search_fields': ['title', 'userprofile__user__last_name',
+                          'userprofile__user__first_name',
+                          'userprofile__user__username'],
         'unsortable_columns': ['id'],
     }
 
@@ -171,27 +199,32 @@ class ReviewReportDatatableView(CustomerListViewMixin, DatatableView):
 
     def get_queryset(self):
         """
-        return any report which is about the current user, or which they have access to
-        one has access to:
+        return any report which is about the current user, or which they have
+        access to one has access to:
             any report of someone they manage
         """
         queryset = super(ReviewReportDatatableView, self).get_queryset()
-        queryset = queryset.filter(Q(userprofile=self.request.user.userprofile) | Q(
-            userprofile__manager=self.request.user.userprofile) | Q(userprofile__group__manager=self.request.user.userprofile))
+        queryset = queryset.filter(
+            Q(userprofile=self.request.user.userprofile) |
+            Q(userprofile__manager=self.request.user.userprofile) |
+            Q(userprofile__group__manager=self.request.user.userprofile))
         return queryset.distinct()
 
     def get_actions(self, instance, *args, **kwargs):
         if instance.userprofile:
             return format_html(
-                '<a href="{}">Report</a>', reverse('reports:peer_review', args=[instance.pk])
+                '<a href="{}">Report</a>', reverse(
+                    'reports:peer_review', args=[instance.pk])
             )
         else:
             return format_html(
-                '<a href="{}">Report</a>', reverse('reports:review', args=[instance.pk])
+                '<a href="{}">Report</a>', reverse(
+                    'reports:review', args=[instance.pk])
             )
 
 
-class PendingReviewsReportDatatableView(AdminMixin, CustomerListViewMixin, DatatableView):
+class PendingReviewsReportDatatableView(AdminMixin, CustomerListViewMixin,
+                                        DatatableView):
 
     """
     Displays a list of reviews and how many people have reviewed
@@ -208,7 +241,9 @@ class PendingReviewsReportDatatableView(AdminMixin, CustomerListViewMixin, Datat
             (_("No. of Reviewers"), 'no_reviewers', 'get_no_reviewers'),
             (_("Completed"), 'answered', 'get_answered'),
         ],
-        'search_fields': ['title', 'userprofile__user__last_name', 'userprofile__user__first_name', 'userprofile__user__username'],
+        'search_fields': ['title', 'userprofile__user__last_name',
+                          'userprofile__user__first_name',
+                          'userprofile__user__username'],
         'unsortable_columns': ['id'],
     }
 
@@ -225,27 +260,33 @@ class PendingReviewsReportDatatableView(AdminMixin, CustomerListViewMixin, Datat
 
     def get_queryset(self):
         """
-        return any report which is about the current user, or which they have access to
-        one has access to:
+        return any report which is about the current user, or which they have
+        access to one has access to:
             any report of someone they manage
         """
-        queryset = super(PendingReviewsReportDatatableView, self).get_queryset()
-        queryset = queryset.exclude(userprofile=None).filter(sitting=self.sitting).annotate(
+        queryset = super(PendingReviewsReportDatatableView,
+                         self).get_queryset()
+        queryset = queryset.exclude(
+            userprofile=None).filter(sitting=self.sitting).annotate(
             no_reviewers=Count('reviewers', distinct=True)).annotate(
             no_answers=Count('answer', distinct=True)).annotate(
             no_questions=Count('quiz__question', distinct=True)).annotate(
-            answered=ExpressionWrapper(F('no_answers') / F('no_questions'), output_field=FloatField())).order_by('answered')
+            answered=ExpressionWrapper(
+                F('no_answers') / F('no_questions'),
+                output_field=FloatField())).order_by('answered')
 
         return queryset.distinct()
 
     def get_context_data(self, **kwargs):
-        context = super(PendingReviewsReportDatatableView, self).get_context_data(**kwargs)
+        context = super(PendingReviewsReportDatatableView,
+                        self).get_context_data(**kwargs)
         context['sitting'] = self.sitting
         return context
 
     def dispatch(self, *args, **kwargs):
         self.sitting = get_object_or_404(Sitting, pk=self.kwargs['pk'])
-        return super(PendingReviewsReportDatatableView, self).dispatch(*args, **kwargs)
+        return super(PendingReviewsReportDatatableView,
+                     self).dispatch(*args, **kwargs)
 
 
 class SittingReport(CustomerCheckMixin, ReportMixin, DetailView):
@@ -269,10 +310,13 @@ class SittingUserReport(CustomerCheckMixin, ReportMixin, DetailView):
         context['sitting'] = sitting
         context['reviews'] = this_reviews
 
-        userprofiles = UserProfile.objects.filter(customer=self.get_object().customer)
+        userprofiles = UserProfile.objects.filter(
+                            customer=self.get_object().customer)
         for userprofile in userprofiles:
             userprofile.reports = []
-            reviews = Review.objects.filter(sitting=self.get_object()).filter(userprofile=userprofile).distinct()
+            reviews = Review.objects.filter(
+                sitting=self.get_object()).filter(
+                userprofile=userprofile).distinct()
             for review in reviews:
                 report = user_review_report(review)
                 review_report = report[0]
@@ -296,7 +340,8 @@ class SittingUserReport(CustomerCheckMixin, ReportMixin, DetailView):
 #             (_("Last Name"), 'user__last_name'),
 #             (_("Score"), 'avg', 'get_avg'),
 #         ],
-#         'search_fields': ['user__last_name', 'user__first_name', 'user__email'],
+#         'search_fields': ['user__last_name', 'user__first_name',
+#                           'user__email'],
 #     }
 
 #     def get_avg(self, instance, *args, **kwargs):
@@ -316,7 +361,9 @@ class SittingUserReport(CustomerCheckMixin, ReportMixin, DetailView):
 #         return context
 
 #     def dispatch(self, *args, **kwargs):
-#         self.sitting = get_object_or_404(Sitting, pk=self.kwargs['pk'], customer=self.request.user.userprofile.customer)
+#         self.sitting = get_object_or_404(
+#                            Sitting, pk=self.kwargs['pk'],
+#                            customer=self.request.user.userprofile.customer)
 #         return super(SittingUserRanks, self).dispatch(*args, **kwargs)
 
 
@@ -334,7 +381,8 @@ class SittingUserReport(CustomerCheckMixin, ReportMixin, DetailView):
 #             (_("Last Name"), 'user__last_name'),
 #             (_("Score"), 'avg', 'get_avg'),
 #         ],
-#         'search_fields': ['user__last_name', 'user__first_name', 'user__email'],
+#         'search_fields': ['user__last_name', 'user__first_name',
+#                            'user__email'],
 #     }
 
 #     def get_avg(self, instance, *args, **kwargs):
@@ -342,19 +390,27 @@ class SittingUserReport(CustomerCheckMixin, ReportMixin, DetailView):
 
 #     def get_queryset(self):
 #         queryset = super(SittingQuizUserRanks, self).get_queryset()
-#         queryset = queryset.filter(answer__question__quiz=self.question_set).filter(
+#         queryset = queryset.filter(
+#                        answer__question__quiz=self.question_set).filter(
 #             answer__review__sitting=self.sitting).annotate(
 #             avg=Coalesce(Avg('answer__ratinganswer__answer'), Value(0))
 #         ).order_by('-avg')
 #         return queryset
 
 #     def get_context_data(self, **kwargs):
-#         context = super(SittingQuizUserRanks, self).get_context_data(**kwargs)
+#         context = super(SittingQuizUserRanks,
+#                          self).get_context_data(**kwargs)
 #         context['sitting'] = self.sitting
 #         context['question_set'] = self.question_set
 #         return context
 
 #     def dispatch(self, *args, **kwargs):
-#         self.sitting = get_object_or_404(Sitting, pk=self.kwargs['sitting_pk'], customer=self.request.user.userprofile.customer)
-#         self.question_set = get_object_or_404(Quiz, pk=self.kwargs['quiz_pk'], customer=self.request.user.userprofile.customer)
+#         self.sitting = get_object_or_404(
+#                            Sitting,
+#                            pk=self.kwargs['sitting_pk'],
+#                             customer=self.request.user.userprofile.customer)
+#         self.question_set = get_object_or_404(
+#                Quiz,
+#                pk=self.kwargs['quiz_pk'],
+#                customer=self.request.user.userprofile.customer)
 #         return super(SittingQuizUserRanks, self).dispatch(*args, **kwargs)
