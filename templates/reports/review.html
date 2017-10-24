@@ -3,7 +3,7 @@
 
 {% block title %} {% trans "Report:" %} {{object}} {% endblock %}
 
-{% block page_content %} 
+{% block page_content %}
 	<div class="row">
 		<div class="col-md-12">
 			<div class="content-box-header">
@@ -35,7 +35,7 @@
 											{% endif %}
 											<td>{{question.company_percentage_score|floatformat:2}}%</td>
 										</tr>
-									{% endfor %}				    	        
+									{% endfor %}
 						    	{% endfor %}
 						    	<tr><th colspace="3">{% trans 'Totals' %}</th></th>
 						    	{% for category in review.scored_categories %}
@@ -57,7 +57,7 @@
 									<th>{{review.company_percentage_score|floatformat:2}}%</th>
 								</tr>
 								<tr>
-									<td colspan="3">{% trans "Based on" %} {{review.number_of_reviewers}} {% trans "out of" %} {{review.reviewers.count}} {% trans "reviewers" %}</td>
+									<td colspan="3">{% trans "Based on" %} {{review.number_of_reviewers}} {% trans "out of" %} {{review.reviewer_count}} {% trans "reviewers" %}</td>
 								</tr>
 							{% else %}
 								{% for question in scores %}
@@ -77,7 +77,7 @@
 									<th>{{review.company_percentage_score|floatformat:2}}%</th>
 								</tr>
 								<tr>
-									<td colspan="3">{% trans "Based on" %} {{review.number_of_reviewers}} {% trans "out of" %} {{review.reviewers.count}} {% trans "reviewers" %}</td>
+									<td colspan="3">{% trans "Based on" %} {{review.number_of_reviewers}} {% trans "out of" %} {{review.reviewer_count}} {% trans "reviewers" %}</td>
 								</tr>
 							{% endif %}
 						</tbody>
