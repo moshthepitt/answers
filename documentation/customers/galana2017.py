@@ -9,7 +9,7 @@ quizzes = Quiz.objects.filter(id__in=[29])
 sitting = Sitting.objects.get(pk=11)
 
 # peer reviews
-with open('/home/mosh/Desktop/galana2017.csv',
+with open('/srv/jibupro/documentation/customers/galana2017.csv',
           "rb") as ifile:
     reader = csv.reader(ifile)
     t = zip(reader)
