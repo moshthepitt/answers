@@ -5,11 +5,11 @@ from django.contrib.auth.models import User
 from questions.models import Quiz, Sitting
 from reviews.models import Review
 
-quizzes = Quiz.objects.filter(id__in=[19])
-sitting = Sitting.objects.get(pk=7)
+quizzes = Quiz.objects.filter(id__in=[29])
+sitting = Sitting.objects.get(pk=11)
 
 # peer reviews
-with open('/srv/jibupro/documentation/customers/galana2016.csv',
+with open('/home/mosh/Desktop/galana2017.csv',
           "rb") as ifile:
     reader = csv.reader(ifile)
     t = zip(reader)
@@ -18,7 +18,7 @@ for i in t:
     try:
         this_user = User.objects.get(email=i[0][0])
     except User.DoesNotExist:
-        pass
+        print(i[0][0])
     else:
         emails = [x.strip() for x in i[0][1].split(",")]
         reviewers = User.objects.filter(email__in=emails)
@@ -31,4 +31,5 @@ for i in t:
                 this_review.reviewers.add(person.userprofile)
             groups = this_user.userprofile.group.all()
             for group in groups:
-                this_review.reviewers.add(group.manager)
+                if group.manager:
+                    this_review.reviewers.add(group.manager)

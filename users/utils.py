@@ -16,5 +16,6 @@ def get_user_display(user):
 
 
 def get_user_group(name, customer):
-    group, created = UserGroup.objects.get_or_create(name=name, customer=customer)
+    group, created = UserGroup.objects.get_or_create(name=name,
+                                                     customer=customer)
     return group

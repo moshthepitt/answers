@@ -68,7 +68,8 @@ def geminia_user_groups(filename, customer_id):
         import_list = [x[0] for x in t]
         for row in import_list:
             email = row[4].strip()
-            this_user = User.objects.filter(userprofile__customer=this_customer, email=email).first()
+            this_user = User.objects.filter(
+                userprofile__customer=this_customer, email=email).first()
             if this_user:
                 dept = row[2].strip()
                 user_group = get_user_group(dept, this_customer)
@@ -99,10 +100,13 @@ def geminia_managers(filename, customer_id):
 
         for row in import_list:
             email = row[4].strip()
-            this_user = User.objects.filter(userprofile__customer=this_customer, email=email).first()
+            this_user = User.objects.filter(
+                userprofile__customer=this_customer, email=email).first()
             if this_user:
                 supervisor_email = row[5].strip()
-                this_supervisor = User.objects.filter(userprofile__customer=this_customer, email=supervisor_email).first()
+                this_supervisor = User.objects.filter(
+                    userprofile__customer=this_customer,
+                    email=supervisor_email).first()
                 if this_supervisor:
                     this_user.userprofile.manager = this_supervisor.userprofile
                     this_user.userprofile.save()
