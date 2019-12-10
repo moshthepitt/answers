@@ -47,6 +47,9 @@ class Review(models.Model):
         _("Strict Duration"), default=False,
         help_text=_("If True, no answers will be saved to the database after"
                     " the duration is exceeded"))
+    no_login = models.BooleanField(
+        _("No Login"), default=False,
+        help_text=_("Is this review open to the world?"))
 
     class Meta:
         verbose_name = _("Review")
