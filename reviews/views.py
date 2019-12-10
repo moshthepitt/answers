@@ -7,6 +7,7 @@ from django.utils.translation import ugettext as _
 from django.utils.html import format_html
 from django.utils import timezone
 from django.contrib import messages
+from django.http import Http404
 
 from datatableview.views import DatatableView
 from core.mixins import AdminMixin, CustomerQuerysetMixin
@@ -19,7 +20,7 @@ from questions.forms import quiz_form_helper, save_quiz_form, make_custom_cleane
 from answers.utils import calculate_multichoice_score
 
 
-class ReviewView(CustomerCheckMixin, ReviewMixin, FormMixin, DetailView):
+class BaseReview(FormMixin, DetailView):
     model = Review
 
     def get_success_url(self):
@@ -45,15 +46,15 @@ class ReviewView(CustomerCheckMixin, ReviewMixin, FormMixin, DetailView):
         # Answer.objects.filter(review=self.object).delete()
         # ### DIRTY HACK
         save_quiz_form(self.object.quiz, form, self.request.user, self.object)
-        return super(ReviewView, self).form_valid(form)
+        return super(BaseReview, self).form_valid(form)
 
     def form_invalid(self, form):
         messages.error(
             self.request, _('Please correct the errors below and then re-submit'), fail_silently=True)
-        return super(ReviewView, self).form_invalid(form)
+        return super(BaseReview, self).form_invalid(form)
 
     def get_context_data(self, **kwargs):
-        context = super(ReviewView, self).get_context_data(**kwargs)
+        context = super(BaseReview, self).get_context_data(**kwargs)
         form = self.get_form()
         context['form'] = form
         context['form_helper'] = quiz_form_helper(self.object.quiz, form)
@@ -64,7 +65,24 @@ class ReviewView(CustomerCheckMixin, ReviewMixin, FormMixin, DetailView):
         if self.object.timed:
             self.object.start = timezone.now()
             self.object.save()
-        return super(ReviewView, self).dispatch(*args, **kwargs)
+        return super(BaseReview, self).dispatch(*args, **kwargs)
+
+
+class ReviewView(CustomerCheckMixin, ReviewMixin, BaseReview):
+    pass
+
+
+class PublicReviewView(BaseReview):
+    """Allows public access of some reviews."""
+
+    def get_success_url(self):
+        return reverse('reviews:thanks')
+
+    def dispatch(self, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object and self.object.public and self.object.no_login:
+            return super(PublicReviewView, self).dispatch(*args, **kwargs)
+        raise Http404
 
 
 class ReviewUpdate(AdminMixin, CustomerCheckMixin, CustomerSaveMixin, CustomerQuerysetMixin, UpdateView):
