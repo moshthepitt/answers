@@ -5,3 +5,4 @@ celerybeat.pid
 celerybeat-schedule
 #whoosh_index/
 .venv
+.vscode/
