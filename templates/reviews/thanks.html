@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags i18n %}
+
+{% block title %} {% trans "Thank You" %} {% endblock %}
+
+{% block page_content %} 
+	<div class="row">
+		<div class="col-md-12">
+			<div class="content-box-header">
+				<div class="panel-title">{% trans "Thank You" %}</div>
+			</div>
+			<div class="content-box-large box-with-header">
+			    <div class="status-three">
+			    	<p>Thank you for participating in the survey.</p>
+			    </div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
