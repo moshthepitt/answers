@@ -75,6 +75,8 @@ class ReviewView(CustomerCheckMixin, ReviewMixin, BaseReview):
 class PublicReviewView(BaseReview):
     """Allows public access of some reviews."""
 
+    template_name = "reviews/anonymous.html"
+
     def get_success_url(self):
         return reverse('reviews:thanks')
 
