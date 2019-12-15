@@ -35,7 +35,8 @@
 	              <div class="logo">
 	                 <h1><a href="{% url 'home' %}">{{site.name}}</a></h1>
 	              </div>
-	           </div>
+             </div>
+            {% block main_nav %}
 	           <div class="col-sm-6 col-md-2 pull-right">
 	              <div class="navbar navbar-inverse" role="banner">
 	                  <nav class="collapse navbar-collapse bs-navbar-collapse navbar-right" role="navigation">
@@ -54,7 +55,8 @@
 	                    </ul>
 	                  </nav>
 	              </div>
-	           </div>
+             </div>
+            {% endblock %}
 	           <div class="clearfix"></div>
 	        </div>
 	     </div>
@@ -62,107 +64,107 @@
 
     <div class="page-content">
     	<div class="row">
-		  <div class="col-md-2">
-		  	<div class="sidebar content-box" style="display: block;">
-                <ul class="nav">
-                    {% if request.user.is_authenticated %}
-                    <li><a href="{% url 'dashboard' %}"><i class="glyphicon glyphicon-home"></i> {% trans "Dashboard" %}</a></li>
-                    <li><a href="{% url 'reports:report_list' %}"><i class="glyphicon glyphicon-ok"></i> {% trans "Reports" %}</a></li>
-                    {% if request.user.userprofile.is_admin %}
-                    <li class="submenu">
-                         <a href="{% url 'questions:quiz_list' %}">
-                            <i class="glyphicon glyphicon-list"></i> {% trans "Question Sets" %}
-                            <span class="caret pull-right"></span>
-                         </a>
-                         <!-- Sub menu -->
-                        <ul>
-                            <li><a href="{% url 'questions:quiz_list' %}">{% trans "View Question Sets" %}</a></li>
-                            <li><a href="{% url 'questions:quiz_add' %}">{% trans "Add Question Set" %}</a></li>
-                        </ul>
-                        <ul>
-                            <li><a href="{% url 'questions:category_list' %}">{% trans "View Categories" %}</a></li>
-                            <li><a href="{% url 'questions:category_add' %}">{% trans "Add Category" %}</a></li>
-                        </ul>
-                    </li>
-                    <li class="submenu">
-                         <a href="{% url 'questions:sitting_list' %}">
-                            <i class="glyphicon glyphicon-list"></i> {% trans "Sittings" %}
-                            <span class="caret pull-right"></span>
-                         </a>
-                         <!-- Sub menu -->
-                         <ul>
-                            <li><a href="{% url 'questions:sitting_list' %}">{% trans "View Sittings" %}</a></li>
-                            <li><a href="{% url 'questions:sitting_add' %}">{% trans "Add Sitting" %}</a></li>
-                        </ul>
-                    </li>
-                    <li class="submenu">
-                         <a href="{% url 'reviews:review_list' %}">
-                            <i class="glyphicon glyphicon-list-alt"></i> {% trans "Reviews" %}
-                            <span class="caret pull-right"></span>
-                         </a>
-                         <!-- Sub menu -->
-                         <ul>
-                            <li><a href="{% url 'reviews:review_list' %}">{% trans "View Reviews" %}</a></li>
-                            <li><a href="{% url 'reviews:peer_review_list' %}">{% trans "View Peer Reviews" %}</a></li>
-                            <li><a href="{% url 'reviews:review_add' %}">{% trans "Add Review" %}</a></li>
-                            <li><a href="{% url 'reviews:peer_review_add' %}">{% trans "Add Peer Review" %}</a></li>
-                        </ul>
-                    </li>
-                    <li class="submenu">
-                      <a href="{% url 'users:user_list' %}">
-                        <i class="glyphicon glyphicon-user"></i> {% trans "Users" %}
-                        <span class="caret pull-right"></span>
-                      </a>
+        {% block main_sidebar %}
+          <div class="col-md-2">
+            <div class="sidebar content-box" style="display: block;">
+              <ul class="nav">
+                  {% if request.user.is_authenticated %}
+                  <li><a href="{% url 'dashboard' %}"><i class="glyphicon glyphicon-home"></i> {% trans "Dashboard" %}</a></li>
+                  <li><a href="{% url 'reports:report_list' %}"><i class="glyphicon glyphicon-ok"></i> {% trans "Reports" %}</a></li>
+                  {% if request.user.userprofile.is_admin %}
+                  <li class="submenu">
+                        <a href="{% url 'questions:quiz_list' %}">
+                          <i class="glyphicon glyphicon-list"></i> {% trans "Question Sets" %}
+                          <span class="caret pull-right"></span>
+                        </a>
+                        <!-- Sub menu -->
                       <ul>
-                        <li><a href="{% url 'users:user_list' %}">{% trans "View Users" %}</a></li>
-                        <li><a href="{% url 'users:user_group_add' %}">{% trans "Add Group" %}</a></li>
-                        <li><a href="{% url 'users:user_group_list' %}">{% trans "View Groups" %}</a></li>
-                      </ul>                      
-                    </li>
-                    {% endif %}
-                    <li><a href="{% url 'account_logout' %}"><i class="glyphicon glyphicon-log-out"></i> {% trans "Logout" %}</a></li>
-                    {% else %}
-                    <li><a href="{% url 'account_login' %}"><i class="glyphicon glyphicon-user"></i> {% trans "Login" %}</a></li>
-                    {% endif %}
-                </ul>
-             </div>
-		  </div>
-		  <div class="col-md-10">
-		  	{% block messages %}
-		  	<div class="row">
-		  		<div class="col-md-12">
-			  	{% if messages %}
-			  	    {% for message in messages %}
-			  	    <div class="alert alert-{% if message.tags %}{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %}{% endif %} alert-dismissible" role="alert">
-			  	      <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">{% trans "Close" %}</span></button>
-			  	      {{ message }}
-			  	    </div>
-			  	    {% endfor %}
-			  	{% endif %}  
-			  	</div>
-		  	</div>      
-		  	{% endblock %}
+                          <li><a href="{% url 'questions:quiz_list' %}">{% trans "View Question Sets" %}</a></li>
+                          <li><a href="{% url 'questions:quiz_add' %}">{% trans "Add Question Set" %}</a></li>
+                      </ul>
+                      <ul>
+                          <li><a href="{% url 'questions:category_list' %}">{% trans "View Categories" %}</a></li>
+                          <li><a href="{% url 'questions:category_add' %}">{% trans "Add Category" %}</a></li>
+                      </ul>
+                  </li>
+                  <li class="submenu">
+                        <a href="{% url 'questions:sitting_list' %}">
+                          <i class="glyphicon glyphicon-list"></i> {% trans "Sittings" %}
+                          <span class="caret pull-right"></span>
+                        </a>
+                        <!-- Sub menu -->
+                        <ul>
+                          <li><a href="{% url 'questions:sitting_list' %}">{% trans "View Sittings" %}</a></li>
+                          <li><a href="{% url 'questions:sitting_add' %}">{% trans "Add Sitting" %}</a></li>
+                      </ul>
+                  </li>
+                  <li class="submenu">
+                        <a href="{% url 'reviews:review_list' %}">
+                          <i class="glyphicon glyphicon-list-alt"></i> {% trans "Reviews" %}
+                          <span class="caret pull-right"></span>
+                        </a>
+                        <!-- Sub menu -->
+                        <ul>
+                          <li><a href="{% url 'reviews:review_list' %}">{% trans "View Reviews" %}</a></li>
+                          <li><a href="{% url 'reviews:peer_review_list' %}">{% trans "View Peer Reviews" %}</a></li>
+                          <li><a href="{% url 'reviews:review_add' %}">{% trans "Add Review" %}</a></li>
+                          <li><a href="{% url 'reviews:peer_review_add' %}">{% trans "Add Peer Review" %}</a></li>
+                      </ul>
+                  </li>
+                  <li class="submenu">
+                    <a href="{% url 'users:user_list' %}">
+                      <i class="glyphicon glyphicon-user"></i> {% trans "Users" %}
+                      <span class="caret pull-right"></span>
+                    </a>
+                    <ul>
+                      <li><a href="{% url 'users:user_list' %}">{% trans "View Users" %}</a></li>
+                      <li><a href="{% url 'users:user_group_add' %}">{% trans "Add Group" %}</a></li>
+                      <li><a href="{% url 'users:user_group_list' %}">{% trans "View Groups" %}</a></li>
+                    </ul>                      
+                  </li>
+                  {% endif %}
+                  <li><a href="{% url 'account_logout' %}"><i class="glyphicon glyphicon-log-out"></i> {% trans "Logout" %}</a></li>
+                  {% else %}
+                  <li><a href="{% url 'account_login' %}"><i class="glyphicon glyphicon-user"></i> {% trans "Login" %}</a></li>
+                  {% endif %}
+              </ul>
+            </div>
+          </div>
+        {% endblock %}
+        <div class="{% block main_content_css_class %}col-md-10{% endblock %}">
+          {% block messages %}
+          <div class="row">
+            <div class="col-md-12">
+            {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{% if message.tags %}{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %}{% endif %} alert-dismissible" role="alert">
+                  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">{% trans "Close" %}</span></button>
+                  {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}  
+            </div>
+          </div>      
+          {% endblock %}
 
-		  	{% block page_content %}
-		  	<div class="row page-content">
-		  		<div class="col-md-12 panel-defalt">
-		  			{% block all_content %}
-		  			<div class="content-box">{% block main_content %}{% endblock %}</div>
-					{% endblock %}
-		  		</div>
-		  	</div>
-		  	{% endblock %}
-		  </div>
+          {% block page_content %}
+          <div class="row page-content">
+            <div class="col-md-12 panel-defalt">
+              {% block all_content %}
+              <div class="content-box">{% block main_content %}{% endblock %}</div>
+            {% endblock %}
+            </div>
+          </div>
+          {% endblock %}
+        </div>
 		</div>
     </div>
 
     <footer>
          <div class="container">
-         
             <div class="copy text-center">
                &copy; {{ site.name }} {% trans "2015" %} - {% now "Y" %}
             </div>
-            
          </div>
       </footer>
     {% compress js %}
