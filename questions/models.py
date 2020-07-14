@@ -329,7 +329,7 @@ class MultipleChoiceQuestion(Question):
 @python_2_unicode_compatible
 class MultipleChoiceOption(models.Model):
 
-    """The answer choices to a multipel choice question"""
+    """The answer choices to a multiple choice question"""
 
     created_on = models.DateTimeField(_("Created on"), auto_now_add=True)
     updated_on = models.DateTimeField(_("Updated on"), auto_now=True)
